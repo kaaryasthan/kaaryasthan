@@ -1,0 +1,31 @@
+CREATE TABLE "projects" (
+	id BIGSERIAL PRIMARY KEY,
+	name TEXT UNIQUE NOT NULL,
+	description TEXT NOT NULL
+);
+
+CREATE TABLE "items" (
+	id BIGSERIAL PRIMARY KEY,
+	title TEXT NOT NULL,
+	description TEXT NOT NULL
+);
+
+CREATE TABLE "comments" (
+	id BIGSERIAL PRIMARY KEY,
+	body TEXT NOT NULL,
+	item BIGINT REFERENCES items(id)
+);
+
+
+CREATE TABLE "member" (
+	id BIGSERIAL PRIMARY KEY,
+	fullname TEXT NOT NULL
+);
+
+CREATE TABLE "user" (
+	id BIGSERIAL PRIMARY KEY,
+	username TEXT UNIQUE NOT NULL,
+	password TEXT,
+	salt TEXT,
+	member BIGINT REFERENCES member(id)
+)

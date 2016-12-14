@@ -1,0 +1,6 @@
+*~
+kaaryasthan
+vendor/
+tmp/
+db/bindata.go
+web/bindata_assetfs.go
