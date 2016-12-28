@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	_ "github.com/kaaryasthan/kaaryasthan/auth"
 	_ "github.com/kaaryasthan/kaaryasthan/comment"
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"

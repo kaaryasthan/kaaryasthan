@@ -16,5 +16,5 @@ func Run(addr string) {
 
 func init() {
 	MW = negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(web.AssetFS()))
-	MW.UseHandler(route.RT)
+	MW.UseHandler(route.URT)
 }

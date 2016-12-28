@@ -1,8 +1,12 @@
-hash: 78e31b96dd26c1dd8a615d3c291352b8ed11fe723ee1c7db7e817e8d0a87e4af
-updated: 2016-12-15T00:10:27.907949546+05:30
+hash: f9573ebfc6169c4a17fed42f3f41f3e068afc32aa672db47860509707874a682
+updated: 2016-12-28T21:28:02.887323681+05:30
 imports:
+- name: github.com/auth0/go-jwt-middleware
+  version: f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac
 - name: github.com/baijum/pgmigration
   version: 6b2715e247162f3c3312cdce2b5c8b3ff9c6acb9
+- name: github.com/dgrijalva/jwt-go
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/elazarl/go-bindata-assetfs
   version: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
 - name: github.com/gorilla/context
