@@ -9,12 +9,14 @@ import (
 
 // configuration represent all configurations
 type configuration struct {
-	PostgresHost       string `default:"localhost"`
-	PostgresPort       int    `default:"5432"`
-	PostgresUser       string `default:"postgres"`
-	PostgresPassword   string `default:"secret"`
-	PostgresSSLMode    string `default:"disable"`
-	KaaryasthanAddress string `default:":8080"`
+	PostgresHost     string `default:"localhost",split_words:"true"`
+	PostgresPort     int    `default:"5432",split_words:"true"`
+	PostgresUser     string `default:"postgres",split_words:"true"`
+	PostgresPassword string `default:"secret",split_words:"true"`
+	PostgresSSLMode  string `default:"disable",envconfig:"POSTGRES_SSL_MODE"`
+	HTTPAddress      string `default:":8080",envconfig:"HTTP_ADDRESS"`
+	TokenPrivateKey  string `split_words:"true"`
+	TokenPublicKey   string `split_words:"true"`
 }
 
 func (c *configuration) PostgresConfig() string {

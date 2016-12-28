@@ -8,6 +8,7 @@ import (
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/route"
 	"github.com/urfave/negroni"
 )
@@ -59,11 +60,18 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
+	// FIXME: Verify key
+	privateKey = []byte(config.Config.TokenPrivateKey)
+	publicKey = []byte(config.Config.TokenPublicKey)
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
 			log.Printf("Token: %+v", token)
 			return publicKey, nil
 		},
+		// When set, the middleware verifies that tokens are signed with the specific signing algorithm
+		// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks
+		// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
+		SigningMethod: jwt.SigningMethodRS256,
 	})
 
 	route.URT.HandleFunc("/api/v1/auth", authHandler).Methods("POST")

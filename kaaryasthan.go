@@ -41,5 +41,5 @@ func init() {
 }
 
 func main() {
-	middleware.Run(config.Config.KaaryasthanAddress)
+	middleware.Run(config.Config.HTTPAddress)
 }

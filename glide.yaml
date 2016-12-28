@@ -5,5 +5,5 @@ import:
 - package: github.com/urfave/negroni
   version: ^0.2.0
 - package: github.com/kelseyhightower/envconfig
-  version: ^1.1.0
+  version: 5c008110b20b657eb7e005b83d0a5f6aa6bb5f4b
 - package: github.com/auth0/go-jwt-middleware
