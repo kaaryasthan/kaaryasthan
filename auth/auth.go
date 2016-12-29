@@ -1,16 +1,14 @@
 package auth
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/route"
-	"github.com/urfave/negroni"
 )
 
 var (
@@ -18,63 +16,33 @@ var (
 	publicKey  []byte
 )
 
-// Facebook OAuth 2
-//_ "github.com/kaaryasthan/kaaryasthan/auth/facebook"
-// Google OAuth 2
-//_ "github.com/kaaryasthan/kaaryasthan/auth/google"
-
 // OAuth2 represents a OAuth 2 provider
 type OAuth2 struct {
 	Name string
 }
 
 // Register a OAuth 2 provider
-func Register(name string) *OAuth2 {
+func Register(name string, begin func(http.ResponseWriter, *http.Request), complete func(http.ResponseWriter, *http.Request)) *OAuth2 {
 	o := OAuth2{Name: name}
+	route.URT.HandleFunc(fmt.Sprintf("/api/v1/auth/%s", name), begin).Methods("GET")
+	route.URT.HandleFunc(fmt.Sprintf("/api/v1/auth/%s/callback", name), complete).Methods("GET")
 	return &o
 }
 
-// Token represents a token
-type Token struct {
-	Success bool   `json:"success"`
-	Token   string `json:"token"`
-	Message string `json:"message"`
-}
-
-func authHandler(w http.ResponseWriter, r *http.Request) {
-	token := jwt.New(jwt.GetSigningMethod("RS256"))
-	token.Claims.(jwt.MapClaims)["sub"] = "guest"
-	token.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
-	tokenString, _ := token.SignedString(privateKey)
-	log.Printf("Valid Token: %+v", token)
-	log.Printf("tokenString: %v\n", tokenString)
-
-	authToken, err := json.Marshal(Token{true, tokenString, "Logged in"})
-	if err != nil {
-		log.Fatal("Unable to marhal token")
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(authToken))
-}
+// JwtMiddleware is middleware to handle all request
+var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
+	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+		log.Printf("Token: %+v", token)
+		return publicKey, nil
+	},
+	// When set, the middleware verifies that tokens are signed with the specific signing algorithm
+	// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks
+	// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
+	SigningMethod: jwt.SigningMethodRS256,
+})
 
 func init() {
 	// FIXME: Verify key
 	privateKey = []byte(config.Config.TokenPrivateKey)
 	publicKey = []byte(config.Config.TokenPublicKey)
-	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			log.Printf("Token: %+v", token)
-			return publicKey, nil
-		},
-		// When set, the middleware verifies that tokens are signed with the specific signing algorithm
-		// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks
-		// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
-		SigningMethod: jwt.SigningMethodRS256,
-	})
-
-	route.URT.HandleFunc("/api/v1/auth", authHandler).Methods("POST")
-	route.URT.PathPrefix("/api").Handler(
-		negroni.New(negroni.HandlerFunc(jwtMiddleware.HandlerWithNext), negroni.Wrap(route.RT)))
 }
