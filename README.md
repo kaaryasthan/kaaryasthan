@@ -13,6 +13,15 @@ Collaborative task management system for small teams
 - Install Ember 2.10.x and Node 6.5.x
 - Install https://github.com/pilu/fresh & https://glide.sh/
 
+First time you need to install packages required for Ember.js
+To perform this, run `ember install` from `web` directory:
+
+    cd web
+    ember install
+
+Then run the `build.sh` from top directory
+
+
 ## Running
 
     fresh
