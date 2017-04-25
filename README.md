@@ -1,5 +1,7 @@
 # Kaaryasthan
 
+**WARNING:** This is [my pet](https://team-coder.com/pet-project) project for learning web application development using Go.
+
 Collaborative task management system for small teams
 
 ## Goals
@@ -21,6 +23,7 @@ To perform this, run `ember install` from `web` directory:
 
 Then run the `build.sh` from top directory
 
+Next migrate database schema by running `./kaaryasthan -migrate`
 
 ## Running
 
