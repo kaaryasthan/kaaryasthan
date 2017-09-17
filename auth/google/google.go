@@ -24,10 +24,11 @@ var (
 var googleconf = &oauth2.Config{
 	ClientID:     config.Config.ClientID,
 	ClientSecret: config.Config.ClientSecret,
-	RedirectURL:  config.Content.RedirectURL,
+	RedirectURL:  config.Config.RedirectURL,
 	Scopes: []string{
-		"https://www.googleapis.com/auth/userinfo.profile",
-		"https://www.googleapis.com/auth/userinfo.email",
+		"openid",
+		"profile",
+		"email",
 	},
 	Endpoint: google.Endpoint,
 }
