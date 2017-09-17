@@ -2,7 +2,7 @@ package web
 
 import assetfs "github.com/elazarl/go-bindata-assetfs"
 
-//go:generate ember build -prod
+//go:generate ng build -prod
 
 //go:generate go-bindata-assetfs -pkg web dist/...
 
