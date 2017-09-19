@@ -22,9 +22,9 @@ var (
 )
 
 var googleconf = &oauth2.Config{
-	ClientID:     config.Config.ClientID,
-	ClientSecret: config.Config.ClientSecret,
-	RedirectURL:  config.Config.RedirectURL,
+	ClientID:     config.Config.GoogleClientID,
+	ClientSecret: config.Config.GoogleClientSecret,
+	RedirectURL:  config.Config.GoogleRedirectURL,
 	Scopes: []string{
 		"openid",
 		"profile",
@@ -82,6 +82,5 @@ func init() {
 	// FIXME: Verify key
 	privateKey = []byte(config.Config.TokenPrivateKey)
 	publicKey = []byte(config.Config.TokenPublicKey)
-	//route.URT.HandleFunc("/api/v1/auth/google/callback", completeAuthHandler).Methods("POST")
 	auth.Register("google", beginAuthHandler, completeAuthHandler)
 }
