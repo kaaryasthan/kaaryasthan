@@ -10,7 +10,7 @@ import (
 // configuration represent all configurations
 type configuration struct {
 	PostgresHost      string   `default:"localhost" split_words:"true"`
-	PostgresPort      int      `default:"5432" split_words:"true"`
+	PostgresPort      int      `default:"5433" split_words:"true"`
 	PostgresUser      string   `default:"postgres" split_words:"true"`
 	PostgresPassword  string   `default:"secret" split_words:"true"`
 	PostgresSSLMode   string   `default:"disable" envconfig:"POSTGRES_SSL_MODE"`
