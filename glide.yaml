@@ -10,3 +10,5 @@ import:
 - package: golang.org/x/oauth2
   subpackages:
   - google
+- package: github.com/google/jsonapi
+  version: ^1.0.0

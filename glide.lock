@@ -1,13 +1,12 @@
-hash: 2a06d5eefdcdbf2346e16c3e8336a2f91c34122e3ebe95b5590f3175ecb13d74
-updated: 2016-12-29T16:15:12.875651782+05:30
+hash: 98542d1fbedec6bbcdb97394bda9423198faa8cf783af06e43cd8c1fe819724d
+updated: 2017-09-23T23:04:01.135506688+05:30
 imports:
 - name: cloud.google.com/go
-  version: 4e436992a513aa1dec28f8adda5c8173724d493e
+  version: da30b6d6aeb462b223228cc0b4e7952cba499d90
   subpackages:
   - compute/metadata
-  - internal
 - name: github.com/auth0/go-jwt-middleware
-  version: f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac
+  version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
 - name: github.com/baijum/pgmigration
   version: 6b2715e247162f3c3312cdce2b5c8b3ff9c6acb9
 - name: github.com/dgrijalva/jwt-go
@@ -18,12 +17,12 @@ imports:
   version: 8ee79997227bf9b34611aee7946ae64735e6fd93
   subpackages:
   - proto
-- name: github.com/googleapis/gax-go
-  version: da06d194a00e19ce00d9011a13931c3f6f6887c7
+- name: github.com/google/jsonapi
+  version: 46d3ced0434461be12e555852e2f1a9ed382e139
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 0eeaf8392f5b04950925b8a69fe70f110fa7cbfc
+  version: 24fca303ac6da784b9e8269f724ddeb0b2eea5e7
 - name: github.com/kelseyhightower/envconfig
   version: 5c008110b20b657eb7e005b83d0a5f6aa6bb5f4b
 - name: github.com/lib/pq
@@ -37,12 +36,6 @@ imports:
   subpackages:
   - context
   - context/ctxhttp
-  - http2
-  - http2/hpack
-  - idna
-  - internal/timeseries
-  - lex/httplex
-  - trace
 - name: golang.org/x/oauth2
   version: da3ce8d62a7f77aadfda06cb82bd604d6469c645
   subpackages:
@@ -62,17 +55,4 @@ imports:
   - internal/remote_api
   - internal/urlfetch
   - urlfetch
-- name: google.golang.org/grpc
-  version: c8105071640ef29fce843ed96983e864bb18eb0e
-  subpackages:
-  - codes
-  - credentials
-  - grpclog
-  - internal
-  - metadata
-  - naming
-  - peer
-  - stats
-  - tap
-  - transport
 testImports: []
