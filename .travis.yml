@@ -1,0 +1,46 @@
+sudo: required
+
+language: go
+
+go:
+  - 1.8
+
+services:
+  - docker
+
+before_install:
+  - sudo rm -f /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - go get github.com/golang/lint/golint
+  - curl https://glide.sh/get | sh
+  - docker-compose up -d
+
+script:
+  - go fmt $(glide nv -x);if [ $? != 0 ];then exit 1;fi
+  - go vet $(glide nv -x);if [ $? != 0 ];then exit 1;fi
+  - $HOME/gopath/bin/golint db/db.go
+  - $HOME/gopath/bin/golint web/web.go
+  - $HOME/gopath/bin/golint auth
+  - $HOME/gopath/bin/golint comment
+  - $HOME/gopath/bin/golint config
+  - $HOME/gopath/bin/golint item
+  - $HOME/gopath/bin/golint jsonapi
+  - $HOME/gopath/bin/golint member
+  - $HOME/gopath/bin/golint middleware
+  - $HOME/gopath/bin/golint project
+  - $HOME/gopath/bin/golint route
+  - $HOME/gopath/bin/golint test
+  - go build
+  - ./kaaryasthan -migrate
+  - go test ./auth -v
+  - go test ./comment -v
+  - go test ./config -v
+  - go test ./item -v
+  - go test ./jsonapi -v
+  - go test ./member -v
+  - go test ./middleware -v
+  - go test ./project -v
+  - go test ./route -v
+  - go test ./test -v
