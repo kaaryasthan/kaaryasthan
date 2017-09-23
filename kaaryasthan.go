@@ -23,9 +23,26 @@ import (
 
 var migrate = flag.Bool("migrate", false, "perform db migrations")
 
+// Exit code for clean exit
+type Exit struct {
+	Code int
+}
+
+// exit code handler
+func handleExit() {
+	if e := recover(); e != nil {
+		if exit, ok := e.(Exit); ok == true {
+			os.Exit(exit.Code)
+		}
+		panic(e) // not an Exit, bubble up
+	}
+}
+
 func init() {
 	flag.Parse()
 	go func() {
+		defer handleExit()
+		defer db.DB.Close()
 		time.Sleep(5 * time.Second)
 		err := db.DB.Ping()
 		if err != nil {
@@ -34,10 +51,11 @@ func init() {
 		if *migrate {
 			err = db.SchemaMigrate()
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Println(err.Error())
+				panic(Exit{4})
 			}
 			log.Println("Migration completed. Program is exiting.")
-			os.Exit(0)
+			panic(Exit{3})
 		}
 	}()
 }
