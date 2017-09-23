@@ -1,26 +1,66 @@
-# Kaaryasthan
+# Kaaryasthan - Collaborative Task Management for Small Teams
 
-**WARNING:** This is [my pet](https://team-coder.com/pet-project) project for learning web application development using Go.
+**Disclaimer:** This is [my pet project] for learning web application
+development using Go & Angular.
 
-Collaborative task management system for small teams
+This repository contains the source code of Kaaryasthan.  It has
+source code for both fron-end and back-end.  The front-end of
+Kaaryasthan is written in [Angular], back-end in [Go], and
+[PostgreSQL] is used for the persistent data store.
 
-## Goals
+## Development
 
-- RESTful API using JSONAPI
-- Internal authentication source
+This project requires Go version 1.8 or above.  This project also
+requires Node version 6.11 or above, preferably an LTS release.
 
-## Installation
+Once Go and Node is installed, you can install these utilities:
 
-- Install Go 1.8 or above version
-- Install Angular 4.4.x and Node 6.11.x
-- Install https://github.com/pilu/fresh & https://glide.sh/
-- Run the `build.sh` from top directory
-- Next migrate database schema by running `./kaaryasthan -migrate`
+- <https://github.com/pilu/fresh>
+- <https://glide.sh>
+- <https://cli.angular.io>
+
+To install the above utilities:
+
+    curl https://glide.sh/get | sh
+    go get -u github.com/pilu/fresh
+    npm install -g @angular/cli
+
+Now you can run `./build.sh` command.
+
+Finally, migrate database schema by running `./kaaryasthan -migrate`
 
 ## Running
 
+To run the back-end development server (from the top-level directory):
+
     fresh
 
-## Running tests
+To run the front-end development server (from the `./web` directory):
 
-    ./test.sh
+    ng serve
+
+## License
+
+    Kaaryasthan - Collaborative Task Management for Small Teams
+    Copyright (C) 2017 Baiju Muthukadan
+
+    This program is free software: you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public
+    License along with this program.  If not, see
+    <http://www.gnu.org/licenses/>.
+
+[my pet project]: https://team-coder.com/pet-project
+[Go version 1.8]: https://golang.org
+[Node version 6.11]: https://nodejs.org/en
+[Angular]: https://angular.io
+[Go]: https://golang.org
+[PostgreSQL]: https://www.postgresql.org
