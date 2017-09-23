@@ -8,11 +8,14 @@ go:
 services:
   - docker
 
+env:
+  - DOCKER_COMPOSE_VERSION=1.12.0
+
 before_install:
   - sudo rm -f /usr/local/bin/docker-compose
-    #  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-    #  - chmod +x docker-compose
-    #  - sudo mv docker-compose /usr/local/bin
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
   - go get github.com/golang/lint/golint
   - curl https://glide.sh/get | sh
   - /usr/local/bin/docker-compose up -d
