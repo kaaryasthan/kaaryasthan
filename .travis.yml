@@ -10,12 +10,12 @@ services:
 
 before_install:
   - sudo rm -f /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
+    #  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+    #  - chmod +x docker-compose
+    #  - sudo mv docker-compose /usr/local/bin
   - go get github.com/golang/lint/golint
   - curl https://glide.sh/get | sh
-  - docker-compose up -d
+  - /usr/local/bin/docker-compose up -d
 
 script:
   - go fmt $(glide nv -x);if [ $? != 0 ];then exit 1;fi
