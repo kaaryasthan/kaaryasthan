@@ -27,6 +27,8 @@ To install the above utilities:
 
     curl https://glide.sh/get | sh
     go get -u github.com/pilu/fresh
+    go get -u github.com/jteeuwen/go-bindata/...
+    go get -u github.com/elazarl/go-bindata-assetfs/...
     npm install -g @angular/cli
 
 Now you can run `./build.sh` command.
