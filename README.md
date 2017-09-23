@@ -27,6 +27,10 @@ To install the above utilities:
 
 Now you can run `./build.sh` command.
 
+Install [Docker] and [Docker Compose] and then run:
+
+    docker-compose up -d
+
 Finally, migrate database schema by running `./kaaryasthan -migrate`
 
 ## Running
@@ -64,3 +68,5 @@ To run the front-end development server (from the `./web` directory):
 [Angular]: https://angular.io
 [Go]: https://golang.org
 [PostgreSQL]: https://www.postgresql.org
+[Docker]: https://docs.docker.com
+[Docker Compose]: https://docs.docker.com/compose
