@@ -1,5 +1,8 @@
 # Kaaryasthan - Collaborative Task Management for Small Teams
 
+[![Build Status](https://travis-ci.org/kaaryasthan/kaaryasthan.svg?branch=master)](https://travis-ci.org/kaaryasthan/kaaryasthan)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 **Disclaimer:** This is [my pet project] for learning web application
 development using Go & Angular.
 
