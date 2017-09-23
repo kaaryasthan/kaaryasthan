@@ -9,22 +9,36 @@ services:
   - docker
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.12.0
+  - TRAVIS_NODE_VERSION="6.11.2"
 
 before_install:
   - sudo rm -f /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - go get github.com/golang/lint/golint
+  - go get github.com/jteeuwen/go-bindata/...
+  - go get github.com/elazarl/go-bindata-assetfs/...
+  - ls /home/travis/gopath/bin
   - curl https://glide.sh/get | sh
   - /usr/local/bin/docker-compose up -d
 
+install:
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+  - node --version
+  - npm --version
+  - npm install -g @angular/cli
+
 script:
+  - cd web && npm install && cd ..
+  - $HOME/gopath/bin/go-bindata-assetfs -pkg db -o db/bindata.go -nocompress db/migrations/
+  - cd web && ng build -prod && cd ..
+  - cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
+  - glide install
+  - go build
   - go fmt $(glide nv -x);if [ $? != 0 ];then exit 1;fi
   - go vet $(glide nv -x);if [ $? != 0 ];then exit 1;fi
   - $HOME/gopath/bin/golint db/db.go
-  - $HOME/gopath/bin/golint web/web.go
   - $HOME/gopath/bin/golint auth
   - $HOME/gopath/bin/golint comment
   - $HOME/gopath/bin/golint config
@@ -35,7 +49,6 @@ script:
   - $HOME/gopath/bin/golint project
   - $HOME/gopath/bin/golint route
   - $HOME/gopath/bin/golint test
-  - go build
   - ./kaaryasthan -migrate
   - go test ./auth -v
   - go test ./comment -v

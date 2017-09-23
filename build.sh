@@ -3,6 +3,7 @@
 WD=`pwd`
 
 cd ${WD}/web
+npm install
 go generate
 
 cd ${WD}

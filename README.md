@@ -16,6 +16,7 @@ requires Node version 6.11 or above, preferably an LTS release.
 Once Go and Node is installed, you can install these utilities:
 
 - <https://github.com/pilu/fresh>
+- <https://github.com/elazarl/go-bindata-assetfs>
 - <https://glide.sh>
 - <https://cli.angular.io>
 
