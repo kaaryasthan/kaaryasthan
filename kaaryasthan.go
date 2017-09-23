@@ -52,10 +52,10 @@ func init() {
 			err = db.SchemaMigrate()
 			if err != nil {
 				log.Println(err.Error())
-				panic(Exit{4})
+				panic(Exit{1})
 			}
 			log.Println("Migration completed. Program is exiting.")
-			panic(Exit{3})
+			panic(Exit{0})
 		}
 	}()
 }
