@@ -64,3 +64,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: kaaryasthan/kaaryasthan
+    tags: true
