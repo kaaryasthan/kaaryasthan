@@ -1,60 +1,64 @@
 sudo: required
-
 language: go
-
 go:
-  - 1.8
-
+- 1.8
 services:
-  - docker
-
+- docker
 env:
-  - TRAVIS_NODE_VERSION="6.11.2"
-
+- TRAVIS_NODE_VERSION="6.11.2"
 before_install:
-  - sudo rm -f /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - go get github.com/golang/lint/golint
-  - go get github.com/jteeuwen/go-bindata/...
-  - go get github.com/elazarl/go-bindata-assetfs/...
-  - ls /home/travis/gopath/bin
-  - curl https://glide.sh/get | sh
-  - /usr/local/bin/docker-compose up -d
-
+- sudo rm -f /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+- go get github.com/golang/lint/golint
+- go get github.com/jteeuwen/go-bindata/...
+- go get github.com/elazarl/go-bindata-assetfs/...
+- ls /home/travis/gopath/bin
+- curl https://glide.sh/get | sh
+- "/usr/local/bin/docker-compose up -d"
 install:
-  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - node --version
-  - npm --version
-  - npm install -g @angular/cli
-
+- rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
+  && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
+  install $TRAVIS_NODE_VERSION
+- node --version
+- npm --version
+- npm install -g @angular/cli
 script:
-  - cd web && npm install && cd ..
-  - $HOME/gopath/bin/go-bindata-assetfs -pkg db -o db/bindata.go -nocompress db/migrations/
-  - cd web && ng build -prod && cd ..
-  - cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
-  - glide install
-  - go build
-  - go fmt $(glide nv -x);if [ $? != 0 ];then exit 1;fi
-  - go vet $(glide nv -x);if [ $? != 0 ];then exit 1;fi
-  - $HOME/gopath/bin/golint db/db.go
-  - $HOME/gopath/bin/golint auth
-  - $HOME/gopath/bin/golint comment
-  - $HOME/gopath/bin/golint config
-  - $HOME/gopath/bin/golint item
-  - $HOME/gopath/bin/golint jsonapi
-  - $HOME/gopath/bin/golint middleware
-  - $HOME/gopath/bin/golint project
-  - $HOME/gopath/bin/golint route
-  - $HOME/gopath/bin/golint test
-  - ./kaaryasthan -migrate
-  - go test ./auth -v
-  - go test ./comment -v
-  - go test ./config -v
-  - go test ./item -v
-  - go test ./jsonapi -v
-  - go test ./middleware -v
-  - go test ./project -v
-  - go test ./route -v
-  - go test ./test -v
+- cd web && npm install && cd ..
+- "$HOME/gopath/bin/go-bindata-assetfs -pkg db -o db/bindata.go -nocompress db/migrations/"
+- cd web && ng build -prod && cd ..
+- cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
+- glide install
+- go build
+- go fmt $(glide nv -x);if [ $? != 0 ];then exit 1;fi
+- go vet $(glide nv -x);if [ $? != 0 ];then exit 1;fi
+- "$HOME/gopath/bin/golint db/db.go"
+- "$HOME/gopath/bin/golint auth"
+- "$HOME/gopath/bin/golint comment"
+- "$HOME/gopath/bin/golint config"
+- "$HOME/gopath/bin/golint item"
+- "$HOME/gopath/bin/golint jsonapi"
+- "$HOME/gopath/bin/golint middleware"
+- "$HOME/gopath/bin/golint project"
+- "$HOME/gopath/bin/golint route"
+- "$HOME/gopath/bin/golint test"
+- "./kaaryasthan -migrate"
+- go test ./auth -v
+- go test ./comment -v
+- go test ./config -v
+- go test ./item -v
+- go test ./jsonapi -v
+- go test ./middleware -v
+- go test ./project -v
+- go test ./route -v
+- go test ./test -v
+
+deploy:
+  provider: releases
+  api_key:
+    secure: cuts1a5X5OQdTYwZKk/6nvGyA17EVs1jllG30ZjcZyG5/McR86pN3D14QRKCXBsph3c9PFxCo28qxXjpIA6/oO2Y8Ox2dNWIe2h3RiZdeuFAYYciMeuldqAby51/wwi8992TGgqNL8rFDCLzgoq7gyDwmbCRRHRKOsscFsfPZJHO0PbD+JLytfhLsskj/8abgGBOZPCY17DbCvdunHVHJLz2vgUgcGocj6wCU/0XCooBzXk64F5uXIX6ihtECwJ7pUnm3z3thKLPxJTNlyfq1Yd8fHt5hPBtkBqEV5cQmy8s2MNjrhBt0fBm1sExyYbN7b4b7Hxyxd8W1LEqiBKizhKI/CykuoKSrjS8PFNvGWf334AihkE8e6Quq/Lj0PXIffQGnoA0tdLF1irnKzYgavdWffq2eBYK9tILxsReYD9nyHBThARyVg4NO3OmU4u7+/i+l/JMJhRK12jog0kPsFw1xgtePAARvyVMO6XWqN5Nhj1bsGm3cJOLMAavK1GV0EZOxSh1flUSez2xgOHReZf/+VNE063EBeXtW2B5fVgxV6Pboac+lfprppJlBPaT4HS86FomW2OSUhNoRok3jtaV7/rdg+11viAGEgVm4XxYWXqSKdEKgalkvsQww1wUURkP2zhp7S2w+ldtq/vwYgw2EmpNtOpsvBVDKdtZPSw=
+  file: kaaryasthan
+  on:
+    repo: kaaryasthan/kaaryasthan
