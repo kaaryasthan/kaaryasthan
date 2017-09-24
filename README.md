@@ -9,7 +9,7 @@ development using Go & Angular.
 This repository contains the source code of Kaaryasthan.  It has
 source code for both fron-end and back-end.  The front-end of
 Kaaryasthan is written in [Angular], back-end in [Go], and
-[PostgreSQL] is used for the persistent data store.
+[PostgreSQL] is used as the persistent data store.
 
 ## Development
 
@@ -19,6 +19,7 @@ requires Node version 6.11 or above, preferably an LTS release.
 Once Go and Node is installed, you can install these utilities:
 
 - <https://github.com/pilu/fresh>
+- <https://github.com/jteeuwen/go-bindata>
 - <https://github.com/elazarl/go-bindata-assetfs>
 - <https://glide.sh>
 - <https://cli.angular.io>
