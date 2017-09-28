@@ -1,33 +1,21 @@
 package auth
 
 import (
-	"fmt"
+	"crypto/rand"
+	"io"
 	"log"
-	"net/http"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/config"
-	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/jsonapi"
 )
 
 var (
 	privateKey []byte
 	publicKey  []byte
 )
-
-// OAuth2 represents a OAuth 2 provider
-type OAuth2 struct {
-	Name string
-}
-
-// Register a OAuth 2 provider
-func Register(name string, begin func(http.ResponseWriter, *http.Request), complete func(http.ResponseWriter, *http.Request)) *OAuth2 {
-	o := OAuth2{Name: name}
-	route.URT.HandleFunc(fmt.Sprintf("/api/v1/auth/%s", name), begin).Methods("GET")
-	route.URT.HandleFunc(fmt.Sprintf("/api/v1/auth/%s/callback", name), complete).Methods("GET")
-	return &o
-}
 
 // JwtMiddleware is middleware to handle all request
 var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
@@ -40,6 +28,38 @@ var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
 	SigningMethod: jwt.SigningMethodRS256,
 })
+
+// Schema represents a database schema
+type Schema struct {
+	Username string
+	Name     string
+	Email    string
+	Password string
+}
+
+// New returns a schema
+func New(d jsonapi.Data) *Schema {
+	s := &Schema{}
+	s.Username = d.Attributes["username"]
+	s.Name = d.Attributes["name"]
+	s.Email = d.Attributes["email"]
+	s.Password = d.Attributes["password"]
+	return s
+}
+
+func randomSalt() []byte {
+	s := make([]byte, 32)
+	_, err := io.ReadFull(rand.Reader, s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return s
+}
+
+// Register handlers
+func Register(art, urt *mux.Router) {
+	urt.HandleFunc("/api/v1/register", registerHandler).Methods("POST")
+}
 
 func init() {
 	// FIXME: Verify key

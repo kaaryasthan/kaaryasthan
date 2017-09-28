@@ -1,8 +1,8 @@
 package item
 
 import (
+	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/route"
 )
 
 // Data represents a item payload
@@ -36,6 +36,7 @@ func New(d Data) *Schema {
 	return s
 }
 
-func init() {
-	route.RT.HandleFunc("/api/v1/items", createHandler).Methods("POST")
+// Register handlers
+func Register(art, urt *mux.Router) {
+	art.HandleFunc("/api/v1/items", createHandler).Methods("POST")
 }

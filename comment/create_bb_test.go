@@ -18,9 +18,10 @@ import (
 )
 
 func TestCommentCreateHandler(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM comments")
 	defer db.DB.Exec("DELETE FROM items")
-	ts := httptest.NewServer(route.RT)
+	defer db.DB.Exec("DELETE FROM comments")
+	_, art, _ := route.Router()
+	ts := httptest.NewServer(art)
 	defer ts.Close()
 	n1 := []byte(`{
   "data": {

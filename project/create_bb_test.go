@@ -11,13 +11,14 @@ import (
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/db"
-	. "github.com/kaaryasthan/kaaryasthan/project"
+	"github.com/kaaryasthan/kaaryasthan/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/route"
 )
 
 func TestProjectCreateHandler(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM projects")
-	ts := httptest.NewServer(route.RT)
+	_, art, _ := route.Router()
+	ts := httptest.NewServer(art)
 	defer ts.Close()
 	n := []byte(`{
   "data": {
@@ -28,7 +29,7 @@ func TestProjectCreateHandler(t *testing.T) {
     }
   }
 }`)
-	reqPayload := make(map[string]Data)
+	reqPayload := make(map[string]jsonapi.Data)
 	decoder1 := json.NewDecoder(bytes.NewReader(n))
 	err := decoder1.Decode(&reqPayload)
 	if err != nil {
@@ -44,7 +45,7 @@ func TestProjectCreateHandler(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	respPayload := make(map[string]Data)
+	respPayload := make(map[string]jsonapi.Data)
 	decoder2 := json.NewDecoder(resp.Body)
 	err = decoder2.Decode(&respPayload)
 	if err != nil {

@@ -1,21 +1,18 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
-	"github.com/kaaryasthan/kaaryasthan/auth"
-	_ "github.com/kaaryasthan/kaaryasthan/auth/google"
-	_ "github.com/kaaryasthan/kaaryasthan/comment"
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	_ "github.com/kaaryasthan/kaaryasthan/item"
-	"github.com/kaaryasthan/kaaryasthan/middleware"
-	_ "github.com/kaaryasthan/kaaryasthan/project"
 	"github.com/kaaryasthan/kaaryasthan/route"
-	_ "github.com/kaaryasthan/kaaryasthan/web"
 	"github.com/urfave/negroni"
 )
 
@@ -38,7 +35,54 @@ func handleExit() {
 	}
 }
 
-func init() {
+// run starts the server
+func run(addr string, n *negroni.Negroni) {
+	l := log.New(os.Stdout, "[kaaryasthan] ", 0)
+
+	stopChan := make(chan os.Signal, 1)
+	done := make(chan bool, 1)
+	signal.Notify(stopChan, syscall.SIGTERM, syscall.SIGINT)
+
+	srv := &http.Server{Addr: addr, Handler: n}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil {
+			l.Println("Error starting server:", err)
+
+			if err := db.DB.Close(); err != nil {
+				l.Println("Error closing DB:", err)
+			}
+
+			done <- true
+		}
+	}()
+
+	go func() {
+
+		sig := <-stopChan
+		log.Println("Signal received:", sig)
+
+		ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
+
+		// Even though ctx will be expired, it is good practice to call its
+		// cancelation function in any case. Failure to do so may keep the
+		// context and its parent alive longer than necessary.
+		defer cancel()
+
+		srv.Shutdown(ctx)
+
+		if err := db.DB.Close(); err != nil {
+			l.Println("Error closing DB:", err)
+		}
+
+		done <- true
+	}()
+
+	l.Printf("Listening on: %s", addr)
+	<-done
+}
+
+func main() {
 	flag.Parse()
 	go func() {
 		defer handleExit()
@@ -58,10 +102,7 @@ func init() {
 			panic(Exit{0})
 		}
 	}()
-}
 
-func main() {
-	route.URT.PathPrefix("/api").Handler(
-		negroni.New(negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext), negroni.Wrap(route.RT)))
-	middleware.Run(config.Config.HTTPAddress)
+	n, _, _ := route.Router()
+	run(config.Config.HTTPAddress, n)
 }

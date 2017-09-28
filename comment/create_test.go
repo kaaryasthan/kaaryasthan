@@ -8,8 +8,8 @@ import (
 )
 
 func TestCommentCreate(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM comments")
 	defer db.DB.Exec("DELETE FROM items")
+	defer db.DB.Exec("DELETE FROM comments")
 	is := item.Schema{Title: "sometitle", Description: "Some description"}
 	id, err := is.Create()
 	if err != nil {

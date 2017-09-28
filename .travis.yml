@@ -40,7 +40,6 @@ script:
 - "$HOME/gopath/bin/golint config"
 - "$HOME/gopath/bin/golint item"
 - "$HOME/gopath/bin/golint jsonapi"
-- "$HOME/gopath/bin/golint middleware"
 - "$HOME/gopath/bin/golint project"
 - "$HOME/gopath/bin/golint route"
 - "$HOME/gopath/bin/golint test"
@@ -50,7 +49,6 @@ script:
 - go test ./config -v
 - go test ./item -v
 - go test ./jsonapi -v
-- go test ./middleware -v
 - go test ./project -v
 - go test ./route -v
 - go test ./test -v

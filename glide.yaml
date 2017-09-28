@@ -12,3 +12,6 @@ import:
   - google
 - package: github.com/google/jsonapi
   version: ^1.0.0
+- package: golang.org/x/crypto
+  subpackages:
+  - scrypt
