@@ -16,3 +16,6 @@ import:
   subpackages:
   - scrypt
 - package: github.com/thoas/stats
+- package: github.com/jpillora/backoff
+- package: github.com/dgrijalva/jwt-go
+  version: ^3.0.0

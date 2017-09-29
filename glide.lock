@@ -1,5 +1,5 @@
-hash: abbf75c537673668cb83db483a470eb539735b2d1012e1f9b1babfb4bed5113e
-updated: 2017-09-29T19:14:40.807288756+05:30
+hash: de9ebf62ff04a35fd1054cb87ba410a85f116be3ad5d7ff8b2b1c37c660ce39d
+updated: 2017-09-30T00:29:45.524733163+05:30
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -15,6 +15,8 @@ imports:
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: 24fca303ac6da784b9e8269f724ddeb0b2eea5e7
+- name: github.com/jpillora/backoff
+  version: 8eab2debe79d12b7bd3d10653910df25fa9552ba
 - name: github.com/kelseyhightower/envconfig
   version: 5c008110b20b657eb7e005b83d0a5f6aa6bb5f4b
 - name: github.com/lib/pq
