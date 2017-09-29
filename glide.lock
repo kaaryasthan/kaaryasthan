@@ -1,5 +1,5 @@
-hash: de9ebf62ff04a35fd1054cb87ba410a85f116be3ad5d7ff8b2b1c37c660ce39d
-updated: 2017-09-30T00:29:45.524733163+05:30
+hash: f3e4dd94e53d396769913dd5d6b4c5bfbe37d11ea1e936b9586a7b95090b6b88
+updated: 2017-09-30T03:00:35.584282831+05:30
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -32,8 +32,4 @@ imports:
   subpackages:
   - pbkdf2
   - scrypt
-- name: golang.org/x/oauth2
-  version: da3ce8d62a7f77aadfda06cb82bd604d6469c645
-  subpackages:
-  - google
 testImports: []
