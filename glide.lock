@@ -1,10 +1,6 @@
-hash: d096af991f13300f2e5662f14e0490395f73ebd157472a46b358fe7182d6fe19
-updated: 2017-09-26T23:20:07.142629766+05:30
+hash: abbf75c537673668cb83db483a470eb539735b2d1012e1f9b1babfb4bed5113e
+updated: 2017-09-29T19:14:40.807288756+05:30
 imports:
-- name: cloud.google.com/go
-  version: cb1e56c2b8194c3bcd1c79c114654319c8f92b4d
-  subpackages:
-  - compute/metadata
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
 - name: github.com/baijum/pgmigration
@@ -13,10 +9,6 @@ imports:
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/elazarl/go-bindata-assetfs
   version: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
-- name: github.com/golang/protobuf
-  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
-  subpackages:
-  - proto
 - name: github.com/google/jsonapi
   version: 46d3ced0434461be12e555852e2f1a9ed382e139
 - name: github.com/gorilla/context
@@ -29,34 +21,17 @@ imports:
   version: 4a82388ebc5138c8289fe9bc602cb0b3e32cd617
   subpackages:
   - oid
+- name: github.com/thoas/stats
+  version: 37829025d2242afb04d91572cb143e00019e2aac
 - name: github.com/urfave/negroni
   version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
 - name: golang.org/x/crypto
   version: 81e90905daefcd6fd217b62423c0908922eadb30
   subpackages:
+  - pbkdf2
   - scrypt
-- name: golang.org/x/net
-  version: b1a2d6e8c8b5fc8f601ead62536f02a8e1b6217d
-  subpackages:
-  - context
-  - context/ctxhttp
 - name: golang.org/x/oauth2
   version: da3ce8d62a7f77aadfda06cb82bd604d6469c645
   subpackages:
   - google
-  - internal
-  - jws
-  - jwt
-- name: google.golang.org/appengine
-  version: ca59ef35f409df61fa4a5f8290ff289b37eccfb8
-  subpackages:
-  - internal
-  - internal/app_identity
-  - internal/base
-  - internal/datastore
-  - internal/log
-  - internal/modules
-  - internal/remote_api
-  - internal/urlfetch
-  - urlfetch
 testImports: []
