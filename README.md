@@ -14,8 +14,8 @@ Kaaryasthan is written in [Angular], back-end in [Go], and
 
 ## Development
 
-This project requires Go version 1.8 or above.  This project also
-requires Node version 6.11 or above, preferably an LTS release.
+This project requires [Go] version 1.8 or above.  This project also
+requires [Node] version 6.11 or above, preferably an LTS release.
 
 Once Go and Node is installed, you can install these utilities:
 
@@ -71,8 +71,7 @@ To run the front-end development server (from the `./web` directory):
     <http://www.gnu.org/licenses/>.
 
 [my pet project]: https://team-coder.com/pet-project
-[Go version 1.8]: https://golang.org
-[Node version 6.11]: https://nodejs.org/en
+[Node]: https://nodejs.org/en
 [Angular]: https://angular.io
 [Go]: https://golang.org
 [PostgreSQL]: https://www.postgresql.org
