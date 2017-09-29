@@ -1,6 +1,7 @@
 package route
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,6 +10,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/item"
 	"github.com/kaaryasthan/kaaryasthan/project"
 	"github.com/kaaryasthan/kaaryasthan/web"
+	"github.com/thoas/stats"
 	"github.com/urfave/negroni"
 )
 
@@ -17,9 +19,18 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 	art = mux.NewRouter()
 	urt = mux.NewRouter()
 
-	urt.HandleFunc("/api/v1/projects2", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hi"))
-	}).Methods("GET")
+	middleware := stats.New()
+
+	art.HandleFunc("/api/v1/stats", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		stats := middleware.Data()
+
+		b, _ := json.Marshal(stats)
+
+		w.Write(b)
+	})
+
 	auth.Register(art, urt)
 	project.Register(art, urt)
 	item.Register(art, urt)
@@ -28,6 +39,7 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 	urt.PathPrefix("/api").Handler(
 		negroni.New(negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext), negroni.Wrap(art)))
 	n = negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(web.AssetFS()))
+	n.Use(middleware)
 	n.UseHandler(urt)
 	return
 }
