@@ -60,9 +60,8 @@ deploy:
   on:
     repo: kaaryasthan/kaaryasthan
 branches:
-  only:
-  - develop
-  - master
+  except:
+  - /^exp-.*$/
 after_success:
 - curl -s https://gist.githubusercontent.com/baijum/37354d9de3b3dd38533f5d74b709086a/raw/merge.sh | bash
 env:
