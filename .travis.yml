@@ -50,15 +50,17 @@ script:
 - go test ./project -v
 - go test ./route -v
 - go test ./test -v
-deploy:
-  provider: releases
-  api_key:
-    secure: cuts1a5X5OQdTYwZKk/6nvGyA17EVs1jllG30ZjcZyG5/McR86pN3D14QRKCXBsph3c9PFxCo28qxXjpIA6/oO2Y8Ox2dNWIe2h3RiZdeuFAYYciMeuldqAby51/wwi8992TGgqNL8rFDCLzgoq7gyDwmbCRRHRKOsscFsfPZJHO0PbD+JLytfhLsskj/8abgGBOZPCY17DbCvdunHVHJLz2vgUgcGocj6wCU/0XCooBzXk64F5uXIX6ihtECwJ7pUnm3z3thKLPxJTNlyfq1Yd8fHt5hPBtkBqEV5cQmy8s2MNjrhBt0fBm1sExyYbN7b4b7Hxyxd8W1LEqiBKizhKI/CykuoKSrjS8PFNvGWf334AihkE8e6Quq/Lj0PXIffQGnoA0tdLF1irnKzYgavdWffq2eBYK9tILxsReYD9nyHBThARyVg4NO3OmU4u7+/i+l/JMJhRK12jog0kPsFw1xgtePAARvyVMO6XWqN5Nhj1bsGm3cJOLMAavK1GV0EZOxSh1flUSez2xgOHReZf/+VNE063EBeXtW2B5fVgxV6Pboac+lfprppJlBPaT4HS86FomW2OSUhNoRok3jtaV7/rdg+11viAGEgVm4XxYWXqSKdEKgalkvsQww1wUURkP2zhp7S2w+ldtq/vwYgw2EmpNtOpsvBVDKdtZPSw=
-  file: kaaryasthan
-  overwrite: true
-  skip_cleanup: true
-  on:
-    repo: kaaryasthan/kaaryasthan
+
+  #deploy:
+  #  provider: releases
+  #  api_key:
+  #    secure: cuts1a5X5OQdTYwZKk/6nvGyA17EVs1jllG30ZjcZyG5/McR86pN3D14QRKCXBsph3c9PFxCo28qxXjpIA6/oO2Y8Ox2dNWIe2h3RiZdeuFAYYciMeuldqAby51/wwi8992TGgqNL8rFDCLzgoq7gyDwmbCRRHRKOsscFsfPZJHO0PbD+JLytfhLsskj/8abgGBOZPCY17DbCvdunHVHJLz2vgUgcGocj6wCU/0XCooBzXk64F5uXIX6ihtECwJ7pUnm3z3thKLPxJTNlyfq1Yd8fHt5hPBtkBqEV5cQmy8s2MNjrhBt0fBm1sExyYbN7b4b7Hxyxd8W1LEqiBKizhKI/CykuoKSrjS8PFNvGWf334AihkE8e6Quq/Lj0PXIffQGnoA0tdLF1irnKzYgavdWffq2eBYK9tILxsReYD9nyHBThARyVg4NO3OmU4u7+/i+l/JMJhRK12jog0kPsFw1xgtePAARvyVMO6XWqN5Nhj1bsGm3cJOLMAavK1GV0EZOxSh1flUSez2xgOHReZf/+VNE063EBeXtW2B5fVgxV6Pboac+lfprppJlBPaT4HS86FomW2OSUhNoRok3jtaV7/rdg+11viAGEgVm4XxYWXqSKdEKgalkvsQww1wUURkP2zhp7S2w+ldtq/vwYgw2EmpNtOpsvBVDKdtZPSw=
+  #  file: kaaryasthan
+  #  overwrite: true
+  #  skip_cleanup: true
+  #  on:
+  #    repo: kaaryasthan/kaaryasthan
+
 branches:
   except:
   - /^exp-.*$/
