@@ -34,6 +34,8 @@ CREATE TABLE "members" (
   email TEXT NOT NULL,
   password BYTEA NOT NULL,
   salt BYTEA NOT NULL,
+  email_verified BOOLEAN DEFAULT false,
+  active BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE,
   updated_at TIMESTAMP WITH TIME ZONE,
   deleted_at TIMESTAMP WITH TIME ZONE

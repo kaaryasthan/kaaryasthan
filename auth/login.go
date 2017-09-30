@@ -1,36 +1,38 @@
 package auth
 
 import (
+	"bytes"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
+	"golang.org/x/crypto/scrypt"
+
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/jsonapi"
-	"golang.org/x/crypto/scrypt"
 )
 
-func (obj *Schema) register() error {
-	salt := randomSalt()
-	password, err := scrypt.Key([]byte(obj.Password), salt, 16384, 8, 1, 32)
+func (obj *Schema) login() error {
+	var originalPassword, salt []byte
+	err := db.DB.QueryRow(`SELECT password, salt FROM "members"
+		WHERE username=$1 AND active=true AND email_verified=true`,
+		obj.Username).Scan(&originalPassword, &salt)
 	if err != nil {
 		return err
 	}
-	_, err = db.DB.Exec(`INSERT INTO "members"
-		(username, name, email, password, salt)
-		VALUES ($1, $2, $3, $4, $5)`,
-		obj.Username,
-		obj.Name,
-		obj.Email,
-		password,
-		salt)
+
+	newPassword, err := scrypt.Key([]byte(obj.Password), salt, 16384, 8, 1, 32)
 	if err != nil {
 		return err
+	}
+	if !bytes.Equal(newPassword, originalPassword) {
+		return errors.New("Wrong username or password")
 	}
 	return nil
 }
 
-func registerHandler(w http.ResponseWriter, r *http.Request) {
+func loginHandler(w http.ResponseWriter, r *http.Request) {
 	payload := make(map[string]jsonapi.Data)
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&payload)
@@ -39,14 +41,16 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s := New(payload["data"])
-	err = s.register()
+	err = s.login()
 	if err != nil {
-		log.Println("Unable save data: ", err)
+		log.Println("Login verification failed: ", err)
 		return
 	}
 	tmpData := payload["data"]
 	tmpData.ID = s.Username
 	delete(tmpData.Attributes, "password")
+	delete(tmpData.Attributes, "name")
+	delete(tmpData.Attributes, "email")
 	payload["data"] = tmpData
 	b, err := json.Marshal(payload)
 	if err != nil {

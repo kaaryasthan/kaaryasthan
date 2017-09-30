@@ -31,10 +31,11 @@ var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 
 // Schema represents a database schema
 type Schema struct {
-	Username string
-	Name     string
-	Email    string
-	Password string
+	Username    string
+	Name        string
+	Email       string
+	Password    string
+	AccessToken *string
 }
 
 // New returns a schema
@@ -59,6 +60,7 @@ func randomSalt() []byte {
 // Register handlers
 func Register(art, urt *mux.Router) {
 	urt.HandleFunc("/api/v1/register", registerHandler).Methods("POST")
+	urt.HandleFunc("/api/v1/login", loginHandler).Methods("POST")
 }
 
 func init() {
