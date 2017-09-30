@@ -6,9 +6,11 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/scrypt"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/jsonapi"
 )
@@ -51,6 +53,16 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	delete(tmpData.Attributes, "password")
 	delete(tmpData.Attributes, "name")
 	delete(tmpData.Attributes, "email")
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": s.Username,
+		"exp": time.Now().Add(time.Hour * 24 * 1).Unix(),
+	})
+
+	tokenString, _ := token.SignedString(privateKey)
+
+	tmpData.Attributes["access_token"] = tokenString
+
 	payload["data"] = tmpData
 	b, err := json.Marshal(payload)
 	if err != nil {

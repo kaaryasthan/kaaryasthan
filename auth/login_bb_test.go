@@ -62,6 +62,10 @@ func TestUserLoginHandler(t *testing.T) {
 	delete(reqData.Attributes, "password")
 	delete(reqData.Attributes, "name")
 	delete(reqData.Attributes, "email")
+	if _, ok := respData.Attributes["access_token"]; !ok {
+		t.Errorf("Access token not available: %#v", respData.Attributes)
+	}
+	delete(respData.Attributes, "access_token")
 	if !reflect.DeepEqual(reqData, respData) {
 		t.Errorf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqData, respData)
 	}
