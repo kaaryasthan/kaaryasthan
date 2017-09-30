@@ -33,13 +33,25 @@ To install the above utilities:
     go get -u github.com/elazarl/go-bindata-assetfs/...
     npm install -g @angular/cli
 
+You can clone [Kaaryasthan] repository insdide `$GOPATH` using these
+commands (Note: `$GOPATH` should be pointing to a single directory):
+
+    mkdir -p $GOPATH/src/github.com/kaaryasthan
+    cd $GOPATH/src/github.com/kaaryasthan
+    git clone https://github.com/kaaryasthan/kaaryasthan.git
+
 Now you can run `./build.sh` command.
+
+    cd $GOPATH/src/github.com/kaaryasthan/kaaryasthan
+    ./build.sh
 
 Install [Docker] and [Docker Compose] and then run:
 
     docker-compose up -d
 
-Finally, migrate database schema by running `./kaaryasthan -migrate`
+Finally, migrate database schema by running:
+
+    ./kaaryasthan -migrate
 
 ## Running
 
@@ -77,3 +89,4 @@ To run the front-end development server (from the `./web` directory):
 [PostgreSQL]: https://www.postgresql.org
 [Docker]: https://docs.docker.com
 [Docker Compose]: https://docs.docker.com/compose
+[Kaaryasthan]: https://github.com/kaaryasthan/kaaryasthan
