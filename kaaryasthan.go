@@ -83,45 +83,48 @@ func run(addr string, n *negroni.Negroni) {
 	<-done
 }
 
+func migrateDatabase() {
+	var err error
+	defer handleExit()
+	defer db.DB.Close()
+
+	b := &backoff.Backoff{
+		Min:    7 * time.Second,
+		Factor: 2,
+		Max:    7 * time.Minute,
+	}
+
+	for i := 0; i < 7; i++ {
+		_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
+		if err != nil {
+			d := b.Duration()
+			log.Printf("%s (pinging failed), reconnecting in %s", err, d)
+			time.Sleep(d)
+			continue
+		}
+		b.Reset()
+	}
+
+	_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
+	if err != nil {
+		log.Println("Migration failed.", err.Error())
+		panic(Exit{1})
+	}
+
+	err = db.SchemaMigrate()
+	if err != nil {
+		log.Println("Migration failed.", err.Error())
+		panic(Exit{1})
+	}
+	log.Println("Migration completed.")
+	panic(Exit{0})
+}
+
 func main() {
 	flag.Parse()
+
 	if *migrate {
-		go func() {
-			var err error
-			defer handleExit()
-			defer db.DB.Close()
-
-			b := &backoff.Backoff{
-				Min:    7 * time.Second,
-				Factor: 2,
-				Max:    7 * time.Minute,
-			}
-
-			for i := 0; i < 7; i++ {
-				_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
-				if err != nil {
-					d := b.Duration()
-					log.Printf("%s (pinging failed), reconnecting in %s", err, d)
-					time.Sleep(d)
-					continue
-				}
-				b.Reset()
-			}
-
-			_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
-			if err != nil {
-				log.Println("Migration failed.", err.Error())
-				panic(Exit{1})
-			}
-
-			err = db.SchemaMigrate()
-			if err != nil {
-				log.Println(err.Error())
-				panic(Exit{1})
-			}
-			log.Println("Migration completed.")
-			panic(Exit{0})
-		}()
+		go migrateDatabase()
 	}
 
 	n, _, _ := route.Router()
