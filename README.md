@@ -12,6 +12,8 @@ source code for both fron-end and back-end.  The front-end of
 Kaaryasthan is written in [Angular], back-end in [Go], and
 [PostgreSQL] is used as the persistent data store.
 
+> Kaaryasthan (കാര്യസ്ഥൻ) is a [Malayalam] word with meaning "manager".
+
 ## Development
 
 This project requires [Go] version 1.8 or above.  This project also
@@ -87,6 +89,7 @@ To run the front-end development server (from the `./web` directory):
 [Angular]: https://angular.io
 [Go]: https://golang.org
 [PostgreSQL]: https://www.postgresql.org
+[Malayalam]: https://en.wikipedia.org/wiki/Malayalam
 [Docker]: https://docs.docker.com
 [Docker Compose]: https://docs.docker.com/compose
 [Kaaryasthan]: https://github.com/kaaryasthan/kaaryasthan
