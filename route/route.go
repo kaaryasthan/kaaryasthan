@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/comment"
+	"github.com/kaaryasthan/kaaryasthan/discussion"
 	"github.com/kaaryasthan/kaaryasthan/item"
 	"github.com/kaaryasthan/kaaryasthan/organization"
 	"github.com/kaaryasthan/kaaryasthan/project"
@@ -37,6 +38,7 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 	organization.Register(art, urt)
 	item.Register(art, urt)
 	comment.Register(art, urt)
+	discussion.Register(art, urt)
 
 	urt.PathPrefix("/api").Handler(
 		negroni.New(negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext), negroni.Wrap(art)))

@@ -30,6 +30,15 @@ CREATE TABLE "items" (
   deleted_at TIMESTAMP WITH TIME ZONE
 );
 
+CREATE TABLE "discussions" (
+  id BIGSERIAL PRIMARY KEY,
+  body TEXT NOT NULL,
+  item BIGINT REFERENCES items(id),
+  created_at TIMESTAMP WITH TIME ZONE,
+  updated_at TIMESTAMP WITH TIME ZONE,
+  deleted_at TIMESTAMP WITH TIME ZONE
+);
+
 CREATE TABLE "comments" (
   id BIGSERIAL PRIMARY KEY,
   body TEXT NOT NULL,
