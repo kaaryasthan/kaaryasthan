@@ -21,6 +21,16 @@ CREATE TABLE "projects" (
 
 CREATE UNIQUE INDEX projects_name_idx ON projects (name) WHERE deleted_at IS NULL;
 
+CREATE TABLE "milestones" (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE,
+  updated_at TIMESTAMP WITH TIME ZONE,
+  deleted_at TIMESTAMP WITH TIME ZONE
+);
+
+
 CREATE TABLE "items" (
   id BIGSERIAL PRIMARY KEY,
   title TEXT NOT NULL,
