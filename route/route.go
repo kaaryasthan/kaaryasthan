@@ -9,6 +9,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/comment"
 	"github.com/kaaryasthan/kaaryasthan/discussion"
 	"github.com/kaaryasthan/kaaryasthan/item"
+	"github.com/kaaryasthan/kaaryasthan/label"
 	"github.com/kaaryasthan/kaaryasthan/milestone"
 	"github.com/kaaryasthan/kaaryasthan/organization"
 	"github.com/kaaryasthan/kaaryasthan/project"
@@ -37,6 +38,7 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 	auth.Register(art, urt)
 	project.Register(art, urt)
 	milestone.Register(art, urt)
+	label.Register(art, urt)
 	organization.Register(art, urt)
 	item.Register(art, urt)
 	comment.Register(art, urt)

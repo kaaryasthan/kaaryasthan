@@ -30,6 +30,14 @@ CREATE TABLE "milestones" (
   deleted_at TIMESTAMP WITH TIME ZONE
 );
 
+CREATE TABLE "labels" (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  color TEXT NOT NULL CHECK(color ~ '^#[a-f0-9]{6}$'),
+  created_at TIMESTAMP WITH TIME ZONE,
+  updated_at TIMESTAMP WITH TIME ZONE,
+  deleted_at TIMESTAMP WITH TIME ZONE
+);
 
 CREATE TABLE "items" (
   id BIGSERIAL PRIMARY KEY,
