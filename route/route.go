@@ -8,6 +8,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/comment"
 	"github.com/kaaryasthan/kaaryasthan/item"
+	"github.com/kaaryasthan/kaaryasthan/organization"
 	"github.com/kaaryasthan/kaaryasthan/project"
 	"github.com/kaaryasthan/kaaryasthan/web"
 	"github.com/thoas/stats"
@@ -33,6 +34,7 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 
 	auth.Register(art, urt)
 	project.Register(art, urt)
+	organization.Register(art, urt)
 	item.Register(art, urt)
 	comment.Register(art, urt)
 

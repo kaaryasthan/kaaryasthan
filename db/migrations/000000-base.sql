@@ -1,3 +1,15 @@
+CREATE TABLE "organizations" (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE,
+  updated_at TIMESTAMP WITH TIME ZONE,
+  deleted_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE UNIQUE INDEX organizations_name_idx ON organizations (name) WHERE deleted_at IS NULL;
+
+
 CREATE TABLE "projects" (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
