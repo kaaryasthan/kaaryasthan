@@ -7,6 +7,11 @@
 **Disclaimer:** This is [my pet project] for learning web application
 development using Go & Angular.
 
+Kaaryasthan helps you to manage projects.  You can add tasks & issues
+called items to your project.  An item will have title, description,
+discussions, creator, assignees and labels.  Multiple milestones can
+be created with due date and priority-ordered items.
+
 This repository contains the source code of Kaaryasthan.  It has
 source code for both fron-end and back-end.  The front-end of
 Kaaryasthan is written in [Angular], back-end in [Go], and
