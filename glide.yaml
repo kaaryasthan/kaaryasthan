@@ -5,7 +5,6 @@ import:
 - package: github.com/urfave/negroni
   version: ^0.2.0
 - package: github.com/kelseyhightower/envconfig
-  version: 5c008110b20b657eb7e005b83d0a5f6aa6bb5f4b
 - package: github.com/auth0/go-jwt-middleware
 - package: github.com/google/jsonapi
   version: ^1.0.0
@@ -16,3 +15,4 @@ import:
 - package: github.com/jpillora/backoff
 - package: github.com/dgrijalva/jwt-go
   version: ^3.0.0
+- package: github.com/baijum/pgmigration

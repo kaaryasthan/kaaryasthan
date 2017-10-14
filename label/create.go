@@ -1,45 +1,58 @@
 package label
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/jsonapi"
+	"github.com/kaaryasthan/kaaryasthan/project"
+	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
 func createHandler(w http.ResponseWriter, r *http.Request) {
-	payload := make(map[string]jsonapi.Data)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&payload)
-	if err != nil {
-		log.Println("Unable to decode body: ", err)
+	tkn := r.Context().Value("user").(*jwt.Token)
+	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
+
+	obj := new(Label)
+	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	s := New(payload["data"])
-	id, err := s.create()
-	if err != nil {
-		log.Println("Unable save data: ", err)
+
+	w.Header().Set("Content-Type", jsonapi.MediaType)
+	w.WriteHeader(http.StatusCreated)
+
+	usr := user.User{ID: userID}
+	if err := usr.Valid(); err != nil {
+		log.Println("Couldn't validate user: ", err)
 		return
 	}
-	tmpData := payload["data"]
-	tmpData.ID = strconv.Itoa(id)
-	payload["data"] = tmpData
-	b, err := json.Marshal(payload)
-	if err != nil {
-		log.Println("Unable marshal data: ", err)
+
+	prj := project.Project{ID: obj.ProjectID}
+	if err := prj.Valid(); err != nil {
+		log.Println("Couldn't validate project: ", err)
 		return
 	}
-	w.Write(b)
+
+	err := obj.Create(usr)
+	if err != nil {
+		log.Println("Unable to save data: ", err)
+		return
+	}
+
+	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
-func (obj *Schema) create() (int, error) {
-	var id int
-	err := db.DB.QueryRow(`INSERT INTO "labels" (name, color) VALUES ($1, $2) RETURNING id`, obj.Name, obj.Color).Scan(&id)
+// Create creates a new label
+func (obj *Label) Create(usr user.User) error {
+	err := db.DB.QueryRow(`INSERT INTO "labels" (name, color, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
+		obj.Name, obj.Color, usr.ID, obj.ProjectID).Scan(&obj.ID)
 	if err != nil {
-		return -1, err
+		return err
 	}
-	return id, nil
+	return nil
 }

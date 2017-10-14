@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -14,12 +15,17 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/user"
 	"github.com/urfave/negroni"
 )
 
 //go:generate go-bindata -pkg db -o db/bindata.go -nocompress db/migrations/
 
 var migrate = flag.Bool("migrate", false, "perform db migrations")
+var createuser = flag.String("createuser", "", `create an active user
+        Format: username:password:role:email
+	e.g., admin:admin:admin:admin@example.org
+	Note: username & email should not exist in the system`)
 
 // Exit code for clean exit
 type Exit struct {
@@ -120,11 +126,53 @@ func migrateDatabase() {
 	panic(Exit{0})
 }
 
+func createUser() {
+	var err error
+	defer handleExit()
+	defer db.DB.Close()
+
+	args := strings.SplitN(*createuser, ":", 4)
+	if len(args) != 4 {
+		log.Println("Not enough segments in the string:", args)
+		panic(Exit{1})
+	}
+	username := args[0]
+	password := args[1]
+	role := args[2]
+	email := args[3]
+
+	usr := user.User{
+		Username: username,
+		Name:     username,
+		Email:    email,
+		Role:     role,
+		Password: password,
+	}
+
+	err = usr.Create()
+	if err != nil {
+		log.Println("User creation failed.", err.Error())
+		panic(Exit{1})
+	}
+
+	_, err = db.DB.Exec("UPDATE users SET active=true, email_verified=true, user_role=$1 WHERE id=$2",
+		usr.Role, usr.ID)
+	if err != nil {
+		log.Println("User creation failed.", err.Error())
+		panic(Exit{1})
+	}
+	panic(Exit{0})
+}
+
 func main() {
 	flag.Parse()
 
 	if *migrate {
-		go migrateDatabase()
+		migrateDatabase()
+	}
+
+	if createuser != nil {
+		createUser()
 	}
 
 	n, _, _ := route.Router()

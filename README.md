@@ -1,4 +1,4 @@
-# Kaaryasthan - Collaborative Task Management for Small Teams
+# Kaaryasthan - Task Management for Small Teams
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kaaryasthan/kaaryasthan)](https://goreportcard.com/report/github.com/kaaryasthan/kaaryasthan)
 [![Build Status](https://travis-ci.org/kaaryasthan/kaaryasthan.svg?branch=master)](https://travis-ci.org/kaaryasthan/kaaryasthan)
@@ -72,7 +72,7 @@ To run the front-end development server (from the `./web` directory):
 
 ## License
 
-    Kaaryasthan - Collaborative Task Management for Small Teams
+    Kaaryasthan - Task Management for Small Teams
     Copyright (C) 2017 Baiju Muthukadan
 
     This program is free software: you can redistribute it and/or

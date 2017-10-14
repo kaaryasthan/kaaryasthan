@@ -16,8 +16,7 @@ type configuration struct {
 	PostgresPassword string `default:"secret" split_words:"true"`
 	PostgresSSLMode  string `default:"disable" envconfig:"POSTGRES_SSL_MODE"`
 	HTTPAddress      string `default:":8080" envconfig:"HTTP_ADDRESS"`
-	TokenPrivateKey  string `split_words:"true"`
-	TokenPublicKey   string `split_words:"true"`
+	TokenSecretKey   string `default:"secret" split_words:"true"`
 }
 
 func (c *configuration) PostgresConfig() string {
@@ -29,6 +28,10 @@ func (c *configuration) PostgresConfig() string {
 		c.PostgresPassword,
 		c.PostgresSSLMode,
 	)
+}
+
+func (c *configuration) SetDatabaseName(dbname string) {
+	c.PostgresDatabase = dbname
 }
 
 // Config represent all configurations

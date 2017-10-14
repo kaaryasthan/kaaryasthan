@@ -2,21 +2,14 @@ package milestone
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/jsonapi"
 )
 
-// Schema represents a database schema
-type Schema struct {
-	Name        string
-	Description string
-}
-
-// New returns a schema
-func New(d jsonapi.Data) *Schema {
-	s := &Schema{}
-	s.Name = d.Attributes["name"]
-	s.Description = d.Attributes["description"]
-	return s
+// Milestone represents a milestone
+type Milestone struct {
+	ID          int    `jsonapi:"primary,milestones"`
+	Name        string `jsonapi:"attr,name"`
+	Description string `jsonapi:"attr,description"`
+	ProjectID   int    `jsonapi:"attr,project_id"`
 }
 
 // Register handlers

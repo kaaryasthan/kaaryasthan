@@ -47,15 +47,5 @@ func init() {
 
 // SchemaMigrate migrate database schema
 func SchemaMigrate() error {
-	ms := pgmigration.NewMigrationsSource(AssetNames, Asset)
-	var err error
-	pg, err := pgmigration.Run(DB, ms)
-	if err != nil {
-		return err
-	}
-	err = pg.Migrate("unique-code-migrations-name-00001", func(tx *sql.Tx) error { return nil })
-	if err != nil {
-		return err
-	}
-	return err
+	return pgmigration.Migrate(DB, AssetNames, Asset, nil)
 }

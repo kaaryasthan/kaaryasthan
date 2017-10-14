@@ -1,4 +1,4 @@
-package milestone_test
+package item_test
 
 import (
 	"bytes"
@@ -11,16 +11,17 @@ import (
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	. "github.com/kaaryasthan/kaaryasthan/milestone"
+	. "github.com/kaaryasthan/kaaryasthan/item"
 	"github.com/kaaryasthan/kaaryasthan/project"
 	"github.com/kaaryasthan/kaaryasthan/route"
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func TestMilestoneCreateHandler(t *testing.T) {
+func TestItemCreateHandler(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
-	defer db.DB.Exec("DELETE FROM milestones")
+	defer db.DB.Exec("DELETE FROM items")
+	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
 
 	_, _, urt := route.Router()
 	ts := httptest.NewServer(urt)
@@ -83,20 +84,21 @@ func TestMilestoneCreateHandler(t *testing.T) {
 
 	n := []byte(fmt.Sprintf(`{
 		"data": {
-			"type": "milestones",
+			"type": "items",
 			"attributes": {
-				"name": "somename",
+				"title": "Some Title",
 				"description": "Some description",
 				"project_id": %d
 			}
 		}
 	}`, prj.ID))
-	reqPayload := new(Milestone)
+
+	reqPayload := new(Item)
 	if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
 		t.Fatal("Unable to unmarshal input:", err)
 	}
 
-	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/milestones", bytes.NewReader(n))
+	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/items", bytes.NewReader(n))
 	req.Header.Set("Authorization", "Bearer "+tkn)
 	client := http.Client{}
 	resp, err := client.Do(req)
@@ -105,13 +107,14 @@ func TestMilestoneCreateHandler(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	respPayload := new(Milestone)
+	respPayload := new(Item)
 	if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
 		t.Fatal("Unable to unmarshal body:", err)
 		return
 	}
 
 	reqPayload.ID = respPayload.ID
+	reqPayload.Num = respPayload.Num
 
 	if reqPayload.ID <= 0 {
 		t.Fatalf("ID is not 1 or above: %#v", reqPayload.ID)

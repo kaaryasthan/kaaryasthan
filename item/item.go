@@ -1,42 +1,49 @@
 package item
 
 import (
+	"errors"
+
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/db"
 )
 
-// Data represents a item payload
-type Data struct {
-	Type       string            `json:"type"`
-	ID         string            `json:"id"`
-	Attributes map[string]string `json:"attributes"`
+// Item represents an item
+type Item struct {
+	ID          int    `jsonapi:"primary,items"`
+	Title       string `jsonapi:"attr,title"`
+	Description string `jsonapi:"attr,description"`
+	Num         int    `jsonapi:"attr,num"`
+	ProjectID   int    `jsonapi:"attr,project_id"`
 }
 
-// Schema represents a database schema
-type Schema struct {
-	Title       string
-	Description string
-}
-
-// Create creates a new item
-func (obj *Schema) Create() (int, error) {
-	var id int
-	err := db.DB.QueryRow(`INSERT INTO "items" (title, description) VALUES ($1, $2) RETURNING id`, obj.Title, obj.Description).Scan(&id)
+// Valid checks the validity of the item
+func (obj *Item) Valid() error {
+	var count int
+	err := db.DB.QueryRow(`SELECT count(1) FROM "items"
+		WHERE id=$1 AND disabled=false AND deleted_at IS NULL`,
+		obj.ID).Scan(&count)
 	if err != nil {
-		return -1, err
+		return err
 	}
-	return id, nil
-}
-
-// New returns a schema
-func New(d Data) *Schema {
-	s := &Schema{}
-	s.Title = d.Attributes["title"]
-	s.Description = d.Attributes["description"]
-	return s
+	if count == 0 {
+		return errors.New("Invalid item")
+	}
+	err = db.DB.QueryRow(`SELECT count(1) FROM "items"
+		INNER JOIN projects ON items.project_id = projects.id
+		WHERE items.id=$1 AND projects.archived=false AND projects.deleted_at IS NULL`,
+		obj.ID).Scan(&count)
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return errors.New("Invalid item")
+	}
+	return nil
 }
 
 // Register handlers
 func Register(art, urt *mux.Router) {
-	art.HandleFunc("/api/v1/items", createHandler).Methods("POST")
+	art.HandleFunc("/api/v1/items", createItemHandler).Methods("POST")
+	art.HandleFunc("/api/v1/discussions", createDiscussionHandler).Methods("POST")
+	art.HandleFunc("/api/v1/comments", createCommentHandler).Methods("POST")
 }

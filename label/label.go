@@ -2,21 +2,14 @@ package label
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/jsonapi"
 )
 
-// Schema represents a database schema
-type Schema struct {
-	Name  string
-	Color string
-}
-
-// New returns a schema
-func New(d jsonapi.Data) *Schema {
-	s := &Schema{}
-	s.Name = d.Attributes["name"]
-	s.Color = d.Attributes["color"]
-	return s
+// Label represents a label
+type Label struct {
+	ID        int    `jsonapi:"primary,labels"`
+	Name      string `jsonapi:"attr,name"`
+	Color     string `jsonapi:"attr,color"`
+	ProjectID int    `jsonapi:"attr,project_id"`
 }
 
 // Register handlers

@@ -1,4 +1,4 @@
-package milestone
+package item
 
 import (
 	"log"
@@ -7,15 +7,14 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project"
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func createHandler(w http.ResponseWriter, r *http.Request) {
+func createCommentHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
-	obj := new(Milestone)
+	obj := new(Comment)
 	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -30,9 +29,9 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	prj := project.Project{ID: obj.ProjectID}
-	if err := prj.Valid(); err != nil {
-		log.Println("Couldn't validate project: ", err)
+	disc := Discussion{ID: obj.DiscussionID}
+	if err := disc.Valid(); err != nil {
+		log.Println("Couldn't validate discussion: ", err)
 		return
 	}
 
@@ -47,10 +46,10 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Create creates a new milestone
-func (obj *Milestone) Create(usr user.User) error {
-	err := db.DB.QueryRow(`INSERT INTO "milestones" (name, description, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-		obj.Name, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID)
+// Create creates new comments
+func (obj *Comment) Create(usr user.User) error {
+	err := db.DB.QueryRow(`INSERT INTO "comments" (body, created_by, discussion_id) VALUES ($1, $2, $3) RETURNING id`,
+		obj.Body, usr.ID, obj.DiscussionID).Scan(&obj.ID)
 	if err != nil {
 		return err
 	}

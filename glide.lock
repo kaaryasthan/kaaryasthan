@@ -1,14 +1,14 @@
-hash: f3e4dd94e53d396769913dd5d6b4c5bfbe37d11ea1e936b9586a7b95090b6b88
-updated: 2017-09-30T03:00:35.584282831+05:30
+hash: cffdb857c5fec893c9d5e626ca1309c27ae14d1702456fb3906a71682dca3ff4
+updated: 2017-10-19T10:05:00.132022966+05:30
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
 - name: github.com/baijum/pgmigration
-  version: 6b2715e247162f3c3312cdce2b5c8b3ff9c6acb9
+  version: b721838087c8558dd77144d60cab73fc5a6f3735
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/elazarl/go-bindata-assetfs
-  version: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
+  version: 30f82fa23fd844bd5bb1e5f216db87fd77b5eb43
 - name: github.com/google/jsonapi
   version: 46d3ced0434461be12e555852e2f1a9ed382e139
 - name: github.com/gorilla/context
@@ -18,9 +18,9 @@ imports:
 - name: github.com/jpillora/backoff
   version: 8eab2debe79d12b7bd3d10653910df25fa9552ba
 - name: github.com/kelseyhightower/envconfig
-  version: 5c008110b20b657eb7e005b83d0a5f6aa6bb5f4b
+  version: 462fda1f11d8cad3660e52737b8beefd27acfb3f
 - name: github.com/lib/pq
-  version: 4a82388ebc5138c8289fe9bc602cb0b3e32cd617
+  version: 017e4c14d80628353eaee677a1aeffe47a10c0dc
   subpackages:
   - oid
 - name: github.com/thoas/stats
@@ -28,7 +28,7 @@ imports:
 - name: github.com/urfave/negroni
   version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
 - name: golang.org/x/crypto
-  version: 81e90905daefcd6fd217b62423c0908922eadb30
+  version: ed5229da99e3a6df35c756cd64b6982d19505d86
   subpackages:
   - pbkdf2
   - scrypt

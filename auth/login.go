@@ -2,24 +2,22 @@ package auth
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
 	"golang.org/x/crypto/scrypt"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/jsonapi"
 )
 
-func (obj *Schema) login() error {
+func (obj *Login) login() error {
 	var originalPassword, salt []byte
-	err := db.DB.QueryRow(`SELECT password, salt FROM "members"
+	err := db.DB.QueryRow(`SELECT id, password, salt FROM "users"
 		WHERE username=$1 AND active=true AND email_verified=true`,
-		obj.Username).Scan(&originalPassword, &salt)
+		obj.Username).Scan(&obj.ID, &originalPassword, &salt)
 	if err != nil {
 		return err
 	}
@@ -35,39 +33,23 @@ func (obj *Schema) login() error {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	payload := make(map[string]jsonapi.Data)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&payload)
-	if err != nil {
-		log.Println("Unable to decode body: ", err)
+	obj := new(Login)
+	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	s := New(payload["data"])
-	err = s.login()
-	if err != nil {
-		log.Println("Login verification failed: ", err)
-		return
-	}
-	tmpData := payload["data"]
-	tmpData.ID = s.Username
-	delete(tmpData.Attributes, "password")
-	delete(tmpData.Attributes, "name")
-	delete(tmpData.Attributes, "email")
+
+	obj.login()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": s.Username,
+		"sub": obj.ID,
 		"exp": time.Now().Add(time.Hour * 24 * 1).Unix(),
 	})
 
-	tokenString, _ := token.SignedString(privateKey)
-
-	tmpData.Attributes["access_token"] = tokenString
-
-	payload["data"] = tmpData
-	b, err := json.Marshal(payload)
-	if err != nil {
-		log.Println("Unable marshal data: ", err)
-		return
+	tokenString, _ := token.SignedString(secretKey)
+	obj.Token = tokenString
+	obj.Password = ""
+	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	w.Write(b)
 }

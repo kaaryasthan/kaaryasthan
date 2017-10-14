@@ -1,4 +1,4 @@
-package milestone
+package item
 
 import (
 	"log"
@@ -11,11 +11,11 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func createHandler(w http.ResponseWriter, r *http.Request) {
+func createItemHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
-	obj := new(Milestone)
+	obj := new(Item)
 	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -47,10 +47,11 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Create creates a new milestone
-func (obj *Milestone) Create(usr user.User) error {
-	err := db.DB.QueryRow(`INSERT INTO "milestones" (name, description, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-		obj.Name, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID)
+// Create an item in the database
+func (obj *Item) Create(usr user.User) error {
+	err := db.DB.QueryRow(`INSERT INTO "items" (title, description, created_by, project_id) VALUES
+		($1, $2, $3, $4) RETURNING id, num`,
+		obj.Title, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID, &obj.Num)
 	if err != nil {
 		return err
 	}
