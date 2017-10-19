@@ -17,14 +17,11 @@ RETURNS TRIGGER AS $$
 DECLARE
 nextValue BIGINT;
 BEGIN
-  SELECT COALESCE(MAX(num), 0)+1 INTO nextValue
-    FROM items
-    WHERE project_id=NEW.project_id;
-   NEW.num = nextValue;
-   RETURN NEW;
+  SELECT COALESCE(MAX(num), 0)+1 INTO nextValue FROM items;
+  NEW.num = nextValue;
+  RETURN NEW;
 END;
 $$ language 'plpgsql';
-
 
 CREATE FUNCTION update_item_discussion_comment_search_tsv_column()
 RETURNS TRIGGER AS $$
@@ -137,23 +134,6 @@ CREATE UNIQUE INDEX idx_unq_projects_name ON projects (name);
 
 CREATE TRIGGER trgr_update_projects_updated_at_column BEFORE UPDATE ON projects FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
-CREATE TABLE "milestones" (
-  id BIGSERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT DEFAULT '' NOT NULL,
-  project_id BIGINT REFERENCES projects(id) NOT NULL,
-  created_by UUID REFERENCES users(id) NOT NULL,
-  updated_by UUID REFERENCES users(id),
-  deleted_by UUID REFERENCES users(id),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE,
-  deleted_at TIMESTAMP WITH TIME ZONE
-);
-
-CREATE UNIQUE INDEX idx_unq_milestones_name_project_id ON milestones (name, project_id) WHERE deleted_at IS NULL;
-
-CREATE TRIGGER trgr_update_milestones_updated_at_column BEFORE UPDATE ON milestones FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
 CREATE TABLE "labels" (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
@@ -184,16 +164,35 @@ CREATE TABLE "items" (
   deleted_by UUID REFERENCES users(id),
   assignees UUID[],
   subscribers UUID[],
+  labels TEXT[],
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE,
   deleted_at TIMESTAMP WITH TIME ZONE
 );
 
-CREATE UNIQUE INDEX idx_unq_items_num_project_id ON items (num, project_id) WHERE deleted_at IS NULL;
+CREATE UNIQUE INDEX idx_unq_items_num_id ON items (num);
 
 CREATE TRIGGER trgr_update_items_num_column BEFORE INSERT ON items FOR EACH ROW EXECUTE PROCEDURE update_items_num_column();
 CREATE TRIGGER trgr_update_items_updated_at_column BEFORE UPDATE ON items FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER trgr_update_items_fulltext_search AFTER INSERT OR UPDATE OF title, description ON items FOR EACH ROW EXECUTE PROCEDURE update_item_discussion_comment_search_tsv_column();
+
+CREATE TABLE "milestones" (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT DEFAULT '' NOT NULL,
+  items BIGINT[],
+  project_id BIGINT REFERENCES projects(id) NOT NULL,
+  created_by UUID REFERENCES users(id) NOT NULL,
+  updated_by UUID REFERENCES users(id),
+  deleted_by UUID REFERENCES users(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE,
+  deleted_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE UNIQUE INDEX idx_unq_milestones_name_project_id ON milestones (name, project_id) WHERE deleted_at IS NULL;
+
+CREATE TRIGGER trgr_update_milestones_updated_at_column BEFORE UPDATE ON milestones FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 CREATE TABLE "discussions" (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,

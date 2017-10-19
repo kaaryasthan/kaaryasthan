@@ -9,9 +9,11 @@ import (
 
 // Project represents a project
 type Project struct {
-	ID          int    `jsonapi:"primary,projects"`
-	Name        string `jsonapi:"attr,name"`
-	Description string `jsonapi:"attr,description"`
+	ID           int    `jsonapi:"primary,projects"`
+	Name         string `jsonapi:"attr,name"`
+	Description  string `jsonapi:"attr,description"`
+	ItemTemplate string `jsonapi:"attr,item_template"`
+	Archived     bool   `jsonapi:"attr,archived"`
 }
 
 // Valid checks the validity of the project
@@ -32,4 +34,5 @@ func (obj *Project) Valid() error {
 // Register handlers
 func Register(art, urt *mux.Router) {
 	art.HandleFunc("/api/v1/projects", createHandler).Methods("POST")
+	art.HandleFunc("/api/v1/projects/{name}", showHandler).Methods("GET")
 }

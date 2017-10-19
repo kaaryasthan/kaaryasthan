@@ -10,6 +10,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/label"
 	"github.com/kaaryasthan/kaaryasthan/milestone"
 	"github.com/kaaryasthan/kaaryasthan/project"
+	"github.com/kaaryasthan/kaaryasthan/user"
 	"github.com/kaaryasthan/kaaryasthan/web"
 	"github.com/thoas/stats"
 	"github.com/urfave/negroni"
@@ -32,6 +33,7 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 		w.Write(b)
 	})
 
+	user.Register(art, urt)
 	auth.Register(art, urt)
 	project.Register(art, urt)
 	milestone.Register(art, urt)

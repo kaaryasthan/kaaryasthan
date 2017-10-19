@@ -23,13 +23,14 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 	w.WriteHeader(http.StatusCreated)
 
-	u := user.User{ID: userID}
-	if err := u.Valid(); err != nil {
-		log.Println("Couldn't validate user: ", err)
+	usr := user.User{ID: userID}
+	if err := usr.Valid(); err != nil {
+		log.Println("Couldn't validate user: "+usr.ID, err)
+		http.Error(w, "Couldn't validate user: "+usr.ID, http.StatusUnauthorized)
 		return
 	}
 
-	if err := obj.Create(u); err != nil {
+	if err := obj.Create(usr); err != nil {
 		log.Println("Unable to save data: ", err)
 		return
 	}

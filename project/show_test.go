@@ -7,7 +7,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func TestProjectCreate(t *testing.T) {
+func TestProjectShow(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
 
@@ -18,9 +18,26 @@ func TestProjectCreate(t *testing.T) {
 
 	prj := Project{Name: "somename", Description: "Some description"}
 	if err := prj.Create(usr); err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	if prj.ID <= 0 {
-		t.Errorf("Data not inserted. ID: %#v", prj.ID)
+		t.Fatalf("Data not inserted. ID: %#v", prj.ID)
+	}
+
+	prj2 := Project{Name: "somename"}
+	if err := prj2.Show(); err != nil {
+		t.Error("Project is valid", err)
+	}
+
+	if prj2.ID == 0 {
+		t.Error("ID not set")
+	}
+
+	if prj2.Description != "Some description" {
+		t.Error("Wrong Description", prj2.Description)
+	}
+
+	if prj2.Archived == true {
+		t.Error("Wrong Archived", prj2.Archived)
 	}
 }

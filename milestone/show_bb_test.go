@@ -1,4 +1,4 @@
-package project_test
+package milestone_test
 
 import (
 	"bytes"
@@ -10,20 +10,22 @@ import (
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/db"
+	"github.com/kaaryasthan/kaaryasthan/milestone"
 	"github.com/kaaryasthan/kaaryasthan/project"
 	"github.com/kaaryasthan/kaaryasthan/route"
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func TestProjectCreateHandler(t *testing.T) {
+func TestMilestoneShowHandler(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
+	defer db.DB.Exec("DELETE FROM milestones")
 
 	_, _, urt := route.Router()
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 
-	tkn := func() string {
+	tkn, usr := func() (string, user.User) {
 		usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 		err := usr.Create()
 		if err != nil {
@@ -70,24 +72,22 @@ func TestProjectCreateHandler(t *testing.T) {
 		if !reflect.DeepEqual(reqPayload, respPayload) {
 			t.Fatalf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
 		}
-		return respPayload.Token
+		return respPayload.Token, usr
 	}()
 
-	n := []byte(`{
-		"data": {
-			"type": "projects",
-			"attributes": {
-				"name": "somename",
-				"description": "Some description"
-			}
-		}
-	}`)
-	reqPayload := new(project.Project)
-	if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
-		t.Fatal("Unable to unmarshal input:", err)
+	prj := project.Project{Name: "somename", Description: "Some description"}
+	if err := prj.Create(usr); err != nil {
+		t.Fatal(err)
+	}
+	mil := milestone.Milestone{Name: "somename", Description: "Some description", ProjectID: prj.ID}
+	if err := mil.Create(usr); err != nil {
+		t.Fatal(err)
+	}
+	if mil.ID <= 0 {
+		t.Fatalf("Data not inserted. ID: %#v", mil.ID)
 	}
 
-	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/projects", bytes.NewReader(n))
+	req, _ := http.NewRequest("GET", ts.URL+"/api/v1/projects/"+prj.Name+"/milestones/"+mil.Name, nil)
 	req.Header.Set("Authorization", "Bearer "+tkn)
 	client := http.Client{}
 	resp, err := client.Do(req)
@@ -95,19 +95,23 @@ func TestProjectCreateHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer resp.Body.Close()
-
-	respPayload := new(project.Project)
+	if resp.StatusCode != http.StatusOK {
+		t.Error("User found with response:", resp.Status)
+	}
+	respPayload := new(milestone.Milestone)
 	if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
 		t.Error("Unable to unmarshal body:", err)
-		return
 	}
 
-	reqPayload.ID = respPayload.ID
-
-	if reqPayload.ID <= 0 {
-		t.Errorf("ID is not 1 or above: %#v", reqPayload.ID)
+	if respPayload.ID == 0 {
+		t.Error("ID not set")
 	}
-	if !reflect.DeepEqual(reqPayload, respPayload) {
-		t.Errorf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
+
+	if respPayload.Description != "Some description" {
+		t.Error("Wrong Description:", respPayload.Description)
+	}
+
+	if respPayload.Items != nil {
+		t.Error("Wrong Items", respPayload.Items)
 	}
 }

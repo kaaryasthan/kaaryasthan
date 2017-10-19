@@ -5,12 +5,13 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 **Disclaimer:** This is [my pet project] for learning web application
-development using Go & Angular.
+development using Go & Angular.  See the [FAQ](#why-this-project) for
+more details.
 
-Kaaryasthan helps you to manage projects.  You can add tasks & issues
-called items to your project.  An item will have title, description,
-discussions, creator, assignees and labels.  Multiple milestones can
-be created with due date and priority-ordered items.
+Kaaryasthan helps you to manage private projects.  You can add tasks &
+issues called items to your project.  An item will have title,
+description, discussions, creator, assignees and labels.  Multiple
+milestones can be created with due date and priority-ordered items.
 
 This repository contains the source code of Kaaryasthan.  It has
 source code for both fron-end and back-end.  The front-end of
@@ -18,6 +19,18 @@ Kaaryasthan is written in [Angular], back-end in [Go], and
 [PostgreSQL] is used as the persistent data store.
 
 > Kaaryasthan (കാര്യസ്ഥൻ) is a [Malayalam] word with meaning "manager".
+
+## Key Features
+
+- All API end points except login & registraion requires
+  authentication.  (Note: This makes it not useful for open source
+  projects with public issues.  Only private projects can be hosted
+  using Kaaryasthan)
+- Threaded discussions.  Discussions can be added under items.
+  Comments can be added under each discussion.
+- Easy deployment.  Entire application including front-end is
+  available as a single binary. You also need to install PostgreSQL
+  and NGINX.
 
 ## Development
 
@@ -56,11 +69,15 @@ Install [Docker] and [Docker Compose] and then run:
 
     docker-compose up -d
 
-Finally, migrate database schema by running:
+Migrate database schema by running:
 
     ./kaaryasthan -migrate
 
-## Running
+To run test cases:
+
+    ./runtests.sh
+
+### Running development servers
 
 To run the back-end development server (from the top-level directory):
 
@@ -89,6 +106,48 @@ To run the front-end development server (from the `./web` directory):
     License along with this program.  If not, see
     <http://www.gnu.org/licenses/>.
 
+## FAQ
+
+### Why this project?
+
+This is [my pet project] for learning web application development
+using Go & Angular.  Here I am trying to explore various ideas about
+web application development.  I started this [project in 2014] with
+another name.  Few things I am learning through this project:
+
+- Designing RESTful APIs
+- Database design
+- Front-end development
+- Web application security
+- Load testing
+
+As part of my professional work, I can work on some of these things.
+But this side project gives me more freedom and flexibility.
+
+### Are you seeking external contributions?
+
+At this point, I am not really looking for any external contribution.
+I am not sure that I can spend time on pull request review.  Though if
+you have any feedback, I would be happy to listen.  You can send mail
+to: baiju.m.mail AT gmail.com
+
+### Can I use Kaaryasthan to manage open source project tasks & issues?
+
+Sorry, that is not possible.  All URLs will require authentication
+except login & registraion.  Kaaryasthan is designed exclusively for
+private projects.
+
+### Why did you choose AGPLv3+ as the license?
+
+I believe that's the best license for a web application.  From the
+[GNU website]:
+
+> The GNU Affero General Public License is a modified version of the
+> ordinary GNU GPL version 3.  It has one added requirement: if you
+> run a modified program on a server and let other users communicate
+> with it there, your server must also allow them to download the
+> source code corresponding to the modified version running there.
+
 [my pet project]: https://team-coder.com/pet-project
 [Node]: https://nodejs.org/en
 [Angular]: https://angular.io
@@ -98,3 +157,5 @@ To run the front-end development server (from the `./web` directory):
 [Docker]: https://docs.docker.com
 [Docker Compose]: https://docs.docker.com/compose
 [Kaaryasthan]: https://github.com/kaaryasthan/kaaryasthan
+[project in 2014]: https://github.com/baijum/pitracker
+[GNU website]: https://www.gnu.org/licenses/why-affero-gpl.en.html
