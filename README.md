@@ -131,12 +131,6 @@ I am not sure that I can spend time on pull request review.  Though if
 you have any feedback, I would be happy to listen.  You can send mail
 to: baiju.m.mail AT gmail.com
 
-### Can I use Kaaryasthan to manage open source project tasks & issues?
-
-Sorry, that is not possible.  All URLs will require authentication
-except login & registraion.  Kaaryasthan is designed exclusively for
-private projects.
-
 ### Why did you choose AGPLv3+ as the license?
 
 I believe that's the best license for a web application.  From the
@@ -147,6 +141,18 @@ I believe that's the best license for a web application.  From the
 > run a modified program on a server and let other users communicate
 > with it there, your server must also allow them to download the
 > source code corresponding to the modified version running there.
+
+### Can I use Kaaryasthan to manage open source project tasks & issues?
+
+Sorry, that is not possible.  All URLs will require authentication
+except login & registraion.  Kaaryasthan is designed exclusively for
+private projects.
+
+---
+
+> [muthukadan.net](http://muthukadan.net) &nbsp;&middot;&nbsp;
+> GitHub [@baijum](https://github.com/baijum) &nbsp;&middot;&nbsp;
+> Twitter [@nogenerics](https://twitter.com/nogenerics)
 
 [my pet project]: https://team-coder.com/pet-project
 [Node]: https://nodejs.org/en
