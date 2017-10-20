@@ -91,8 +91,8 @@ func TestCommentCreateHandler(t *testing.T) {
 	if itm.ID <= 0 {
 		t.Fatalf("Data not inserted. ID: %#v", itm.ID)
 	}
-	if itm.Num != 1 {
-		t.Fatalf("Data not inserted. Num: %#v", itm.Num)
+	if itm.Number != 1 {
+		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 
 	disc := Discussion{Body: "some discussion", ItemID: itm.ID}

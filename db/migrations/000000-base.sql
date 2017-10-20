@@ -156,7 +156,7 @@ CREATE TABLE "items" (
   num BIGINT NOT NULL,
   title TEXT NOT NULL,
   description TEXT DEFAULT '' NOT NULL,
-  state BOOLEAN DEFAULT true NOT NULL, -- false is closed
+  open_state BOOLEAN DEFAULT true NOT NULL, -- false is closed
   project_id BIGINT REFERENCES projects(id) NOT NULL,
   disabled BOOLEAN DEFAULT false NOT NULL,
   created_by UUID REFERENCES users(id) NOT NULL,

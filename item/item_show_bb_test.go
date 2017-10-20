@@ -2,10 +2,10 @@ package item_test
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/google/jsonapi"
@@ -17,7 +17,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func TestItemCreateHandler(t *testing.T) {
+func TestItemShowHandler(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
 	defer db.DB.Exec("DELETE FROM items")
@@ -82,23 +82,19 @@ func TestItemCreateHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	n := []byte(fmt.Sprintf(`{
-		"data": {
-			"type": "items",
-			"attributes": {
-				"title": "Some Title",
-				"description": "Some description",
-				"project_id": %d
-			}
-		}
-	}`, prj.ID))
-
-	reqPayload := new(item.Item)
-	if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
-		t.Fatal("Unable to unmarshal input:", err)
+	itm := item.Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
+	err := itm.Create(usr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if itm.ID <= 0 {
+		t.Fatalf("Data not inserted. ID: %#v", itm.ID)
+	}
+	if itm.Number != 1 {
+		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 
-	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/items", bytes.NewReader(n))
+	req, _ := http.NewRequest("GET", ts.URL+"/api/v1/items/"+strconv.Itoa(itm.Number), nil)
 	req.Header.Set("Authorization", "Bearer "+tkn)
 	client := http.Client{}
 	resp, err := client.Do(req)
@@ -106,20 +102,19 @@ func TestItemCreateHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer resp.Body.Close()
-
+	if resp.StatusCode != http.StatusOK {
+		t.Error("User found with response:", resp.Status)
+	}
 	respPayload := new(item.Item)
 	if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
-		t.Fatal("Unable to unmarshal body:", err)
-		return
+		t.Error("Unable to unmarshal body:", err)
 	}
 
-	reqPayload.ID = respPayload.ID
-	reqPayload.Number = respPayload.Number
-
-	if reqPayload.ID <= 0 {
-		t.Fatalf("ID is not 1 or above: %#v", reqPayload.ID)
+	if respPayload.ID == 0 {
+		t.Error("ID not set")
 	}
-	if !reflect.DeepEqual(reqPayload, respPayload) {
-		t.Fatalf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
+
+	if respPayload.Description != "Some description" {
+		t.Error("Wrong Description:", respPayload.Description)
 	}
 }

@@ -32,7 +32,7 @@ func TestItemCreate(t *testing.T) {
 	if itm.ID <= 0 {
 		t.Errorf("Data not inserted. ID: %#v", itm.ID)
 	}
-	if itm.Num != 1 {
-		t.Errorf("Data not inserted. Num: %#v", itm.Num)
+	if itm.Number != 1 {
+		t.Errorf("Data not inserted. Num: %#v", itm.Number)
 	}
 }

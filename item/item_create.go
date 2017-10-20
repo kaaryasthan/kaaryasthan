@@ -51,7 +51,7 @@ func createItemHandler(w http.ResponseWriter, r *http.Request) {
 func (obj *Item) Create(usr user.User) error {
 	err := db.DB.QueryRow(`INSERT INTO "items" (title, description, created_by, project_id) VALUES
 		($1, $2, $3, $4) RETURNING id, num`,
-		obj.Title, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID, &obj.Num)
+		obj.Title, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID, &obj.Number)
 	if err != nil {
 		return err
 	}
