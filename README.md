@@ -14,7 +14,7 @@ description, discussions, creator, assignees and labels.  Multiple
 milestones can be created with due date and priority-ordered items.
 
 This repository contains the source code of Kaaryasthan.  It has
-source code for both fron-end and back-end.  The front-end of
+source code for both front-end and back-end.  The front-end of
 Kaaryasthan is written in [Angular], back-end in [Go], and
 [PostgreSQL] is used as the persistent data store.
 
@@ -22,8 +22,8 @@ Kaaryasthan is written in [Angular], back-end in [Go], and
 
 ## Key Features
 
-- All API end points except login & registraion requires
-  authentication.  (Note: This makes it not useful for open source
+- All URLs will require require authentication except login &
+  registration.  (Note: This makes it unsuitable for open source
   projects with public issues.  Only private projects can be hosted
   using Kaaryasthan)
 - Threaded discussions.  Discussions can be added under items.
@@ -48,12 +48,12 @@ Once Go and Node is installed, you can install these utilities:
 To install the above utilities:
 
     curl https://glide.sh/get | sh
-    go get -u github.com/pilu/fresh
-    go get -u github.com/jteeuwen/go-bindata/...
-    go get -u github.com/elazarl/go-bindata-assetfs/...
+    go get github.com/pilu/fresh
+    go get github.com/jteeuwen/go-bindata/...
+    go get github.com/elazarl/go-bindata-assetfs/...
     npm install -g @angular/cli
 
-You can clone [Kaaryasthan] repository insdide `$GOPATH` using these
+You can clone [Kaaryasthan] repository inside `$GOPATH` using these
 commands (Note: `$GOPATH` should be pointing to a single directory):
 
     mkdir -p $GOPATH/src/github.com/kaaryasthan
@@ -126,10 +126,10 @@ But this side project gives me more freedom and flexibility.
 
 ### Are you seeking external contributions?
 
-At this point, I am not really looking for any external contribution.
-I am not sure that I can spend time on pull request review.  Though if
-you have any feedback, I would be happy to listen.  You can send mail
-to: baiju.m.mail AT gmail.com
+As of now, I am not really looking for any external contributions.  I
+am not really sure how much time I can spend on pull request reviews.
+Though if you have any feedback, I would be happy to listen.  You can
+send your feedback to: baiju.m.mail AT gmail.com
 
 ### Why did you choose AGPLv3+ as the license?
 
@@ -144,9 +144,11 @@ I believe that's the best license for a web application.  From the
 
 ### Can I use Kaaryasthan to manage open source project tasks & issues?
 
-Sorry, that is not possible.  All URLs will require authentication
-except login & registraion.  Kaaryasthan is designed exclusively for
-private projects.
+I think that may not be possible.  Because all URLs will require
+authentication except login & registration.  Since open source
+projects requires public trackers, this won't be a desirable solution.
+Kaaryasthan is designed exclusively for private projects.  And I am
+not planning to change it.
 
 ---
 
