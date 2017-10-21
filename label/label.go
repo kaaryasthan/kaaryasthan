@@ -13,6 +13,6 @@ type Label struct {
 }
 
 // Register handlers
-func Register(art, urt *mux.Router) {
+func Register(art *mux.Router) {
 	art.HandleFunc("/api/v1/labels", createHandler).Methods("POST")
 }

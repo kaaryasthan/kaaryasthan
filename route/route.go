@@ -36,12 +36,12 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 		}
 	})
 
-	user.Register(art, urt)
-	auth.Register(art, urt)
-	project.Register(art, urt)
-	milestone.Register(art, urt)
-	label.Register(art, urt)
-	item.Register(art, urt)
+	user.Register(art)
+	auth.Register(urt)
+	project.Register(art)
+	milestone.Register(art)
+	label.Register(art)
+	item.Register(art)
 
 	urt.PathPrefix("/api").Handler(
 		negroni.New(negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext), negroni.Wrap(art)))

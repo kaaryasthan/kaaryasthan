@@ -53,7 +53,7 @@ func (obj *Item) Valid() error {
 }
 
 // Register handlers
-func Register(art, urt *mux.Router) {
+func Register(art *mux.Router) {
 	art.HandleFunc("/api/v1/items", createItemHandler).Methods("POST")
 	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}", showItemHandler).Methods("GET")
 	art.HandleFunc("/api/v1/discussions", createDiscussionHandler).Methods("POST")

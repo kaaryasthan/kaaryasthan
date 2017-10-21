@@ -13,6 +13,8 @@ before_install:
 - go get github.com/golang/lint/golint
 - go get github.com/jteeuwen/go-bindata/...
 - go get github.com/elazarl/go-bindata-assetfs/...
+- go get github.com/alecthomas/gometalinter
+- gometalinter --install
 - ls /home/travis/gopath/bin
 - curl https://glide.sh/get | sh
 - "/usr/local/bin/docker-compose up -d"
@@ -30,17 +32,8 @@ script:
 - cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
 - glide install
 - go build
-- go fmt $(glide nv -x);if [ $? != 0 ];then exit 1;fi
-- go vet $(glide nv -x);if [ $? != 0 ];then exit 1;fi
-- "$HOME/gopath/bin/golint db/db.go"
-- "$HOME/gopath/bin/golint auth"
-- "$HOME/gopath/bin/golint config"
-- "$HOME/gopath/bin/golint item"
-- "$HOME/gopath/bin/golint project"
-- "$HOME/gopath/bin/golint route"
-- "$HOME/gopath/bin/golint test"
 - "./kaaryasthan -migrate"
-- go test ./user ./label ./milestone ./config ./item ./project ./web ./route ./db ./test ./auth -v
+- "./runtests.sh"
 
   #deploy:
   #  provider: releases

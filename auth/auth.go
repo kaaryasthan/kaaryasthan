@@ -32,7 +32,7 @@ type Login struct {
 }
 
 // Register handlers
-func Register(art, urt *mux.Router) {
+func Register(urt *mux.Router) {
 	urt.HandleFunc("/api/v1/register", registerHandler).Methods("POST")
 	urt.HandleFunc("/api/v1/login", loginHandler).Methods("POST")
 }

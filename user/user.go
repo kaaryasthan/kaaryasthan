@@ -25,7 +25,7 @@ type User struct {
 	Active        bool   `jsonapi:"attr,active"`
 	EmailVerified bool   `jsonapi:"attr,email_verified"`
 	Password      string `jsonapi:"attr,password,omitempty"`
-	PersonalNote  string `jsonapi:"attr,peronal_note,omitempty"`
+	PersonalNote  string `jsonapi:"attr,personal_note,omitempty"`
 }
 
 // Create a new user
@@ -114,7 +114,7 @@ func showUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Register handlers
-func Register(art, urt *mux.Router) {
+func Register(art *mux.Router) {
 	// art.HandleFunc("/api/v1/users", listUsersHandler).Methods("GET")
 	art.HandleFunc("/api/v1/users/{username}", showUserHandler).Methods("GET")
 	//art.HandleFunc("/api/v1/users/{username}", updateUserHandler).Methods("PATCH")

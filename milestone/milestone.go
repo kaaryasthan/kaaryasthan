@@ -15,7 +15,7 @@ type Milestone struct {
 }
 
 // Register handlers
-func Register(art, urt *mux.Router) {
+func Register(art *mux.Router) {
 	art.HandleFunc("/api/v1/milestones", createHandler).Methods("POST")
 	art.HandleFunc("/api/v1/projects/{project}/milestones/{name}", showHandler).Methods("GET")
 }

@@ -32,7 +32,7 @@ func (obj *Project) Valid() error {
 }
 
 // Register handlers
-func Register(art, urt *mux.Router) {
+func Register(art *mux.Router) {
 	art.HandleFunc("/api/v1/projects", createHandler).Methods("POST")
 	art.HandleFunc("/api/v1/projects/{name}", showHandler).Methods("GET")
 	art.HandleFunc("/api/v1/projects", listHandler).Methods("GET")
