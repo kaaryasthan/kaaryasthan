@@ -37,7 +37,7 @@ func TestProjectShow(t *testing.T) {
 		t.Error("Wrong Description", prj2.Description)
 	}
 
-	if prj2.Archived == true {
+	if prj2.Archived {
 		t.Error("Wrong Archived", prj2.Archived)
 	}
 }

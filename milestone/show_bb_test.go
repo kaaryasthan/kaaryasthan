@@ -27,8 +27,7 @@ func TestMilestoneShowHandler(t *testing.T) {
 
 	tkn, usr := func() (string, user.User) {
 		usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-		err := usr.Create()
-		if err != nil {
+		if err := usr.Create(); err != nil {
 			t.Log("User creation failed", err)
 			t.FailNow()
 		}
@@ -50,8 +49,9 @@ func TestMilestoneShowHandler(t *testing.T) {
 
 		req, _ := http.NewRequest("POST", ts.URL+"/api/v1/login", bytes.NewReader(n))
 		client := http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
+		var err error
+		var resp *http.Response
+		if resp, err = client.Do(req); err != nil {
 			t.Fatal(err)
 		}
 		defer resp.Body.Close()

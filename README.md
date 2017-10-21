@@ -42,6 +42,7 @@ Once Go and Node is installed, you can install these utilities:
 - <https://github.com/pilu/fresh>
 - <https://github.com/jteeuwen/go-bindata>
 - <https://github.com/elazarl/go-bindata-assetfs>
+- <https://github.com/alecthomas/gometalinter>
 - <https://glide.sh>
 - <https://cli.angular.io>
 
@@ -51,6 +52,8 @@ To install the above utilities:
     go get github.com/pilu/fresh
     go get github.com/jteeuwen/go-bindata/...
     go get github.com/elazarl/go-bindata-assetfs/...
+    go get github.com/alecthomas/gometalinter
+    gometalinter --install
     npm install -g @angular/cli
 
 You can clone [Kaaryasthan] repository inside `$GOPATH` using these

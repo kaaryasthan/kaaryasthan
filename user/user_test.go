@@ -37,10 +37,10 @@ func TestUserShow(t *testing.T) {
 	if usr3.Role != "member" {
 		t.Error("Wrong Role:", usr3.Role)
 	}
-	if usr3.Active != false {
+	if usr3.Active {
 		t.Error("Wrong Active:", usr3.Active)
 	}
-	if usr3.EmailVerified != true {
+	if !usr3.EmailVerified {
 		t.Error("Wrong EmailVerified:", usr3.EmailVerified)
 	}
 
@@ -51,7 +51,7 @@ func TestUserShow(t *testing.T) {
 		t.Error(err)
 	}
 
-	if usr4.Active != true {
+	if !usr4.Active {
 		t.Error("Wrong Active:", usr4.Active)
 	}
 

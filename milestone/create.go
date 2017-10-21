@@ -51,8 +51,5 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 func (obj *Milestone) Create(usr user.User) error {
 	err := db.DB.QueryRow(`INSERT INTO "milestones" (name, description, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
 		obj.Name, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

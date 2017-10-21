@@ -31,7 +31,10 @@ func NewTestDB() string {
 	if err != nil {
 		log.Printf("Database creation failed: %s. %#v", dbname, err)
 	}
-	db.DB.Close()
+	if err = db.DB.Close(); err != nil {
+		log.Println("Error closing the database connection:", err)
+	}
+
 	config.Config.SetDatabaseName(dbname)
 	db.DB, _ = sql.Open("postgres", config.Config.PostgresConfig())
 
@@ -62,7 +65,10 @@ func NewTestDB() string {
 // ResetDB reset database to postgres
 func ResetDB(dbname string) {
 	var err error
-	db.DB.Close()
+	if err = db.DB.Close(); err != nil {
+		log.Println("Error closing the database connection:", err)
+	}
+
 	config.Config.SetDatabaseName("postgres")
 	db.DB, _ = sql.Open("postgres", config.Config.PostgresConfig())
 

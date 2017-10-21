@@ -16,12 +16,13 @@ import (
 
 func TestUserLoginHandler(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
-	s2 := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	err := s2.Create()
-	if err != nil {
+
+	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usr.Create(); err != nil {
 		t.Log("User creation failed", err)
 		t.FailNow()
 	}
+
 	db.DB.Exec("UPDATE users SET active=true, email_verified=true")
 	_, _, urt := route.Router()
 	ts := httptest.NewServer(urt)

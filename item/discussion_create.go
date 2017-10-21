@@ -51,8 +51,5 @@ func createDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 func (obj *Discussion) Create(usr user.User) error {
 	err := db.DB.QueryRow(`INSERT INTO "discussions" (body, created_by, item_id) VALUES ($1, $2, $3) RETURNING id`,
 		obj.Body, usr.ID, obj.ItemID).Scan(&obj.ID)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

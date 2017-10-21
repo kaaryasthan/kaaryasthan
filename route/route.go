@@ -2,6 +2,7 @@ package route
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -30,7 +31,9 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 
 		b, _ := json.Marshal(stats)
 
-		w.Write(b)
+		if _, err := w.Write(b); err != nil {
+			log.Println("Couldn't write to response:", err)
+		}
 	})
 
 	user.Register(art, urt)

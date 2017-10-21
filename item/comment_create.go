@@ -50,8 +50,5 @@ func createCommentHandler(w http.ResponseWriter, r *http.Request) {
 func (obj *Comment) Create(usr user.User) error {
 	err := db.DB.QueryRow(`INSERT INTO "comments" (body, created_by, discussion_id) VALUES ($1, $2, $3) RETURNING id`,
 		obj.Body, usr.ID, obj.DiscussionID).Scan(&obj.ID)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

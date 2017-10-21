@@ -39,7 +39,9 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	obj.login()
+	if err := obj.login(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": obj.ID,

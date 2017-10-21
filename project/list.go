@@ -25,11 +25,16 @@ func List(all bool) ([]Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err = rows.Close(); err != nil {
+			log.Println("Error closing the database rows:", err)
+		}
+	}()
+
 	var objs []Project
 	for rows.Next() {
 		prj := Project{}
-		err := rows.Scan(&prj.ID, &prj.Name, &prj.Description, &prj.ItemTemplate, &prj.Archived)
+		err = rows.Scan(&prj.ID, &prj.Name, &prj.Description, &prj.ItemTemplate, &prj.Archived)
 		if err != nil {
 			return nil, err
 		}

@@ -16,7 +16,6 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
 	"github.com/kaaryasthan/kaaryasthan/user"
-	"github.com/urfave/negroni"
 )
 
 //go:generate go-bindata -pkg db -o db/bindata.go -nocompress db/migrations/
@@ -35,7 +34,7 @@ type Exit struct {
 // exit code handler
 func handleExit() {
 	if e := recover(); e != nil {
-		if exit, ok := e.(Exit); ok == true {
+		if exit, ok := e.(Exit); ok {
 			os.Exit(exit.Code)
 		}
 		panic(e) // not an Exit, bubble up
@@ -43,7 +42,7 @@ func handleExit() {
 }
 
 // run starts the server
-func run(addr string, n *negroni.Negroni) {
+func run(addr string, n http.Handler) {
 	l := log.New(os.Stdout, "[kaaryasthan] ", 0)
 
 	stopChan := make(chan os.Signal, 1)
@@ -76,7 +75,9 @@ func run(addr string, n *negroni.Negroni) {
 		// context and its parent alive longer than necessary.
 		defer cancel()
 
-		srv.Shutdown(ctx)
+		if err := srv.Shutdown(ctx); err != nil {
+			l.Println("Error shutting down the server:", err)
+		}
 
 		if err := db.DB.Close(); err != nil {
 			l.Println("Error closing DB:", err)
@@ -92,7 +93,11 @@ func run(addr string, n *negroni.Negroni) {
 func migrateDatabase() {
 	var err error
 	defer handleExit()
-	defer db.DB.Close()
+	defer func() {
+		if err = db.DB.Close(); err != nil {
+			log.Println("Error closing the database connection:", err)
+		}
+	}()
 
 	b := &backoff.Backoff{
 		Min:    7 * time.Second,
@@ -129,7 +134,11 @@ func migrateDatabase() {
 func createUser() {
 	var err error
 	defer handleExit()
-	defer db.DB.Close()
+	defer func() {
+		if err = db.DB.Close(); err != nil {
+			log.Println("Error closing the database connection:", err)
+		}
+	}()
 
 	args := strings.SplitN(*createuser, ":", 4)
 	if len(args) != 4 {
