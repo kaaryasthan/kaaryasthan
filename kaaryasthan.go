@@ -180,7 +180,7 @@ func main() {
 		migrateDatabase()
 	}
 
-	if createuser != nil {
+	if createuser != nil && *createuser != "" {
 		createUser()
 	}
 
