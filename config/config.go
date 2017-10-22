@@ -17,6 +17,7 @@ type configuration struct {
 	PostgresSSLMode  string `default:"disable" envconfig:"POSTGRES_SSL_MODE"`
 	HTTPAddress      string `default:":8080" envconfig:"HTTP_ADDRESS"`
 	TokenSecretKey   string `default:"secret" split_words:"true"`
+	DeveloperMode    bool   `default:"false" split_words:"true"`
 }
 
 func (c *configuration) PostgresConfig() string {
