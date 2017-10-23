@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
+	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/item"
 	"github.com/kaaryasthan/kaaryasthan/label"
 	"github.com/kaaryasthan/kaaryasthan/milestone"
@@ -36,12 +37,12 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 		}
 	})
 
-	user.Register(art)
+	user.Register(art, db.DB)
 	auth.Register(urt)
-	project.Register(art)
-	milestone.Register(art)
-	label.Register(art)
-	item.Register(art)
+	project.Register(art, db.DB)
+	milestone.Register(art, db.DB)
+	label.Register(art, db.DB)
+	item.Register(art, db.DB)
 
 	urt.PathPrefix("/api").Handler(
 		negroni.New(negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext), negroni.Wrap(art)))

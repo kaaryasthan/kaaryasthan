@@ -17,10 +17,10 @@ import (
 func TestUserLoginHandler(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
-		t.Log("User creation failed", err)
-		t.FailNow()
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
+		t.Fatal(err)
 	}
 
 	db.DB.Exec("UPDATE users SET active=true, email_verified=true")

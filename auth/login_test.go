@@ -14,8 +14,9 @@ func TestUserLogin(t *testing.T) {
 		t.Error("Login succeeded")
 	}
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 

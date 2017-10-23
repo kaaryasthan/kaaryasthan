@@ -153,6 +153,13 @@ projects requires public trackers, this won't be a desirable solution.
 Kaaryasthan is designed exclusively for private projects.  And I am
 not planning to change it.
 
+### What are the languages supported for search?
+
+English is the only language that is supported for search.  This may
+not be changed as Kaaryasthan is relying on PostgreSQL full-text
+search which has limited language support.  Introducing another
+dependency for full-text search is not under consideration.
+
 ---
 
 > [muthukadan.net](http://muthukadan.net) &nbsp;&middot;&nbsp;

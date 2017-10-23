@@ -10,46 +10,47 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func createDiscussionHandler(w http.ResponseWriter, r *http.Request) {
+// CreateDiscussionHandler creates discussion
+func (c *DiscussionController) CreateDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
-
-	obj := new(Discussion)
-	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 	w.WriteHeader(http.StatusCreated)
 
-	usr := user.User{ID: userID}
-	if err := usr.Valid(); err != nil {
+	usr := &user.User{ID: userID}
+	if err := c.uds.Valid(usr); err != nil {
 		log.Println("Couldn't validate user: ", err)
 		return
 	}
 
-	itm := Item{ID: obj.ItemID}
-	if err := itm.Valid(); err != nil {
+	disc := new(Discussion)
+	if err := jsonapi.UnmarshalPayload(r.Body, disc); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	itm := &Item{ID: disc.ItemID}
+	if err := c.ids.Valid(itm); err != nil {
 		log.Println("Couldn't validate item: ", err)
 		return
 	}
 
-	err := obj.Create(usr)
+	err := c.ds.Create(usr, disc)
 	if err != nil {
 		log.Println("Unable to save data: ", err)
 		return
 	}
 
-	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+	if err := jsonapi.MarshalPayload(w, disc); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 }
 
 // Create creates new discussions
-func (obj *Discussion) Create(usr user.User) error {
+func (ds *DiscussionDatastore) Create(usr *user.User, disc *Discussion) error {
 	err := db.DB.QueryRow(`INSERT INTO "discussions" (body, created_by, item_id) VALUES ($1, $2, $3) RETURNING id`,
-		obj.Body, usr.ID, obj.ItemID).Scan(&obj.ID)
+		disc.Body, usr.ID, disc.ItemID).Scan(&disc.ID)
 	return err
 }

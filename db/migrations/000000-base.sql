@@ -158,7 +158,7 @@ CREATE TABLE "items" (
   description TEXT DEFAULT '' NOT NULL,
   open_state BOOLEAN DEFAULT true NOT NULL, -- false is closed
   project_id BIGINT REFERENCES projects(id) NOT NULL,
-  disabled BOOLEAN DEFAULT false NOT NULL,
+  lock_conversation BOOLEAN DEFAULT false NOT NULL,
   created_by UUID REFERENCES users(id) NOT NULL,
   updated_by UUID REFERENCES users(id),
   deleted_by UUID REFERENCES users(id),

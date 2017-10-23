@@ -11,45 +11,46 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func createHandler(w http.ResponseWriter, r *http.Request) {
+// CreateHandler creates milestone
+func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
-
-	obj := new(Milestone)
-	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 	w.WriteHeader(http.StatusCreated)
 
-	usr := user.User{ID: userID}
-	if err := usr.Valid(); err != nil {
+	usr := &user.User{ID: userID}
+	if err := c.uds.Valid(usr); err != nil {
 		log.Println("Couldn't validate user: ", err)
 		return
 	}
 
-	prj := project.Project{ID: obj.ProjectID}
-	if err := prj.Valid(); err != nil {
+	mil := new(Milestone)
+	if err := jsonapi.UnmarshalPayload(r.Body, mil); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	prj := &project.Project{ID: mil.ProjectID}
+	if err := c.pds.Valid(prj); err != nil {
 		log.Println("Couldn't validate project: ", err)
 		return
 	}
 
-	err := obj.Create(usr)
+	err := c.ds.Create(usr, mil)
 	if err != nil {
 		log.Println("Unable to save data: ", err)
 		return
 	}
 
-	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+	if err := jsonapi.MarshalPayload(w, mil); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 // Create creates a new milestone
-func (obj *Milestone) Create(usr user.User) error {
+func (ds *Datastore) Create(usr *user.User, mil *Milestone) error {
 	err := db.DB.QueryRow(`INSERT INTO "milestones" (name, description, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-		obj.Name, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID)
+		mil.Name, mil.Description, usr.ID, mil.ProjectID).Scan(&mil.ID)
 	return err
 }

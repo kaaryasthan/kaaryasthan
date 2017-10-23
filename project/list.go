@@ -7,19 +7,18 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
 // List projects
-func List(all bool) ([]Project, error) {
+func (ds *Datastore) List(all bool) ([]Project, error) {
 	var err error
 	var rows *sql.Rows
 	if all {
-		rows, err = db.DB.Query(`SELECT id, name, description, item_template, archived FROM "projects"
+		rows, err = ds.db.Query(`SELECT id, name, description, item_template, archived FROM "projects"
 		WHERE deleted_at IS NULL ORDER BY created_at`)
 	} else {
-		rows, err = db.DB.Query(`SELECT id, name, description, item_template, archived FROM "projects"
+		rows, err = ds.db.Query(`SELECT id, name, description, item_template, archived FROM "projects"
 		WHERE archived=false AND deleted_at IS NULL ORDER BY created_at`)
 	}
 	if err != nil {
@@ -47,15 +46,16 @@ func List(all bool) ([]Project, error) {
 	return objs, nil
 }
 
-func listHandler(w http.ResponseWriter, r *http.Request) {
+// ListHandler list projects
+func (c *Controller) ListHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 	w.WriteHeader(http.StatusOK)
 
-	usr := user.User{ID: userID}
-	if err := usr.Valid(); err != nil {
+	usr := &user.User{ID: userID}
+	if err := c.uds.Valid(usr); err != nil {
 		log.Println("Couldn't validate user: "+usr.ID, err)
 		http.Error(w, "Couldn't validate user: "+usr.ID, http.StatusUnauthorized)
 		return
@@ -63,7 +63,7 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 
 	var objs []Project
 	var err error
-	if objs, err = List(false); err != nil {
+	if objs, err = c.ds.List(false); err != nil {
 		log.Println("Couldn't find projects: ", err)
 		http.Error(w, "Couldn't find projects: ", http.StatusInternalServerError)
 		return

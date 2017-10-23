@@ -12,21 +12,23 @@ func TestProjectList(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 
+	prjDS := NewDatastore(db.DB)
 	for i := 0; i < 5; i++ {
-		prj := Project{Name: "somename" + strconv.Itoa(i), Description: "Some description " + strconv.Itoa(i)}
-		if err := prj.Create(usr); err != nil {
+		prj := &Project{Name: "somename" + strconv.Itoa(i), Description: "Some description " + strconv.Itoa(i)}
+		if err := prjDS.Create(usr, prj); err != nil {
 			t.Fatal(err)
 		}
 		if prj.ID <= 0 {
 			t.Fatalf("Data not inserted. ID: %#v", prj.ID)
 		}
 	}
-	objs, err := List(true)
+	objs, err := prjDS.List(true)
 	if err != nil {
 		t.Error("There are 5 projects", err)
 	}

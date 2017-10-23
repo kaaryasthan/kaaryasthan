@@ -14,18 +14,21 @@ func TestItemCreate(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM items")
 	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
-		t.Error(err)
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
+		t.Fatal(err)
 	}
 
-	prj := project.Project{Name: "somename", Description: "Some description"}
-	if err := prj.Create(usr); err != nil {
-		t.Error(err)
+	prjDS := project.NewDatastore(db.DB)
+	prj := &project.Project{Name: "somename", Description: "Some description"}
+	if err := prjDS.Create(usr, prj); err != nil {
+		t.Fatal(err)
 	}
 
-	itm := Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
-	err := itm.Create(usr)
+	itmDS := NewDatastore(db.DB)
+	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
+	err := itmDS.Create(usr, itm)
 	if err != nil {
 		t.Error(err)
 	}

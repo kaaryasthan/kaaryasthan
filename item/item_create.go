@@ -11,46 +11,47 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user"
 )
 
-func createItemHandler(w http.ResponseWriter, r *http.Request) {
+// CreateItemHandler creates item
+func (c *Controller) CreateItemHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
-
-	obj := new(Item)
-	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 	w.WriteHeader(http.StatusCreated)
 
-	usr := user.User{ID: userID}
-	if err := usr.Valid(); err != nil {
+	usr := &user.User{ID: userID}
+	if err := c.uds.Valid(usr); err != nil {
 		log.Println("Couldn't validate user: ", err)
 		return
 	}
 
-	prj := project.Project{ID: obj.ProjectID}
-	if err := prj.Valid(); err != nil {
+	itm := new(Item)
+	if err := jsonapi.UnmarshalPayload(r.Body, itm); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	prj := &project.Project{ID: itm.ProjectID}
+	if err := c.pds.Valid(prj); err != nil {
 		log.Println("Couldn't validate project: ", err)
 		return
 	}
 
-	err := obj.Create(usr)
+	err := c.ds.Create(usr, itm)
 	if err != nil {
 		log.Println("Unable to save data: ", err)
 		return
 	}
 
-	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+	if err := jsonapi.MarshalPayload(w, itm); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 // Create an item in the database
-func (obj *Item) Create(usr user.User) error {
+func (ds *Datastore) Create(usr *user.User, itm *Item) error {
 	err := db.DB.QueryRow(`INSERT INTO "items" (title, description, created_by, project_id) VALUES
 		($1, $2, $3, $4) RETURNING id, num`,
-		obj.Title, obj.Description, usr.ID, obj.ProjectID).Scan(&obj.ID, &obj.Number)
+		itm.Title, itm.Description, usr.ID, itm.ProjectID).Scan(&itm.ID, &itm.Number)
 	return err
 }

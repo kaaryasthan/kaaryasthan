@@ -15,18 +15,21 @@ func TestDiscussionCreate(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
 	defer db.DB.Exec("DELETE FROM discussions")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
-		t.Error(err)
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
+		t.Fatal(err)
 	}
 
-	prj := project.Project{Name: "somename", Description: "Some description"}
-	if err := prj.Create(usr); err != nil {
-		t.Error(err)
+	prjDS := project.NewDatastore(db.DB)
+	prj := &project.Project{Name: "somename", Description: "Some description"}
+	if err := prjDS.Create(usr, prj); err != nil {
+		t.Fatal(err)
 	}
 
-	itm := Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
-	if err := itm.Create(usr); err != nil {
+	itmDS := NewDatastore(db.DB)
+	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
+	if err := itmDS.Create(usr, itm); err != nil {
 		t.Fatal(err)
 	}
 	if itm.ID <= 0 {
@@ -36,8 +39,9 @@ func TestDiscussionCreate(t *testing.T) {
 		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 
-	disc := Discussion{Body: "some discussion", ItemID: itm.ID}
-	if err := disc.Create(usr); err != nil {
+	discDS := NewDiscussionDatastore(db.DB)
+	disc := &Discussion{Body: "some discussion", ItemID: itm.ID}
+	if err := discDS.Create(usr, disc); err != nil {
 		t.Error(err)
 	}
 	if disc.ID == "" {

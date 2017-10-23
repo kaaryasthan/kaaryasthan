@@ -1,11 +1,26 @@
 package project
 
 import (
+	"database/sql"
 	"errors"
 
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/db"
+	"github.com/kaaryasthan/kaaryasthan/user"
 )
+
+// Repository to manage projects
+type Repository interface {
+	Create(usr *user.User, prj *Project) error
+	Valid(prj *Project) error
+	Show(prj *Project) error
+	List(all bool) ([]Project, error)
+}
+
+// Controller holds DB
+type Controller struct {
+	ds  Repository
+	uds user.Repository
+}
 
 // Project represents a project
 type Project struct {
@@ -16,12 +31,22 @@ type Project struct {
 	Archived     bool   `jsonapi:"attr,archived"`
 }
 
+// Datastore implements the Repository interface
+type Datastore struct {
+	db *sql.DB
+}
+
+// NewDatastore constructs a new Repository
+func NewDatastore(db *sql.DB) *Datastore {
+	return &Datastore{db}
+}
+
 // Valid checks the validity of the project
-func (obj *Project) Valid() error {
+func (ds *Datastore) Valid(prj *Project) error {
 	var count int
-	err := db.DB.QueryRow(`SELECT count(1) FROM "projects"
+	err := ds.db.QueryRow(`SELECT count(1) FROM "projects"
 		WHERE id=$1 AND archived=false AND deleted_at IS NULL`,
-		obj.ID).Scan(&count)
+		prj.ID).Scan(&count)
 	if err != nil {
 		return err
 	}
@@ -31,9 +56,16 @@ func (obj *Project) Valid() error {
 	return nil
 }
 
+// NewController constructs a controller
+func NewController(userRepo user.Repository, repo Repository) *Controller {
+	return &Controller{ds: repo, uds: userRepo}
+}
+
 // Register handlers
-func Register(art *mux.Router) {
-	art.HandleFunc("/api/v1/projects", createHandler).Methods("POST")
-	art.HandleFunc("/api/v1/projects/{name}", showHandler).Methods("GET")
-	art.HandleFunc("/api/v1/projects", listHandler).Methods("GET")
+func Register(art *mux.Router, db *sql.DB) {
+	c := NewController(user.NewDatastore(db), NewDatastore(db))
+
+	art.HandleFunc("/api/v1/projects", c.CreateHandler).Methods("POST")
+	art.HandleFunc("/api/v1/projects/{name}", c.ShowHandler).Methods("GET")
+	art.HandleFunc("/api/v1/projects", c.ListHandler).Methods("GET")
 }

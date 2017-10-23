@@ -11,21 +11,23 @@ func TestProjectShow(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 
-	prj := Project{Name: "somename", Description: "Some description"}
-	if err := prj.Create(usr); err != nil {
+	prjDS := NewDatastore(db.DB)
+	prj := &Project{Name: "somename", Description: "Some description"}
+	if err := prjDS.Create(usr, prj); err != nil {
 		t.Fatal(err)
 	}
 	if prj.ID <= 0 {
 		t.Fatalf("Data not inserted. ID: %#v", prj.ID)
 	}
 
-	prj2 := Project{Name: "somename"}
-	if err := prj2.Show(); err != nil {
+	prj2 := &Project{Name: "somename"}
+	if err := prjDS.Show(prj2); err != nil {
 		t.Error("Project is valid", err)
 	}
 

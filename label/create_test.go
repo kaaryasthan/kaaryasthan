@@ -13,18 +13,21 @@ func TestLabelCreate(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM projects")
 	defer db.DB.Exec("DELETE FROM labels")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
+		t.Fatal(err)
+	}
+
+	prjDS := project.NewDatastore(db.DB)
+	prj := &project.Project{Name: "somename", Description: "Some description"}
+	if err := prjDS.Create(usr, prj); err != nil {
 		t.Error(err)
 	}
 
-	prj := project.Project{Name: "somename", Description: "Some description"}
-	if err := prj.Create(usr); err != nil {
-		t.Error(err)
-	}
-
-	lbl := Label{Name: "somename", Color: "#ee0701", ProjectID: prj.ID}
-	if err := lbl.Create(usr); err != nil {
+	lblDS := NewDatastore(db.DB)
+	lbl := &Label{Name: "somename", Color: "#ee0701", ProjectID: prj.ID}
+	if err := lblDS.Create(usr, lbl); err != nil {
 		t.Error(err)
 	}
 	if lbl.ID <= 0 {

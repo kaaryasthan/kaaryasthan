@@ -13,26 +13,29 @@ func TestMilestoneShow(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM projects")
 	defer db.DB.Exec("DELETE FROM milestones")
 
-	usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-	if err := usr.Create(); err != nil {
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
+	if err := usrDS.Create(usr); err != nil {
+		t.Fatal(err)
+	}
+
+	prjDS := project.NewDatastore(db.DB)
+	prj := &project.Project{Name: "somename", Description: "Some description"}
+	if err := prjDS.Create(usr, prj); err != nil {
 		t.Error(err)
 	}
 
-	prj := project.Project{Name: "somename", Description: "Some description"}
-	if err := prj.Create(usr); err != nil {
-		t.Error(err)
-	}
-
-	mil := Milestone{Name: "somename", Description: "Some description", ProjectID: prj.ID}
-	if err := mil.Create(usr); err != nil {
+	milDS := NewDatastore(db.DB)
+	mil := &Milestone{Name: "somename", Description: "Some description", ProjectID: prj.ID}
+	if err := milDS.Create(usr, mil); err != nil {
 		t.Fatal(err)
 	}
 	if mil.ID <= 0 {
 		t.Fatalf("Data not inserted. ID: %#v", mil.ID)
 	}
 
-	mil2 := Milestone{Name: "somename", ProjectID: prj.ID}
-	if err := mil2.Show(); err != nil {
+	mil2 := &Milestone{Name: "somename", ProjectID: prj.ID}
+	if err := milDS.Show(mil2); err != nil {
 		t.Error("Milestone is valid", err)
 	}
 

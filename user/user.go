@@ -2,6 +2,7 @@ package user
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"errors"
 	"io"
 	"log"
@@ -11,9 +12,20 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"golang.org/x/crypto/scrypt"
 )
+
+// Repository helps to manage users
+type Repository interface {
+	Create(usr *User) error
+	Valid(usr *User) error
+	Show(usr *User) error
+}
+
+// Controller holds DB
+type Controller struct {
+	ds Repository
+}
 
 // User represents a user
 type User struct {
@@ -28,30 +40,40 @@ type User struct {
 	PersonalNote  string `jsonapi:"attr,personal_note,omitempty"`
 }
 
+// Datastore implements the Repository interface
+type Datastore struct {
+	db *sql.DB
+}
+
+// NewDatastore constructs a new Repository
+func NewDatastore(db *sql.DB) *Datastore {
+	return &Datastore{db}
+}
+
 // Create a new user
-func (obj *User) Create() error {
+func (ds *Datastore) Create(usr *User) error {
 	salt := randomSalt()
-	password, err := scrypt.Key([]byte(obj.Password), salt, 16384, 8, 1, 32)
+	password, err := scrypt.Key([]byte(usr.Password), salt, 16384, 8, 1, 32)
 	if err != nil {
 		return err
 	}
-	err = db.DB.QueryRow(`INSERT INTO "users"
+	err = ds.db.QueryRow(`INSERT INTO "users"
 		(username, name, email, password, salt)
 		VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-		obj.Username,
-		obj.Name,
-		obj.Email,
+		usr.Username,
+		usr.Name,
+		usr.Email,
 		password,
-		salt).Scan(&obj.ID)
+		salt).Scan(&usr.ID)
 	return err
 }
 
 // Valid checks the validity of the user
-func (obj *User) Valid() error {
+func (ds *Datastore) Valid(usr *User) error {
 	var count int
-	err := db.DB.QueryRow(`SELECT count(1) FROM "users"
+	err := ds.db.QueryRow(`SELECT count(1) FROM "users"
 		WHERE id=$1 AND active=true AND email_verified=true AND deleted_at IS NULL`,
-		obj.ID).Scan(&count)
+		usr.ID).Scan(&count)
 	if err != nil {
 		return err
 	}
@@ -71,21 +93,22 @@ func randomSalt() []byte {
 }
 
 // Show a user
-func (obj *User) Show() error {
-	err := db.DB.QueryRow(`SELECT id, name, email, user_role, active, email_verified, personal_note FROM "users"
+func (ds *Datastore) Show(usr *User) error {
+	err := ds.db.QueryRow(`SELECT id, name, email, user_role, active, email_verified, personal_note FROM "users"
 		WHERE username=$1 AND email_verified=true AND deleted_at IS NULL`,
-		obj.Username).Scan(&obj.ID, &obj.Name, &obj.Email, &obj.Role, &obj.Active, &obj.EmailVerified, &obj.PersonalNote)
+		usr.Username).Scan(&usr.ID, &usr.Name, &usr.Email, &usr.Role, &usr.Active, &usr.EmailVerified, &usr.PersonalNote)
 	return err
 }
 
-func showUserHandler(w http.ResponseWriter, r *http.Request) {
+// ShowUserHandler get one user
+func (c *Controller) ShowUserHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 
-	usr := User{ID: userID}
-	if err := usr.Valid(); err != nil {
+	usr := &User{ID: userID}
+	if err := c.ds.Valid(usr); err != nil {
 		if logger.Level <= logger.DEBUG {
 			log.Println("Couldn't validate user: "+usr.ID, err)
 		}
@@ -96,15 +119,15 @@ func showUserHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	username := vars["username"]
 
-	obj := &User{Username: username}
-	if err := obj.Show(); err != nil {
+	usr = &User{Username: username}
+	if err := c.ds.Show(usr); err != nil {
 		if logger.Level <= logger.DEBUG {
 			log.Println("Couldn't find user: "+username, err)
 		}
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+	if err := jsonapi.MarshalPayload(w, usr); err != nil {
 		if logger.Level <= logger.DEBUG {
 			log.Println("Couldn't unmarshal: ", err)
 		}
@@ -113,10 +136,17 @@ func showUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// NewController constructs a controller
+func NewController(repo Repository) *Controller {
+	return &Controller{ds: repo}
+}
+
 // Register handlers
-func Register(art *mux.Router) {
+func Register(art *mux.Router, db *sql.DB) {
+	c := NewController(NewDatastore(db))
+
 	// art.HandleFunc("/api/v1/users", listUsersHandler).Methods("GET")
-	art.HandleFunc("/api/v1/users/{username}", showUserHandler).Methods("GET")
+	art.HandleFunc("/api/v1/users/{username}", c.ShowUserHandler).Methods("GET")
 	//art.HandleFunc("/api/v1/users/{username}", updateUserHandler).Methods("PATCH")
 	//art.HandleFunc("/api/v1/users/{username}", deleteUserHandler).Methods("DELETE")
 }

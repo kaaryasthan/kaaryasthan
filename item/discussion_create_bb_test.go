@@ -2,133 +2,74 @@ package item_test
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"testing"
 
 	"github.com/google/jsonapi"
+	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	. "github.com/kaaryasthan/kaaryasthan/item"
-	"github.com/kaaryasthan/kaaryasthan/project"
-	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/item"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/urfave/negroni"
 )
 
+type discussionDS struct{}
+
+func (ds *discussionDS) Create(usr *user.User, disc *item.Discussion) error {
+	disc.ID = "5bb5faaf-48f5-4ff7-95dd-9bf6088956f3"
+	return nil
+}
+
+func (ds *discussionDS) Valid(itm *item.Discussion) error {
+	return nil
+}
+
 func TestDiscussionCreateHandler(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
-	defer db.DB.Exec("DELETE FROM projects")
-	defer db.DB.Exec("DELETE FROM items")
-	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
-	defer db.DB.Exec("DELETE FROM discussions")
+	t.Parallel()
 
-	_, _, urt := route.Router()
-	ts := httptest.NewServer(urt)
-	defer ts.Close()
+	n := negroni.New()
+	r := mux.NewRouter()
+	c := item.NewDiscussionController(&userDS{}, &itemDS{}, &discussionDS{})
+	r.Handle("/api/v1/discussions", negroni.New(
+		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(c.CreateDiscussionHandler)),
+	)).Methods("POST")
+	n.UseHandler(r)
 
-	tkn, usr := func() (string, user.User) {
-		usr := user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
-		if err := usr.Create(); err != nil {
-			t.Log("User creation failed", err)
-			t.FailNow()
-		}
-		db.DB.Exec("UPDATE users SET active=true, email_verified=true WHERE id=$1", usr.ID)
-		n := []byte(`{
-			"data": {
-				"type": "logins",
-				"attributes": {
-					"username": "jack",
-					"password": "Secret@123"
-				}
-			}
-		}`)
-
-		reqPayload := new(auth.Login)
-		if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
-			t.Fatal("Unable to unmarshal input:", err)
-		}
-
-		req, _ := http.NewRequest("POST", ts.URL+"/api/v1/login", bytes.NewReader(n))
-		client := http.Client{}
-		var err error
-		var resp *http.Response
-		if resp, err = client.Do(req); err != nil {
-			t.Fatal(err)
-		}
-		defer resp.Body.Close()
-
-		respPayload := new(auth.Login)
-		if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
-			t.Fatal("Unable to unmarshal body:", err)
-		}
-
-		reqPayload.ID = respPayload.ID
-		reqPayload.Token = respPayload.Token
-		respPayload.Password = reqPayload.Password
-
-		if reqPayload.ID == "" {
-			t.Fatalf("Login ID is empty")
-		}
-
-		if !reflect.DeepEqual(reqPayload, respPayload) {
-			t.Fatalf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
-		}
-		return respPayload.Token, usr
-	}()
-
-	prj := project.Project{Name: "somename", Description: "Some description"}
-	if err := prj.Create(usr); err != nil {
-		t.Fatal(err)
-	}
-
-	itm := Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
-	if err := itm.Create(usr); err != nil {
-		t.Fatal(err)
-	}
-	if itm.ID <= 0 {
-		t.Fatalf("Data not inserted. ID: %#v", itm.ID)
-	}
-	if itm.Number != 1 {
-		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
-	}
-
-	n := []byte(fmt.Sprintf(`{
+	d := []byte(`{
 		"data": {
 			"type": "discussions",
 			"attributes": {
-				"body": "Some Body",
-				"item_id": %d
+				"body": "Some body",
+				"item_id": 1
 			}
 		}
-	}`, itm.ID))
+	}`)
 
-	reqPayload := new(Discussion)
-	if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
+	req, _ := http.NewRequest("POST", "/api/v1/discussions", bytes.NewReader(d))
+	req.Header.Set("Authorization", test.NewBearerToken())
+	tr := httptest.NewRecorder()
+	n.ServeHTTP(tr, req)
+
+	reqPayload := new(item.Discussion)
+	if err := jsonapi.UnmarshalPayload(bytes.NewReader(d), reqPayload); err != nil {
 		t.Fatal("Unable to unmarshal input:", err)
 	}
 
-	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/discussions", bytes.NewReader(n))
-	req.Header.Set("Authorization", "Bearer "+tkn)
-	client := http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	respPayload := new(Discussion)
-	if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
-		t.Fatal("Unable to unmarshal body:", err)
+	respPayload := new(item.Discussion)
+	if err := jsonapi.UnmarshalPayload(tr.Body, respPayload); err != nil {
+		t.Error("Unable to unmarshal body:", err)
 		return
 	}
-
 	reqPayload.ID = respPayload.ID
 
-	if reqPayload.ID == "" {
-		t.Error("Discussion ID is empty")
+	if reqPayload.ID != "5bb5faaf-48f5-4ff7-95dd-9bf6088956f3" {
+		t.Errorf("ID is not '5bb5faaf-48f5-4ff7-95dd-9bf6088956f3' got: %#v", reqPayload.ID)
 	}
+
 	if !reflect.DeepEqual(reqPayload, respPayload) {
 		t.Errorf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
 	}

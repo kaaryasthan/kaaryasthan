@@ -48,8 +48,9 @@ func handleExit() {
 	}
 }
 
-// run starts the server
-func run(addr string, n http.Handler) {
+func runApp() {
+	addr := config.Config.HTTPAddress
+	n, _, _ := route.Router()
 	l := log.New(os.Stdout, "[kaaryasthan] ", 0)
 
 	stopChan := make(chan os.Signal, 1)
@@ -185,7 +186,8 @@ func createUser() {
 	role := args[2]
 	email := args[3]
 
-	usr := user.User{
+	usrDS := user.NewDatastore(db.DB)
+	usr := &user.User{
 		Username: username,
 		Name:     username,
 		Email:    email,
@@ -193,7 +195,7 @@ func createUser() {
 		Password: password,
 	}
 
-	err = usr.Create()
+	err = usrDS.Create(usr)
 	if err != nil {
 		log.Println("User creation failed.", err.Error())
 		return
@@ -233,6 +235,5 @@ func main() {
 		os.Exit(0)
 	}
 
-	n, _, _ := route.Router()
-	run(config.Config.HTTPAddress, n)
+	runApp()
 }
