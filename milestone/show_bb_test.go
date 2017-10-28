@@ -1,4 +1,4 @@
-package milestone_test
+package controller_test
 
 import (
 	"net/http"
@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/milestone"
+	"github.com/kaaryasthan/kaaryasthan/milestone/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/urfave/negroni"
 )
@@ -18,7 +19,7 @@ func TestMilestoneShowHandler(t *testing.T) {
 
 	n := negroni.New()
 	r := mux.NewRouter()
-	c := milestone.NewController(&userDS{}, &projectDS{}, &milestoneDS{})
+	c := controller.NewController(&userDS{}, &projectDS{}, &milestoneDS{})
 	r.Handle("/api/v1/projects/{project}/milestones/{name}", negroni.New(
 		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.ShowHandler)),

@@ -1,4 +1,4 @@
-package milestone
+package controller
 
 import (
 	"log"
@@ -7,18 +7,10 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/milestone/model"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
-
-// Show a milestone
-func (ds *Datastore) Show(mil *Milestone) error {
-	err := db.DB.QueryRow(`SELECT id, description, items FROM "milestones"
-		WHERE name=$1 AND project_id=$2 AND deleted_at IS NULL`,
-		mil.Name, mil.ProjectID).Scan(&mil.ID, &mil.Description, &mil.Items)
-	return err
-}
 
 // ShowHandler shows milestone
 func (c *Controller) ShowHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +38,7 @@ func (c *Controller) ShowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mil := &Milestone{Name: projectName, ProjectID: prj.ID}
+	mil := &milestone.Milestone{Name: projectName, ProjectID: prj.ID}
 	if err := c.ds.Show(mil); err != nil {
 		log.Println("Couldn't find project: "+name, err)
 		http.Error(w, "Couldn't find project: "+name, http.StatusInternalServerError)

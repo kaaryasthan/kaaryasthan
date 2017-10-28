@@ -1,10 +1,11 @@
-package project
+package controller
 
 import (
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestProjectShow(t *testing.T) {
@@ -17,8 +18,8 @@ func TestProjectShow(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	prjDS := NewDatastore(db.DB)
-	prj := &Project{Name: "somename", Description: "Some description"}
+	prjDS := project.NewDatastore(db.DB)
+	prj := &project.Project{Name: "somename", Description: "Some description"}
 	if err := prjDS.Create(usr, prj); err != nil {
 		t.Fatal(err)
 	}
@@ -26,7 +27,7 @@ func TestProjectShow(t *testing.T) {
 		t.Fatalf("Data not inserted. ID: %#v", prj.ID)
 	}
 
-	prj2 := &Project{Name: "somename"}
+	prj2 := &project.Project{Name: "somename"}
 	if err := prjDS.Show(prj2); err != nil {
 		t.Error("Project is valid", err)
 	}

@@ -18,7 +18,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 //go:generate go-bindata -pkg db -o db/bindata.go -nocompress db/migrations/

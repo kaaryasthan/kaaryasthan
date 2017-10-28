@@ -1,4 +1,4 @@
-package project_test
+package controller_test
 
 import (
 	"net/http"
@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/project"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/urfave/negroni"
 )
@@ -18,7 +19,7 @@ func TestProjectShowHandler(t *testing.T) {
 
 	n := negroni.New()
 	r := mux.NewRouter()
-	c := project.NewController(&userDS{}, &projectDS{})
+	c := controller.NewController(&userDS{}, &projectDS{})
 	r.Handle("/api/v1/projects/{name}", negroni.New(
 		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.ShowHandler)),

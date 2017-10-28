@@ -1,4 +1,4 @@
-package user
+package controller
 
 func init() {
 	/*

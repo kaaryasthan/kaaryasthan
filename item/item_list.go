@@ -1,4 +1,4 @@
-package item
+package controller
 
 import (
 	"log"
@@ -6,11 +6,12 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // ListItemHandler list items
-func (c *Controller) ListItemHandler(w http.ResponseWriter, r *http.Request) {
+func (c *ItemController) ListItemHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
@@ -31,7 +32,7 @@ func (c *Controller) ListItemHandler(w http.ResponseWriter, r *http.Request) {
 		query = queries[0]
 	}
 
-	var objs []Item
+	var objs []item.Item
 	var err error
 	if objs, err = c.ds.List(query); err != nil {
 		log.Println("Couldn't find items: ", err)

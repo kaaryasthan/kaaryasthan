@@ -1,4 +1,4 @@
-package item
+package controller
 
 import (
 	"log"
@@ -6,8 +6,8 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // CreateCommentHandler creates comment
@@ -24,13 +24,13 @@ func (c *CommentController) CreateCommentHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	cmt := new(Comment)
+	cmt := new(item.Comment)
 	if err := jsonapi.UnmarshalPayload(r.Body, cmt); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	disc := &Discussion{ID: cmt.DiscussionID}
+	disc := &item.Discussion{ID: cmt.DiscussionID}
 	if err := c.dds.Valid(disc); err != nil {
 		log.Println("Couldn't validate discussion: ", err)
 		return
@@ -45,11 +45,4 @@ func (c *CommentController) CreateCommentHandler(w http.ResponseWriter, r *http.
 	if err := jsonapi.MarshalPayload(w, cmt); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// Create creates new comments
-func (ds *CommentDatastore) Create(usr *user.User, cmt *Comment) error {
-	err := db.DB.QueryRow(`INSERT INTO "comments" (body, created_by, discussion_id) VALUES ($1, $2, $3) RETURNING id`,
-		cmt.Body, usr.ID, cmt.DiscussionID).Scan(&cmt.ID)
-	return err
 }

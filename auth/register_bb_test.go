@@ -10,7 +10,7 @@ import (
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestUserRegisterHandler(t *testing.T) {

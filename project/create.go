@@ -1,4 +1,4 @@
-package project
+package controller
 
 import (
 	"log"
@@ -6,7 +6,8 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // CreateHandler creates project
@@ -24,7 +25,7 @@ func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	prj := new(Project)
+	prj := new(project.Project)
 	if err := jsonapi.UnmarshalPayload(r.Body, prj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -38,11 +39,4 @@ func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	if err := jsonapi.MarshalPayload(w, prj); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// Create creates a new project
-func (ds *Datastore) Create(usr *user.User, prj *Project) error {
-	err := ds.db.QueryRow(`INSERT INTO "projects" (name, description, created_by) VALUES ($1, $2, $3) RETURNING id`,
-		prj.Name, prj.Description, usr.ID).Scan(&prj.ID)
-	return err
 }

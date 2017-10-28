@@ -1,50 +1,14 @@
-package project
+package controller
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
-
-// List projects
-func (ds *Datastore) List(all bool) ([]Project, error) {
-	var err error
-	var rows *sql.Rows
-	if all {
-		rows, err = ds.db.Query(`SELECT id, name, description, item_template, archived FROM "projects"
-		WHERE deleted_at IS NULL ORDER BY created_at`)
-	} else {
-		rows, err = ds.db.Query(`SELECT id, name, description, item_template, archived FROM "projects"
-		WHERE archived=false AND deleted_at IS NULL ORDER BY created_at`)
-	}
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err = rows.Close(); err != nil {
-			log.Println("Error closing the database rows:", err)
-		}
-	}()
-
-	var objs []Project
-	for rows.Next() {
-		prj := Project{}
-		err = rows.Scan(&prj.ID, &prj.Name, &prj.Description, &prj.ItemTemplate, &prj.Archived)
-		if err != nil {
-			return nil, err
-		}
-		objs = append(objs, prj)
-	}
-	err = rows.Err()
-	if err != nil {
-		return nil, err
-	}
-	return objs, nil
-}
 
 // ListHandler list projects
 func (c *Controller) ListHandler(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +25,7 @@ func (c *Controller) ListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var objs []Project
+	var objs []project.Project
 	var err error
 	if objs, err = c.ds.List(false); err != nil {
 		log.Println("Couldn't find projects: ", err)

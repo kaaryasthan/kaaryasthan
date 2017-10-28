@@ -1,4 +1,4 @@
-package project
+package controller
 
 import (
 	"log"
@@ -7,17 +7,9 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
-
-// Show a project
-func (ds *Datastore) Show(prj *Project) error {
-	err := db.DB.QueryRow(`SELECT id, description, item_template, archived FROM "projects"
-		WHERE name=$1 AND archived=$2 AND deleted_at IS NULL`,
-		prj.Name, prj.Archived).Scan(&prj.ID, &prj.Description, &prj.ItemTemplate, &prj.Archived)
-	return err
-}
 
 // ShowHandler shows project
 func (c *Controller) ShowHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +29,7 @@ func (c *Controller) ShowHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	name := vars["name"]
 
-	prj := &Project{Name: name}
+	prj := &project.Project{Name: name}
 	if err := c.ds.Show(prj); err != nil {
 		log.Println("Couldn't find project: "+name, err)
 		http.Error(w, "Couldn't find project: "+name, http.StatusInternalServerError)

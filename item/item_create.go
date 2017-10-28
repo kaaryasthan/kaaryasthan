@@ -1,4 +1,4 @@
-package item
+package controller
 
 import (
 	"log"
@@ -6,13 +6,13 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // CreateItemHandler creates item
-func (c *Controller) CreateItemHandler(w http.ResponseWriter, r *http.Request) {
+func (c *ItemController) CreateItemHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
@@ -25,7 +25,7 @@ func (c *Controller) CreateItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	itm := new(Item)
+	itm := new(item.Item)
 	if err := jsonapi.UnmarshalPayload(r.Body, itm); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -46,12 +46,4 @@ func (c *Controller) CreateItemHandler(w http.ResponseWriter, r *http.Request) {
 	if err := jsonapi.MarshalPayload(w, itm); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// Create an item in the database
-func (ds *Datastore) Create(usr *user.User, itm *Item) error {
-	err := db.DB.QueryRow(`INSERT INTO "items" (title, description, created_by, project_id) VALUES
-		($1, $2, $3, $4) RETURNING id, num`,
-		itm.Title, itm.Description, usr.ID, itm.ProjectID).Scan(&itm.ID, &itm.Number)
-	return err
 }

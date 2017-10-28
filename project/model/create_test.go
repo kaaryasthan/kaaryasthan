@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestProjectCreate(t *testing.T) {

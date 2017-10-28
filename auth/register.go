@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {

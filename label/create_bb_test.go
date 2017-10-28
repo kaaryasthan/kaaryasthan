@@ -1,4 +1,4 @@
-package label_test
+package controller_test
 
 import (
 	"bytes"
@@ -11,9 +11,10 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/label"
-	"github.com/kaaryasthan/kaaryasthan/project"
+	"github.com/kaaryasthan/kaaryasthan/label/model"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/urfave/negroni"
 )
 
@@ -75,7 +76,7 @@ func TestLabelCreateHandler(t *testing.T) {
 
 	n := negroni.New()
 	r := mux.NewRouter()
-	c := label.NewController(&userDS{}, &projectDS{}, &labelDS{})
+	c := controller.NewController(&userDS{}, &projectDS{}, &labelDS{})
 	r.Handle("/api/v1/labels", negroni.New(
 		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.CreateHandler)),

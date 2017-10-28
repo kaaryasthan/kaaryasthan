@@ -1,4 +1,4 @@
-package milestone
+package controller
 
 import (
 	"log"
@@ -6,9 +6,9 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/milestone/model"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // CreateHandler creates milestone
@@ -25,7 +25,7 @@ func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mil := new(Milestone)
+	mil := new(milestone.Milestone)
 	if err := jsonapi.UnmarshalPayload(r.Body, mil); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -46,11 +46,4 @@ func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	if err := jsonapi.MarshalPayload(w, mil); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// Create creates a new milestone
-func (ds *Datastore) Create(usr *user.User, mil *Milestone) error {
-	err := db.DB.QueryRow(`INSERT INTO "milestones" (name, description, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-		mil.Name, mil.Description, usr.ID, mil.ProjectID).Scan(&mil.ID)
-	return err
 }

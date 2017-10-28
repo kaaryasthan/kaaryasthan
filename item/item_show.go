@@ -1,4 +1,4 @@
-package item
+package controller
 
 import (
 	"log"
@@ -8,25 +8,12 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
-// Show an item
-func (ds *Datastore) Show(itm *Item) error {
-	err := db.DB.QueryRow(`SELECT id, title, description, open_state,
-			project_id, lock_conversation, created_by, updated_by, assignees,
-			subscribers, labels, created_at, updated_at FROM "items"
-			WHERE num=$1 AND deleted_at IS NULL`,
-		itm.Number).Scan(&itm.ID, &itm.Title, &itm.Description,
-		&itm.OpenState, &itm.ProjectID, &itm.LockConversation, &itm.CreatedBy,
-		&itm.UpdatedBy, &itm.Assignees, &itm.Subscribers, &itm.Labels,
-		&itm.CreatedAt, &itm.UpdatedAt)
-	return err
-}
-
 // ShowItemHandler shows item
-func (c *Controller) ShowItemHandler(w http.ResponseWriter, r *http.Request) {
+func (c *ItemController) ShowItemHandler(w http.ResponseWriter, r *http.Request) {
 	tkn := r.Context().Value("user").(*jwt.Token)
 	userID := tkn.Claims.(jwt.MapClaims)["sub"].(string)
 
@@ -50,7 +37,7 @@ func (c *Controller) ShowItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	itm := &Item{Number: number}
+	itm := &item.Item{Number: number}
 	if err := c.ds.Show(itm); err != nil {
 		log.Println("Couldn't find item: ", number, err)
 		http.Error(w, "Couldn't find item: "+string(number), http.StatusInternalServerError)

@@ -1,4 +1,4 @@
-package item
+package controller
 
 import (
 	"log"
@@ -6,8 +6,8 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // CreateDiscussionHandler creates discussion
@@ -24,13 +24,13 @@ func (c *DiscussionController) CreateDiscussionHandler(w http.ResponseWriter, r 
 		return
 	}
 
-	disc := new(Discussion)
+	disc := new(item.Discussion)
 	if err := jsonapi.UnmarshalPayload(r.Body, disc); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	itm := &Item{ID: disc.ItemID}
+	itm := &item.Item{ID: disc.ItemID}
 	if err := c.ids.Valid(itm); err != nil {
 		log.Println("Couldn't validate item: ", err)
 		return
@@ -45,12 +45,4 @@ func (c *DiscussionController) CreateDiscussionHandler(w http.ResponseWriter, r 
 	if err := jsonapi.MarshalPayload(w, disc); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-
-}
-
-// Create creates new discussions
-func (ds *DiscussionDatastore) Create(usr *user.User, disc *Discussion) error {
-	err := db.DB.QueryRow(`INSERT INTO "discussions" (body, created_by, item_id) VALUES ($1, $2, $3) RETURNING id`,
-		disc.Body, usr.ID, disc.ItemID).Scan(&disc.ID)
-	return err
 }

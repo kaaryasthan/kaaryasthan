@@ -1,4 +1,4 @@
-package item_test
+package controller_test
 
 import (
 	"bytes"
@@ -11,8 +11,9 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/item"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/urfave/negroni"
 )
 
@@ -28,7 +29,7 @@ func TestCommentCreateHandler(t *testing.T) {
 
 	n := negroni.New()
 	r := mux.NewRouter()
-	c := item.NewCommentController(&userDS{}, &discussionDS{}, &commentDS{})
+	c := controller.NewCommentController(&userDS{}, &discussionDS{}, &commentDS{})
 	r.Handle("/api/v1/comments", negroni.New(
 		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.CreateCommentHandler)),

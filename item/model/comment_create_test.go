@@ -4,15 +4,17 @@ import (
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
-func TestItemShow(t *testing.T) {
+func TestCommentCreate(t *testing.T) {
 	defer db.DB.Exec("DELETE FROM users")
 	defer db.DB.Exec("DELETE FROM projects")
 	defer db.DB.Exec("DELETE FROM items")
 	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
+	defer db.DB.Exec("DELETE FROM discussions")
+	defer db.DB.Exec("DELETE FROM comments")
 
 	usrDS := user.NewDatastore(db.DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
@@ -28,8 +30,7 @@ func TestItemShow(t *testing.T) {
 
 	itmDS := NewDatastore(db.DB)
 	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
-	err := itmDS.Create(usr, itm)
-	if err != nil {
+	if err := itmDS.Create(usr, itm); err != nil {
 		t.Fatal(err)
 	}
 	if itm.ID <= 0 {
@@ -39,9 +40,21 @@ func TestItemShow(t *testing.T) {
 		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 
-	itm2 := &Item{Number: itm.Number}
-	if err := itmDS.Show(itm2); err != nil {
-		t.Error("Item is valid", err)
+	discDS := NewDiscussionDatastore(db.DB)
+	disc := &Discussion{Body: "some discussion", ItemID: itm.ID}
+	if err := discDS.Create(usr, disc); err != nil {
+		t.Fatal(err)
+	}
+	if disc.ID == "" {
+		t.Fatalf("Data not inserted. ID: %#v", disc.ID)
 	}
 
+	cmtDS := NewCommentDatastore(db.DB)
+	cmt := &Comment{Body: "some discussion", DiscussionID: disc.ID}
+	if err := cmtDS.Create(usr, cmt); err != nil {
+		t.Error(err)
+	}
+	if cmt.ID == "" {
+		t.Errorf("Data not inserted. ID: %#v", cmt.ID)
+	}
 }

@@ -1,4 +1,4 @@
-package user_test
+package controller_test
 
 import (
 	"errors"
@@ -11,6 +11,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/urfave/negroni"
 )
 
@@ -48,7 +49,7 @@ func TestUserShowHandler(t *testing.T) {
 		t.Parallel()
 		n := negroni.New()
 		r := mux.NewRouter()
-		c := user.NewController(&userDS{})
+		c := controller.NewController(&userDS{})
 		r.Handle("/api/v1/users/{username}", negroni.New(
 			negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 			negroni.Wrap(http.HandlerFunc(c.ShowUserHandler)),
@@ -93,7 +94,7 @@ func TestUserShowHandler(t *testing.T) {
 		t.Parallel()
 		n := negroni.New()
 		r := mux.NewRouter()
-		c := user.NewController(&invalidUserDS{})
+		c := controller.NewController(&invalidUserDS{})
 		r.Handle("/api/v1/users/{username}", negroni.New(
 			negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 			negroni.Wrap(http.HandlerFunc(c.ShowUserHandler)),

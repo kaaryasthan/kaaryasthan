@@ -1,4 +1,4 @@
-package item_test
+package controller_test
 
 import (
 	"bytes"
@@ -11,9 +11,10 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/item"
-	"github.com/kaaryasthan/kaaryasthan/project"
+	"github.com/kaaryasthan/kaaryasthan/item/model"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/urfave/negroni"
 )
 
@@ -76,7 +77,7 @@ func TestItemCreateHandler(t *testing.T) {
 
 	n := negroni.New()
 	r := mux.NewRouter()
-	c := item.NewController(&userDS{}, &projectDS{}, &itemDS{})
+	c := controller.NewItemController(&userDS{}, &projectDS{}, &itemDS{})
 	r.Handle("/api/v1/items", negroni.New(
 		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.CreateItemHandler)),

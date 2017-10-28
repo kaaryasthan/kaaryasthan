@@ -1,11 +1,12 @@
-package project
+package controller
 
 import (
 	"strconv"
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestProjectList(t *testing.T) {
@@ -18,9 +19,9 @@ func TestProjectList(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	prjDS := NewDatastore(db.DB)
+	prjDS := project.NewDatastore(db.DB)
 	for i := 0; i < 5; i++ {
-		prj := &Project{Name: "somename" + strconv.Itoa(i), Description: "Some description " + strconv.Itoa(i)}
+		prj := &project.Project{Name: "somename" + strconv.Itoa(i), Description: "Some description " + strconv.Itoa(i)}
 		if err := prjDS.Create(usr, prj); err != nil {
 			t.Fatal(err)
 		}

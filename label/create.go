@@ -1,4 +1,4 @@
-package label
+package controller
 
 import (
 	"log"
@@ -7,9 +7,9 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project"
-	"github.com/kaaryasthan/kaaryasthan/user"
+	"github.com/kaaryasthan/kaaryasthan/label/model"
+	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // CreateHandler creates label
@@ -27,7 +27,7 @@ func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	lbl := new(Label)
+	lbl := new(label.Label)
 	if err := jsonapi.UnmarshalPayload(r.Body, lbl); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -49,11 +49,4 @@ func (c *Controller) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	if err := jsonapi.MarshalPayload(w, lbl); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// Create creates a new label
-func (ds *Datastore) Create(usr *user.User, lbl *Label) error {
-	err := db.DB.QueryRow(`INSERT INTO "labels" (name, color, created_by, project_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-		lbl.Name, lbl.Color, usr.ID, lbl.ProjectID).Scan(&lbl.ID)
-	return err
 }
