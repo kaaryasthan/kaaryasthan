@@ -7,8 +7,8 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-// configuration represent all configurations
-type configuration struct {
+// Configuration represent all configurations
+type Configuration struct {
 	PostgresHost     string `default:"localhost" split_words:"true"`
 	PostgresPort     int    `default:"5430" split_words:"true"`
 	PostgresUser     string `default:"postgres" split_words:"true"`
@@ -20,7 +20,8 @@ type configuration struct {
 	DeveloperMode    bool   `default:"false" split_words:"true"`
 }
 
-func (c *configuration) PostgresConfig() string {
+// PostgresConfig provides PostgreSQL connection string
+func (c *Configuration) PostgresConfig() string {
 	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
 		c.PostgresHost,
 		c.PostgresPort,
@@ -31,12 +32,13 @@ func (c *configuration) PostgresConfig() string {
 	)
 }
 
-func (c *configuration) SetDatabaseName(dbname string) {
+// SetDatabaseName set database
+func (c *Configuration) SetDatabaseName(dbname string) {
 	c.PostgresDatabase = dbname
 }
 
 // Config represent all configurations
-var Config configuration
+var Config Configuration
 
 func init() {
 	err := envconfig.Process("kaaryasthan", &Config)

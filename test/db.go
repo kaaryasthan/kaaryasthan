@@ -10,6 +10,7 @@ import (
 
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"
+	"github.com/kelseyhightower/envconfig"
 )
 
 func randomDatabaseName() string {
@@ -25,8 +26,8 @@ func randomDatabaseName() string {
 func NewTestDB() *sql.DB {
 	var err error
 	dbname := randomDatabaseName()
-	conf := config.Config.PostgresConfig()
-	DB := db.Connect(conf)
+	connConf := config.Config.PostgresConfig()
+	DB := db.Connect(connConf)
 	_, err = DB.Exec(fmt.Sprintf(`CREATE DATABASE "%s"`, dbname))
 	if err != nil {
 		log.Printf("Database creation failed: %s. %#v", dbname, err)
@@ -35,9 +36,14 @@ func NewTestDB() *sql.DB {
 		log.Println("Error closing the database connection:", err)
 	}
 
-	config.Config.SetDatabaseName(dbname)
-	conf = config.Config.PostgresConfig()
-	tmpDB := db.Connect(conf)
+	var localConfig config.Configuration
+	err = envconfig.Process("kaaryasthan", &localConfig)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	localConfig.SetDatabaseName(dbname)
+	localConnConf := localConfig.PostgresConfig()
+	tmpDB := db.Connect(localConnConf)
 	err = db.SchemaMigrate(tmpDB)
 	if err != nil {
 		log.Println("Migration failed.", err.Error())
@@ -58,10 +64,9 @@ func ResetDB(DB *sql.DB) {
 		log.Println("Error closing the database connection:", err)
 	}
 
-	config.Config.SetDatabaseName("postgres")
-	conf := config.Config.PostgresConfig()
-	tmpDB := db.Connect(conf)
-	_, err = tmpDB.Exec(fmt.Sprintf(`DROP DATABASE "%s"`, dbname))
+	connConf := config.Config.PostgresConfig()
+	baseDB := db.Connect(connConf)
+	_, err = baseDB.Exec(fmt.Sprintf(`DROP DATABASE "%s"`, dbname))
 
 	if err != nil {
 		log.Printf("Database drop failed: %s. %#v", dbname, err)
