@@ -9,4 +9,6 @@ gometalinter $(glide nv)  --disable-all --enable=errcheck --enable=ineffassign \
 	--enable=interfacer --enable=vetshadow --enable=megacheck --enable=golint \
 	--skip=db --skip=web
 #gometalinter $(glide nv)  --disable-all --enable=safesql --enable=misspell --skip=db --skip=web
-go test $(glide nv) -v -race -tags=integration
+# FIXME: temporarily disable race detector
+#go test $(glide nv) -v -race -tags=integration
+go test $(glide nv) -v -tags=integration

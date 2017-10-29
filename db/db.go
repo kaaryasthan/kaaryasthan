@@ -7,17 +7,14 @@ import (
 
 	"github.com/baijum/pgmigration"
 	"github.com/jpillora/backoff"
-	"github.com/kaaryasthan/kaaryasthan/config"
 	// DB is actually initialized here
 	_ "github.com/lib/pq"
 )
 
-// DB is the database connection wrapper
-var DB *sql.DB
-
-func init() {
+// Connect to database
+func Connect(conf string) *sql.DB {
 	var err error
-	DB, err = sql.Open("postgres", config.Config.PostgresConfig())
+	DB, err := sql.Open("postgres", conf)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,9 +40,10 @@ func init() {
 			time.Sleep(b.Max)
 		}
 	}()
+	return DB
 }
 
 // SchemaMigrate migrate database schema
-func SchemaMigrate() error {
+func SchemaMigrate(DB *sql.DB) error {
 	return pgmigration.Migrate(DB, AssetNames, Asset, nil)
 }

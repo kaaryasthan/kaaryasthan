@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/lib/pq"
 )
@@ -49,7 +48,7 @@ func NewDatastore(db *sql.DB) *Datastore {
 // Valid checks the validity of the item
 func (ds *Datastore) Valid(itm *Item) error {
 	var count int
-	err := db.DB.QueryRow(`SELECT count(1) FROM "items"
+	err := ds.db.QueryRow(`SELECT count(1) FROM "items"
 		WHERE id=$1 AND lock_conversation=false AND deleted_at IS NULL`,
 		itm.ID).Scan(&count)
 	if err != nil {
@@ -58,7 +57,7 @@ func (ds *Datastore) Valid(itm *Item) error {
 	if count == 0 {
 		return errors.New("Invalid item")
 	}
-	err = db.DB.QueryRow(`SELECT count(1) FROM "items"
+	err = ds.db.QueryRow(`SELECT count(1) FROM "items"
 		INNER JOIN projects ON items.project_id = projects.id
 		WHERE items.id=$1 AND projects.archived=false AND projects.deleted_at IS NULL`,
 		itm.ID).Scan(&count)

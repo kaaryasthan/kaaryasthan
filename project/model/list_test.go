@@ -1,27 +1,27 @@
-package controller
+package project
 
 import (
 	"strconv"
 	"testing"
 
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestProjectList(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
-	defer db.DB.Exec("DELETE FROM projects")
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
 
-	usrDS := user.NewDatastore(db.DB)
+	usrDS := user.NewDatastore(DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 
-	prjDS := project.NewDatastore(db.DB)
+	prjDS := NewDatastore(DB)
 	for i := 0; i < 5; i++ {
-		prj := &project.Project{Name: "somename" + strconv.Itoa(i), Description: "Some description " + strconv.Itoa(i)}
+		prj := &Project{Name: "somename" + strconv.Itoa(i), Description: "Some description " + strconv.Itoa(i)}
 		if err := prjDS.Create(usr, prj); err != nil {
 			t.Fatal(err)
 		}

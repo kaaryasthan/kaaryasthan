@@ -8,14 +8,17 @@ import (
 	"testing"
 
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestUserRegisterHandler(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
-	_, _, urt := route.Router()
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
+
+	_, _, urt := route.Router(DB)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 	n := []byte(`{

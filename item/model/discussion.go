@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
@@ -34,7 +33,7 @@ func NewDiscussionDatastore(db *sql.DB) *DiscussionDatastore {
 // Valid checks the validity of the discussion
 func (ds *DiscussionDatastore) Valid(disc *Discussion) error {
 	var count int
-	err := db.DB.QueryRow(`SELECT count(1) FROM "discussions"
+	err := ds.db.QueryRow(`SELECT count(1) FROM "discussions"
 		WHERE id=$1 AND deleted_at IS NULL`,
 		disc.ID).Scan(&count)
 	if err != nil {
@@ -43,7 +42,7 @@ func (ds *DiscussionDatastore) Valid(disc *Discussion) error {
 	if count == 0 {
 		return errors.New("Invalid item")
 	}
-	err = db.DB.QueryRow(`SELECT count(1) FROM "discussions"
+	err = ds.db.QueryRow(`SELECT count(1) FROM "discussions"
 		INNER JOIN items ON discussions.item_id = items.id
 		INNER JOIN projects ON items.project_id = projects.id
 		WHERE discussions.id=$1 AND items.lock_conversation=false

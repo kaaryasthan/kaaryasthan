@@ -7,9 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"time"
 
-	"github.com/jpillora/backoff"
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"
 )
@@ -24,72 +22,46 @@ func randomDatabaseName() string {
 }
 
 // NewTestDB initializes a  test database
-func NewTestDB() string {
+func NewTestDB() *sql.DB {
 	var err error
 	dbname := randomDatabaseName()
-	_, err = db.DB.Exec(fmt.Sprintf(`CREATE DATABASE "%s"`, dbname))
+	conf := config.Config.PostgresConfig()
+	DB := db.Connect(conf)
+	_, err = DB.Exec(fmt.Sprintf(`CREATE DATABASE "%s"`, dbname))
 	if err != nil {
 		log.Printf("Database creation failed: %s. %#v", dbname, err)
 	}
-	if err = db.DB.Close(); err != nil {
+	if err = DB.Close(); err != nil {
 		log.Println("Error closing the database connection:", err)
 	}
 
 	config.Config.SetDatabaseName(dbname)
-	db.DB, _ = sql.Open("postgres", config.Config.PostgresConfig())
-
-	b := &backoff.Backoff{
-		Min:    7 * time.Second,
-		Factor: 2,
-		Max:    7 * time.Minute,
-	}
-
-	for i := 0; i < 7; i++ {
-		_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
-		if err != nil {
-			d := b.Duration()
-			log.Printf("%s (pinging failed), reconnecting in %s", err, d)
-			time.Sleep(d)
-			continue
-		}
-		b.Reset()
-	}
-	err = db.SchemaMigrate()
+	conf = config.Config.PostgresConfig()
+	tmpDB := db.Connect(conf)
+	err = db.SchemaMigrate(tmpDB)
 	if err != nil {
 		log.Println("Migration failed.", err.Error())
 	}
-
-	return dbname
+	return tmpDB
 }
 
 // ResetDB reset database to postgres
-func ResetDB(dbname string) {
+func ResetDB(DB *sql.DB) {
 	var err error
-	if err = db.DB.Close(); err != nil {
+	var dbname string
+	err = DB.QueryRow("SELECT current_database() as dbname").Scan(&dbname)
+	if err != nil {
+		log.Println("Error database name:", err)
+	}
+
+	if err = DB.Close(); err != nil {
 		log.Println("Error closing the database connection:", err)
 	}
 
 	config.Config.SetDatabaseName("postgres")
-	db.DB, _ = sql.Open("postgres", config.Config.PostgresConfig())
-
-	b := &backoff.Backoff{
-		Min:    7 * time.Second,
-		Factor: 2,
-		Max:    7 * time.Minute,
-	}
-
-	for i := 0; i < 7; i++ {
-		_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
-		if err != nil {
-			d := b.Duration()
-			log.Printf("%s (pinging failed), reconnecting in %s", err, d)
-			time.Sleep(d)
-			continue
-		}
-		b.Reset()
-	}
-
-	_, err = db.DB.Exec(fmt.Sprintf(`DROP DATABASE "%s"`, dbname))
+	conf := config.Config.PostgresConfig()
+	tmpDB := db.Connect(conf)
+	_, err = tmpDB.Exec(fmt.Sprintf(`DROP DATABASE "%s"`, dbname))
 
 	if err != nil {
 		log.Printf("Database drop failed: %s. %#v", dbname, err)

@@ -3,13 +3,15 @@ package user
 import (
 	"testing"
 
-	"github.com/kaaryasthan/kaaryasthan/db"
+	"github.com/kaaryasthan/kaaryasthan/test"
 )
 
 func TestUserShow(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
 
-	usrDS := NewDatastore(db.DB)
+	usrDS := NewDatastore(DB)
 
 	usr := &User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 	if err := usrDS.Create(usr); err != nil {
@@ -21,7 +23,7 @@ func TestUserShow(t *testing.T) {
 		t.Error("email is not yet verified")
 	}
 
-	db.DB.Exec("UPDATE users SET email_verified=true WHERE id=$1", usr.ID)
+	DB.Exec("UPDATE users SET email_verified=true WHERE id=$1", usr.ID)
 
 	usr3 := &User{Username: "jack"}
 	if err := usrDS.Show(usr3); err != nil {
@@ -46,7 +48,7 @@ func TestUserShow(t *testing.T) {
 		t.Error("Wrong EmailVerified:", usr3.EmailVerified)
 	}
 
-	db.DB.Exec("UPDATE users SET active=true WHERE id=$1", usr.ID)
+	DB.Exec("UPDATE users SET active=true WHERE id=$1", usr.ID)
 
 	usr4 := &User{Username: "jack"}
 	if err := usrDS.Show(usr4); err != nil {

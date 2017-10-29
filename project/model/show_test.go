@@ -1,25 +1,25 @@
-package controller
+package project
 
 import (
 	"testing"
 
-	"github.com/kaaryasthan/kaaryasthan/db"
-	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestProjectShow(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
-	defer db.DB.Exec("DELETE FROM projects")
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
 
-	usrDS := user.NewDatastore(db.DB)
+	usrDS := user.NewDatastore(DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 
-	prjDS := project.NewDatastore(db.DB)
-	prj := &project.Project{Name: "somename", Description: "Some description"}
+	prjDS := NewDatastore(DB)
+	prj := &Project{Name: "somename", Description: "Some description"}
 	if err := prjDS.Create(usr, prj); err != nil {
 		t.Fatal(err)
 	}
@@ -27,7 +27,7 @@ func TestProjectShow(t *testing.T) {
 		t.Fatalf("Data not inserted. ID: %#v", prj.ID)
 	}
 
-	prj2 := &project.Project{Name: "somename"}
+	prj2 := &Project{Name: "somename"}
 	if err := prjDS.Show(prj2); err != nil {
 		t.Error("Project is valid", err)
 	}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"flag"
 	"fmt"
 	"log"
@@ -48,9 +49,9 @@ func handleExit() {
 	}
 }
 
-func runApp() {
+func runApp(DB *sql.DB) {
 	addr := config.Config.HTTPAddress
-	n, _, _ := route.Router()
+	n, _, _ := route.Router(DB)
 	l := log.New(os.Stdout, "[kaaryasthan] ", 0)
 
 	stopChan := make(chan os.Signal, 1)
@@ -63,7 +64,7 @@ func runApp() {
 		if err := srv.ListenAndServe(); err != nil {
 			l.Println("Error starting server:", err)
 
-			if err := db.DB.Close(); err != nil {
+			if err := DB.Close(); err != nil {
 				l.Println("Error closing DB:", err)
 			}
 
@@ -87,7 +88,7 @@ func runApp() {
 			l.Println("Error shutting down the server:", err)
 		}
 
-		if err := db.DB.Close(); err != nil {
+		if err := DB.Close(); err != nil {
 			l.Println("Error closing DB:", err)
 		}
 
@@ -98,7 +99,7 @@ func runApp() {
 	<-done
 }
 
-func migrateDatabase() {
+func migrateDatabase(DB *sql.DB) {
 	var err error
 	defer handleExit()
 
@@ -109,7 +110,7 @@ func migrateDatabase() {
 	}
 
 	for i := 0; i < 7; i++ {
-		_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
+		_, err = DB.Exec("SELECT 1") // DB.Ping() seems to be not working always
 		if err != nil {
 			d := b.Duration()
 			log.Printf("%s (pinging failed), reconnecting in %s", err, d)
@@ -119,13 +120,13 @@ func migrateDatabase() {
 		b.Reset()
 	}
 
-	_, err = db.DB.Exec("SELECT 1") // db.DB.Ping() seems to be not working always
+	_, err = DB.Exec("SELECT 1") // DB.Ping() seems to be not working always
 	if err != nil {
 		log.Println("Migration failed.", err.Error())
 		panic(Exit{1})
 	}
 
-	err = db.SchemaMigrate()
+	err = db.SchemaMigrate(DB)
 	if err != nil {
 		log.Println("Migration failed.", err.Error())
 		panic(Exit{1})
@@ -133,7 +134,7 @@ func migrateDatabase() {
 	log.Println("Migration completed.")
 }
 
-func generateTokens() {
+func generateTokens(DB *sql.DB) {
 	defer handleExit()
 	if !config.Config.DeveloperMode {
 		log.Println("Developer mode not enabled.\nTo enable: export KAARYASTHAN_DEVELOPER_MODE=true")
@@ -144,14 +145,14 @@ func generateTokens() {
 	for i := 1; i <= *generatetokens; i++ {
 		username := strconv.Itoa(i)
 		var id string
-		err := db.DB.QueryRow(`SELECT id FROM "users"
+		err := DB.QueryRow(`SELECT id FROM "users"
 		WHERE username=$1 AND active=true AND email_verified=true`,
 			fmt.Sprintf("developer%[1]s", username)).Scan(&id)
 		if err != nil {
 			if id == "" {
 				*createuser = fmt.Sprintf("developer%[1]s:developer%[1]s:admin:developer%[1]s@example.org", username)
-				createUser()
-				err := db.DB.QueryRow(`SELECT id FROM "users"
+				createUser(DB)
+				err := DB.QueryRow(`SELECT id FROM "users"
 		WHERE username=$1 AND active=true AND email_verified=true`,
 					fmt.Sprintf("developer%[1]s", username)).Scan(&id)
 				if err != nil {
@@ -172,7 +173,7 @@ func generateTokens() {
 	}
 }
 
-func createUser() {
+func createUser(DB *sql.DB) {
 	var err error
 	defer handleExit()
 
@@ -186,7 +187,7 @@ func createUser() {
 	role := args[2]
 	email := args[3]
 
-	usrDS := user.NewDatastore(db.DB)
+	usrDS := user.NewDatastore(DB)
 	usr := &user.User{
 		Username: username,
 		Name:     username,
@@ -201,7 +202,7 @@ func createUser() {
 		return
 	}
 
-	_, err = db.DB.Exec("UPDATE users SET active=true, email_verified=true, user_role=$1 WHERE id=$2",
+	_, err = DB.Exec("UPDATE users SET active=true, email_verified=true, user_role=$1 WHERE id=$2",
 		usr.Role, usr.ID)
 	if err != nil {
 		log.Println("User creation failed.", err.Error())
@@ -211,29 +212,34 @@ func createUser() {
 func main() {
 	flag.Parse()
 
+	conf := config.Config.PostgresConfig()
 	if *migrate {
-		migrateDatabase()
-		if err := db.DB.Close(); err != nil {
+		DB := db.Connect(conf)
+		migrateDatabase(DB)
+		if err := DB.Close(); err != nil {
 			log.Println("Error closing the database connection:", err)
 		}
 		os.Exit(0)
 	}
 
 	if *createuser != "" {
-		createUser()
-		if err := db.DB.Close(); err != nil {
+		DB := db.Connect(conf)
+		createUser(DB)
+		if err := DB.Close(); err != nil {
 			log.Println("Error closing the database connection:", err)
 		}
 		os.Exit(0)
 	}
 
 	if *generatetokens != 0 {
-		generateTokens()
-		if err := db.DB.Close(); err != nil {
+		DB := db.Connect(conf)
+		generateTokens(DB)
+		if err := DB.Close(); err != nil {
 			log.Println("Error closing the database connection:", err)
 		}
 		os.Exit(0)
 	}
 
-	runApp()
+	DB := db.Connect(conf)
+	runApp(DB)
 }

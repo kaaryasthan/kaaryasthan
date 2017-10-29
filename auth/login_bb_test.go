@@ -9,22 +9,24 @@ import (
 
 	"github.com/google/jsonapi"
 	. "github.com/kaaryasthan/kaaryasthan/auth"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestUserLoginHandler(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
 
-	usrDS := user.NewDatastore(db.DB)
+	usrDS := user.NewDatastore(DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 
-	db.DB.Exec("UPDATE users SET active=true, email_verified=true")
-	_, _, urt := route.Router()
+	DB.Exec("UPDATE users SET active=true, email_verified=true")
+	_, _, urt := route.Router(DB)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 	n := []byte(`{

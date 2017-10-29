@@ -9,32 +9,31 @@ import (
 
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/auth"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestItemListHandler(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
-	defer db.DB.Exec("DELETE FROM projects")
-	defer db.DB.Exec("DELETE FROM items")
-	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
 
-	_, _, urt := route.Router()
+	_, _, urt := route.Router(DB)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 
 	tkn, usr := func() (string, *user.User) {
 
-		usrDS := user.NewDatastore(db.DB)
+		usrDS := user.NewDatastore(DB)
 		usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 		if err := usrDS.Create(usr); err != nil {
 			t.Fatal(err)
 		}
 
-		db.DB.Exec("UPDATE users SET active=true, email_verified=true WHERE id=$1", usr.ID)
+		DB.Exec("UPDATE users SET active=true, email_verified=true WHERE id=$1", usr.ID)
 		n := []byte(`{
 			"data": {
 				"type": "logins",
@@ -79,13 +78,13 @@ func TestItemListHandler(t *testing.T) {
 
 	}()
 
-	prjDS := project.NewDatastore(db.DB)
+	prjDS := project.NewDatastore(DB)
 	prj := &project.Project{Name: "somename", Description: "Some description"}
 	if err := prjDS.Create(usr, prj); err != nil {
 		t.Fatal(err)
 	}
 
-	itmDS := item.NewDatastore(db.DB)
+	itmDS := item.NewDatastore(DB)
 	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
 	err := itmDS.Create(usr, itm)
 	if err != nil {

@@ -10,12 +10,13 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
+	"github.com/kaaryasthan/kaaryasthan/config"
 )
 
-func (obj *Login) login() error {
+// Login verify user
+func (ds *Datastore) Login(obj *Login) error {
 	var originalPassword, salt []byte
-	err := db.DB.QueryRow(`SELECT id, password, salt FROM "users"
+	err := ds.db.QueryRow(`SELECT id, password, salt FROM "users"
 		WHERE username=$1 AND active=true AND email_verified=true`,
 		obj.Username).Scan(&obj.ID, &originalPassword, &salt)
 	if err != nil {
@@ -32,14 +33,15 @@ func (obj *Login) login() error {
 	return nil
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+// LoginHandler login user
+func (c *Controller) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	obj := new(Login)
 	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err := obj.login(); err != nil {
+	if err := c.ds.Login(obj); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -48,6 +50,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		"exp": time.Now().Add(time.Hour * 24 * 1).Unix(),
 	})
 
+	secretKey := []byte(config.Config.TokenSecretKey)
 	tokenString, _ := token.SignedString(secretKey)
 	obj.Token = tokenString
 	obj.Password = ""

@@ -1,13 +1,13 @@
 package route
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	item "github.com/kaaryasthan/kaaryasthan/item"
 	label "github.com/kaaryasthan/kaaryasthan/label"
 	milestone "github.com/kaaryasthan/kaaryasthan/milestone"
@@ -19,7 +19,7 @@ import (
 )
 
 // Router creates all routes
-func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
+func Router(DB *sql.DB) (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 	art = mux.NewRouter()
 	urt = mux.NewRouter()
 
@@ -37,12 +37,12 @@ func Router() (n *negroni.Negroni, art *mux.Router, urt *mux.Router) {
 		}
 	})
 
-	user.Register(art, db.DB)
-	auth.Register(urt)
-	project.Register(art, db.DB)
-	milestone.Register(art, db.DB)
-	label.Register(art, db.DB)
-	item.Register(art, db.DB)
+	user.Register(art, DB)
+	auth.Register(urt, DB)
+	project.Register(art, DB)
+	milestone.Register(art, DB)
+	label.Register(art, DB)
+	item.Register(art, DB)
 
 	urt.PathPrefix("/api").Handler(
 		negroni.New(negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext), negroni.Wrap(art)))

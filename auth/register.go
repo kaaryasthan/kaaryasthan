@@ -5,14 +5,13 @@ import (
 	"net/http"
 
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
-func registerHandler(w http.ResponseWriter, r *http.Request) {
-	usrDS := user.NewDatastore(db.DB)
-	obj := new(user.User)
-	if err := jsonapi.UnmarshalPayload(r.Body, obj); err != nil {
+// RegisterHandler register user
+func (c *Controller) RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	usr := new(user.User)
+	if err := jsonapi.UnmarshalPayload(r.Body, usr); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -20,13 +19,13 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", jsonapi.MediaType)
 	w.WriteHeader(http.StatusOK)
 
-	err := usrDS.Create(obj)
+	err := c.uds.Create(usr)
 	if err != nil {
 		log.Println("Unable save data: ", err)
 		return
 	}
-	obj.Password = ""
-	if err := jsonapi.MarshalPayload(w, obj); err != nil {
+	usr.Password = ""
+	if err := jsonapi.MarshalPayload(w, usr); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

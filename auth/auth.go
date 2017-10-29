@@ -1,20 +1,19 @@
 package auth
 
 import (
+	"database/sql"
+
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/config"
-)
-
-var (
-	secretKey []byte
+	user "github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 // JwtMiddleware is middleware to handle all request
 var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-		//log.Printf("Token: %+v", token)
+		secretKey := []byte(config.Config.TokenSecretKey)
 		return secretKey, nil
 	},
 	// When set, the middleware verifies that tokens are signed with the specific signing algorithm
@@ -22,6 +21,17 @@ var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
 	SigningMethod: jwt.SigningMethodHS256,
 })
+
+// Repository helps to manage login
+type Repository interface {
+	Login(obj *Login) error
+}
+
+// Controller holds DB
+type Controller struct {
+	ds  Repository
+	uds user.Repository
+}
 
 // Login represents a logged in user session
 type Login struct {
@@ -31,12 +41,24 @@ type Login struct {
 	Token    string `jsonapi:"attr,token,omitempty"`
 }
 
-// Register handlers
-func Register(urt *mux.Router) {
-	urt.HandleFunc("/api/v1/register", registerHandler).Methods("POST")
-	urt.HandleFunc("/api/v1/login", loginHandler).Methods("POST")
+// Datastore implements the Repository interface
+type Datastore struct {
+	db *sql.DB
 }
 
-func init() {
-	secretKey = []byte(config.Config.TokenSecretKey)
+// NewDatastore constructs a new Repository
+func NewDatastore(db *sql.DB) *Datastore {
+	return &Datastore{db}
+}
+
+// NewController constructs a controller
+func NewController(userRepo user.Repository, repo Repository) *Controller {
+	return &Controller{ds: repo, uds: userRepo}
+}
+
+// Register handlers
+func Register(urt *mux.Router, db *sql.DB) {
+	c := NewController(user.NewDatastore(db), NewDatastore(db))
+	urt.HandleFunc("/api/v1/register", c.RegisterHandler).Methods("POST")
+	urt.HandleFunc("/api/v1/login", c.LoginHandler).Methods("POST")
 }

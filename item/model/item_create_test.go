@@ -3,30 +3,29 @@ package item
 import (
 	"testing"
 
-	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestItemCreate(t *testing.T) {
-	defer db.DB.Exec("DELETE FROM users")
-	defer db.DB.Exec("DELETE FROM projects")
-	defer db.DB.Exec("DELETE FROM items")
-	defer db.DB.Exec("DELETE FROM item_discussion_comment_search")
+	t.Parallel()
+	DB := test.NewTestDB()
+	defer test.ResetDB(DB)
 
-	usrDS := user.NewDatastore(db.DB)
+	usrDS := user.NewDatastore(DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
 	if err := usrDS.Create(usr); err != nil {
 		t.Fatal(err)
 	}
 
-	prjDS := project.NewDatastore(db.DB)
+	prjDS := project.NewDatastore(DB)
 	prj := &project.Project{Name: "somename", Description: "Some description"}
 	if err := prjDS.Create(usr, prj); err != nil {
 		t.Fatal(err)
 	}
 
-	itmDS := NewDatastore(db.DB)
+	itmDS := NewDatastore(DB)
 	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
 	err := itmDS.Create(usr, itm)
 	if err != nil {
