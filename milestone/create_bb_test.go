@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/auth"
+	authctrl "github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/milestone"
 	"github.com/kaaryasthan/kaaryasthan/milestone/model"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
@@ -83,7 +83,7 @@ func TestMilestoneCreateHandler(t *testing.T) {
 	r := mux.NewRouter()
 	c := controller.NewController(&userDS{}, &projectDS{}, &milestoneDS{})
 	r.Handle("/api/v1/milestones", negroni.New(
-		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
+		negroni.HandlerFunc(authctrl.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.CreateHandler)),
 	)).Methods("POST")
 	n.UseHandler(r)

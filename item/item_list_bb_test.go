@@ -1,4 +1,4 @@
-package item_test
+package controller_test
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/jsonapi"
-	"github.com/kaaryasthan/kaaryasthan/auth"
+	"github.com/kaaryasthan/kaaryasthan/auth/model"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/route"

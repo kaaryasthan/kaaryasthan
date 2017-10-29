@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/auth"
+	auth "github.com/kaaryasthan/kaaryasthan/auth"
 	item "github.com/kaaryasthan/kaaryasthan/item"
 	label "github.com/kaaryasthan/kaaryasthan/label"
 	milestone "github.com/kaaryasthan/kaaryasthan/milestone"

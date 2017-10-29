@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/auth"
+	authctrl "github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
@@ -51,7 +51,7 @@ func TestUserShowHandler(t *testing.T) {
 		r := mux.NewRouter()
 		c := controller.NewController(&userDS{})
 		r.Handle("/api/v1/users/{username}", negroni.New(
-			negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
+			negroni.HandlerFunc(authctrl.JwtMiddleware.HandlerWithNext),
 			negroni.Wrap(http.HandlerFunc(c.ShowUserHandler)),
 		)).Methods("GET")
 		n.UseHandler(r)
@@ -96,7 +96,7 @@ func TestUserShowHandler(t *testing.T) {
 		r := mux.NewRouter()
 		c := controller.NewController(&invalidUserDS{})
 		r.Handle("/api/v1/users/{username}", negroni.New(
-			negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
+			negroni.HandlerFunc(authctrl.JwtMiddleware.HandlerWithNext),
 			negroni.Wrap(http.HandlerFunc(c.ShowUserHandler)),
 		)).Methods("GET")
 		n.UseHandler(r)

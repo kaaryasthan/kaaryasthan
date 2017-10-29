@@ -1,4 +1,4 @@
-package auth_test
+package controller_test
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/jsonapi"
-	. "github.com/kaaryasthan/kaaryasthan/auth"
+	"github.com/kaaryasthan/kaaryasthan/auth/model"
 	"github.com/kaaryasthan/kaaryasthan/route"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
@@ -39,7 +39,7 @@ func TestUserLoginHandler(t *testing.T) {
   }
 }`)
 
-	reqPayload := new(Login)
+	reqPayload := new(auth.Login)
 	if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
 		t.Fatal("Unable to unmarshal input:", err)
 	}
@@ -52,7 +52,7 @@ func TestUserLoginHandler(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	respPayload := new(Login)
+	respPayload := new(auth.Login)
 	if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
 		t.Fatal("Unable to unmarshal body:", err)
 	}

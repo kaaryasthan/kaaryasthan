@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
-	"github.com/kaaryasthan/kaaryasthan/auth"
+	authctrl "github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/item"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
@@ -35,7 +35,7 @@ func TestDiscussionCreateHandler(t *testing.T) {
 	r := mux.NewRouter()
 	c := controller.NewDiscussionController(&userDS{}, &itemDS{}, &discussionDS{})
 	r.Handle("/api/v1/discussions", negroni.New(
-		negroni.HandlerFunc(auth.JwtMiddleware.HandlerWithNext),
+		negroni.HandlerFunc(authctrl.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.CreateDiscussionHandler)),
 	)).Methods("POST")
 	n.UseHandler(r)
