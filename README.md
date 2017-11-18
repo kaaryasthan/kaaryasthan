@@ -156,7 +156,12 @@ not planning to change it. These are few reasons for not supporting:
 1. There are many good trackers available for open source projects
 2. Kaaryasthan is not exclusively designed for software projects
 3. Don't want to make the system complex to handle Slashdot effects
-4. Reducing scope will make the system simple
+4. No plan for search engine optimization (SEO) for Google, Bing etc.
+5. Reducing scope will make the system simple
+
+The architecture doesn't support Kaaryasthan being used as a public
+tracker.  Despite this limitation, if you really want to use, a work
+around could be using a reverse proxy.
 
 ---
 
