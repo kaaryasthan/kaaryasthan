@@ -9,8 +9,8 @@ import (
 
 func TestUserLogin(t *testing.T) {
 	t.Parallel()
-	DB := test.NewTestDB()
-	defer test.ResetDB(DB)
+	DB, conf := test.NewTestDB()
+	defer test.ResetDB(DB, conf)
 
 	loginDS := NewDatastore(DB)
 

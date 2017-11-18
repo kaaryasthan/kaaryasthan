@@ -12,16 +12,18 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestItemListHandler(t *testing.T) {
 	t.Parallel()
-	DB := test.NewTestDB()
-	defer test.ResetDB(DB)
+	DB, conf := test.NewTestDB()
+	defer test.ResetDB(DB, conf)
+	bi := search.NewBleveIndex(DB, conf)
 
-	_, _, urt := route.Router(DB)
+	_, _, urt := route.Router(DB, bi)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 
@@ -84,7 +86,7 @@ func TestItemListHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	itmDS := item.NewDatastore(DB)
+	itmDS := item.NewDatastore(DB, bi)
 	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
 	err := itmDS.Create(usr, itm)
 	if err != nil {

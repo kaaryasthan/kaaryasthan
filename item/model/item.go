@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/lib/pq"
 )
@@ -14,7 +15,7 @@ type Repository interface {
 	Create(usr *user.User, itm *Item) error
 	Valid(itm *Item) error
 	Show(itm *Item) error
-	List(query string) ([]Item, error)
+	List(query string, offset, limit int) ([]Item, error)
 }
 
 // Item represents an item
@@ -38,11 +39,12 @@ type Item struct {
 // Datastore implements the Repository interface
 type Datastore struct {
 	db *sql.DB
+	bi *search.BleveIndex
 }
 
 // NewDatastore constructs a new Repository
-func NewDatastore(db *sql.DB) *Datastore {
-	return &Datastore{db}
+func NewDatastore(db *sql.DB, bi *search.BleveIndex) *Datastore {
+	return &Datastore{db, bi}
 }
 
 // Valid checks the validity of the item

@@ -4,14 +4,18 @@ import (
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestItemCreate(t *testing.T) {
 	t.Parallel()
-	DB := test.NewTestDB()
-	defer test.ResetDB(DB)
+	DB, conf := test.NewTestDB()
+	defer test.ResetDB(DB, conf)
+	bi := search.NewBleveIndex(DB, conf)
+	listener := bi.SubscribeAndCreateIndex()
+	defer listener.Close()
 
 	usrDS := user.NewDatastore(DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}
@@ -25,7 +29,7 @@ func TestItemCreate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	itmDS := NewDatastore(DB)
+	itmDS := NewDatastore(DB, bi)
 	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
 	err := itmDS.Create(usr, itm)
 	if err != nil {

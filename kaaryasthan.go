@@ -19,6 +19,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/db"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
@@ -33,6 +34,8 @@ var createuser = flag.String("createuser", "", `create an active user
 var generatetokens = flag.Int("generatetokens", 0, `generate tokens for testing
 	To generate token, developer mode should be enabled.
 	To enable: export KAARYASTHAN_DEVELOPER_MODE=true`)
+
+var createindex = flag.Bool("createindex", false, "create full-text search index based on the data in the database")
 
 // Exit code for clean exit
 type Exit struct {
@@ -49,9 +52,9 @@ func handleExit() {
 	}
 }
 
-func runApp(DB *sql.DB) {
+func runApp(DB *sql.DB, bi *search.BleveIndex) {
 	addr := config.Config.HTTPAddress
-	n, _, _ := route.Router(DB)
+	n, _, _ := route.Router(DB, bi)
 	l := log.New(os.Stdout, "[kaaryasthan] ", 0)
 
 	stopChan := make(chan os.Signal, 1)
@@ -209,6 +212,42 @@ func createUser(DB *sql.DB) {
 	}
 }
 
+func createIndex(DB *sql.DB) {
+	var err error
+	defer handleExit()
+
+	b := &backoff.Backoff{
+		Min:    7 * time.Second,
+		Factor: 2,
+		Max:    7 * time.Minute,
+	}
+
+	for i := 0; i < 7; i++ {
+		_, err = DB.Exec("SELECT 1") // DB.Ping() seems to be not working always
+		if err != nil {
+			d := b.Duration()
+			log.Printf("%s (pinging failed), reconnecting in %s", err, d)
+			time.Sleep(d)
+			continue
+		}
+		b.Reset()
+	}
+
+	_, err = DB.Exec("SELECT 1") // DB.Ping() seems to be not working always
+	if err != nil {
+		log.Println("Indexing failed.", err.Error())
+		panic(Exit{1})
+	}
+
+	bi := search.NewBleveIndex(DB, config.Config)
+	err = bi.GenerateFromDatabase()
+	if err != nil {
+		log.Println("Indexing failed.", err.Error())
+		panic(Exit{1})
+	}
+	log.Println("Indexing completed.")
+}
+
 func main() {
 	flag.Parse()
 
@@ -240,6 +279,24 @@ func main() {
 		os.Exit(0)
 	}
 
+	if *createindex {
+		DB := db.Connect(conf)
+		createIndex(DB)
+		if err := DB.Close(); err != nil {
+			log.Println("Error closing the database connection:", err)
+		}
+		os.Exit(0)
+	}
+
 	DB := db.Connect(conf)
-	runApp(DB)
+
+	bi := search.NewBleveIndex(DB, config.Config)
+	listener := bi.SubscribeAndCreateIndex()
+	defer func() {
+		if err := listener.Close(); err != nil {
+			log.Println("Error closing the database listener:", err)
+		}
+	}()
+
+	runApp(DB, bi)
 }

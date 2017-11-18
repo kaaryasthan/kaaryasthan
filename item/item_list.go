@@ -34,7 +34,8 @@ func (c *ItemController) ListItemHandler(w http.ResponseWriter, r *http.Request)
 
 	var objs []item.Item
 	var err error
-	if objs, err = c.ds.List(query); err != nil {
+	// FIXME: offset & limit hard-coded
+	if objs, err = c.ds.List(query, 0, 20); err != nil {
 		log.Println("Couldn't find items: ", err)
 		http.Error(w, "Couldn't find items: ", http.StatusInternalServerError)
 		return

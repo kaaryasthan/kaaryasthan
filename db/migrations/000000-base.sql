@@ -62,6 +62,17 @@ BEGIN
 END
 $$ LANGUAGE 'plpgsql';
 
+CREATE FUNCTION notify_item_change() RETURNS TRIGGER AS $$
+BEGIN
+   RAISE NOTICE 'NEW.id is currently %', NEW.id::text;
+   -- Execute pg_notify(channel, notification)
+   PERFORM pg_notify('item_change', NEW.id::text);
+
+   -- Result is ignored since this is an AFTER trigger
+   RETURN NULL;
+END;
+$$ LANGUAGE 'plpgsql';
+
 CREATE TYPE role AS ENUM ('admin', 'manager', 'member');
 
 CREATE TABLE "users" (
@@ -175,6 +186,7 @@ CREATE UNIQUE INDEX idx_unq_items_num_id ON items (num);
 CREATE TRIGGER trgr_update_items_num_column BEFORE INSERT ON items FOR EACH ROW EXECUTE PROCEDURE update_items_num_column();
 CREATE TRIGGER trgr_update_items_updated_at_column BEFORE UPDATE ON items FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER trgr_update_items_fulltext_search AFTER INSERT OR UPDATE OF title, description ON items FOR EACH ROW EXECUTE PROCEDURE update_item_discussion_comment_search_tsv_column();
+CREATE TRIGGER trgr_update_items_notify AFTER INSERT OR UPDATE OF title, description ON items FOR EACH ROW EXECUTE PROCEDURE notify_item_change();
 
 CREATE TABLE "milestones" (
   id BIGSERIAL PRIMARY KEY,

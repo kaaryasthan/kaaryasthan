@@ -151,14 +151,12 @@ I think that may not be possible.  Because all URLs will require
 authentication except login & registration.  Since open source
 projects requires public trackers, this won't be a desirable solution.
 Kaaryasthan is designed exclusively for private projects.  And I am
-not planning to change it.
+not planning to change it. These are few reasons for not supporting:
 
-### What are the languages supported for search?
-
-English is the only language that is supported for search.  This may
-not be changed as Kaaryasthan is relying on PostgreSQL full-text
-search which has limited language support.  Introducing another
-dependency for full-text search is not under consideration.
+1. There are many good trackers available for open source projects
+2. Kaaryasthan is not exclusively designed for software projects
+3. Don't want to make the system complex to handle Slashdot effects
+4. Reducing scope will make the system simple
 
 ---
 

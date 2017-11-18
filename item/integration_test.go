@@ -10,21 +10,27 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/blevesearch/bleve"
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/auth/model"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestIntegration(t *testing.T) {
 	t.Parallel()
-	DB := test.NewTestDB()
-	defer test.ResetDB(DB)
+	DB, conf := test.NewTestDB()
+	defer test.ResetDB(DB, conf)
 
-	_, _, urt := route.Router(DB)
+	bi := search.NewBleveIndex(DB, conf)
+	listener := bi.SubscribeAndCreateIndex()
+	defer listener.Close()
+
+	_, _, urt := route.Router(DB, bi)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 
@@ -86,7 +92,7 @@ func TestIntegration(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	itmDS := item.NewDatastore(DB)
+	itmDS := item.NewDatastore(DB, bi)
 	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
 	if err := itmDS.Create(usr, itm); err != nil {
 		t.Fatal(err)
@@ -145,4 +151,14 @@ func TestIntegration(t *testing.T) {
 	if !reflect.DeepEqual(reqPayload, respPayload) {
 		t.Errorf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
 	}
+
+	// search for some text
+	query := bleve.NewMatchQuery("sometitle")
+	search := bleve.NewSearchRequest(query)
+	searchResults, err := bi.Idx.Search(search)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("bbbbbbbbbbbbbbbbbbbbbbbbbb", searchResults)
 }

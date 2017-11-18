@@ -9,8 +9,8 @@ import (
 
 func TestProjectShow(t *testing.T) {
 	t.Parallel()
-	DB := test.NewTestDB()
-	defer test.ResetDB(DB)
+	DB, conf := test.NewTestDB()
+	defer test.ResetDB(DB, conf)
 
 	usrDS := user.NewDatastore(DB)
 	usr := &user.User{Username: "jack", Name: "Jack Wilber", Email: "jack@example.com", Password: "Secret@123"}

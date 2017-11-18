@@ -18,6 +18,7 @@ type Configuration struct {
 	HTTPAddress      string `default:":8080" envconfig:"HTTP_ADDRESS"`
 	TokenSecretKey   string `default:"secret" split_words:"true"`
 	DeveloperMode    bool   `default:"false" split_words:"true"`
+	BleveIndexPath   string `split_words:"true"`
 }
 
 // PostgresConfig provides PostgreSQL connection string
@@ -35,6 +36,11 @@ func (c *Configuration) PostgresConfig() string {
 // SetDatabaseName set database
 func (c *Configuration) SetDatabaseName(dbname string) {
 	c.PostgresDatabase = dbname
+}
+
+// SetBleveIndexPath set Bleve index path
+func (c *Configuration) SetBleveIndexPath(path string) {
+	c.BleveIndexPath = path
 }
 
 // Config represent all configurations

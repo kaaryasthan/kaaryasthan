@@ -17,3 +17,8 @@ import:
   version: ^3.0.0
 - package: github.com/baijum/pgmigration
 - package: github.com/baijum/logger
+- package: github.com/blevesearch/bleve
+- package: github.com/lib/pq
+  version: 83612a56d3dd153a94a629cd64925371c9adad78
+  subpackages:
+  - oid

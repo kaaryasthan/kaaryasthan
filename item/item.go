@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/project/model"
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
@@ -22,9 +23,9 @@ func NewItemController(userRepo user.Repository, prjRepo project.Repository, rep
 }
 
 // Register handlers
-func Register(art *mux.Router, db *sql.DB) {
-	ic := NewItemController(user.NewDatastore(db), project.NewDatastore(db), item.NewDatastore(db))
-	dc := NewDiscussionController(user.NewDatastore(db), item.NewDatastore(db), item.NewDiscussionDatastore(db))
+func Register(art *mux.Router, db *sql.DB, bi *search.BleveIndex) {
+	ic := NewItemController(user.NewDatastore(db), project.NewDatastore(db), item.NewDatastore(db, bi))
+	dc := NewDiscussionController(user.NewDatastore(db), item.NewDatastore(db, bi), item.NewDiscussionDatastore(db))
 	cc := NewCommentController(user.NewDatastore(db), item.NewDiscussionDatastore(db), item.NewCommentDatastore(db))
 
 	art.HandleFunc("/api/v1/items", ic.CreateItemHandler).Methods("POST")

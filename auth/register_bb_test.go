@@ -9,16 +9,18 @@ import (
 
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/route"
+	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
 func TestUserRegisterHandler(t *testing.T) {
 	t.Parallel()
-	DB := test.NewTestDB()
-	defer test.ResetDB(DB)
+	DB, conf := test.NewTestDB()
+	defer test.ResetDB(DB, conf)
+	bi := search.NewBleveIndex(DB, conf)
 
-	_, _, urt := route.Router(DB)
+	_, _, urt := route.Router(DB, bi)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()
 	n := []byte(`{

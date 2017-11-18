@@ -1,7 +1,9 @@
 package item
 
 import (
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/kaaryasthan/kaaryasthan/project/model"
 	"github.com/kaaryasthan/kaaryasthan/search"
@@ -9,7 +11,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
-func TestItemShow(t *testing.T) {
+func TestItemList(t *testing.T) {
 	t.Parallel()
 	DB, conf := test.NewTestDB()
 	defer test.ResetDB(DB, conf)
@@ -30,20 +32,32 @@ func TestItemShow(t *testing.T) {
 	}
 
 	itmDS := NewDatastore(DB, bi)
-	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
-	err := itmDS.Create(usr, itm)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if itm.ID <= 0 {
-		t.Fatalf("Data not inserted. ID: %#v", itm.ID)
-	}
-	if itm.Number != 1 {
-		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
-	}
 
-	itm2 := &Item{Number: itm.Number}
-	if err := itmDS.Show(itm2); err != nil {
-		t.Error("Item is valid", err)
+	for i := 0; i < 3; i++ {
+		itm := &Item{Title: "found sometitle" + strconv.Itoa(i), Description: "Some awesome description" + strconv.Itoa(i), ProjectID: prj.ID}
+		err := itmDS.Create(usr, itm)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if itm.ID <= 0 {
+			t.Fatalf("Data not inserted. ID: %#v", itm.ID)
+		}
+		if itm.Number != i+1 {
+			t.Fatalf("Data not inserted. Num: %#v", itm.Number)
+		}
+	}
+	time.Sleep(time.Second) // FIXME: Any other approach possible?
+	items, err := itmDS.List(`title:found`, 0, 20)
+	if err != nil {
+		t.Error("Retrieving items failed.")
+	}
+	if items[0].ID != 1 {
+		t.Error("Wrong ID", items[0].ID)
+	}
+	if items[0].Title != "found sometitle0" {
+		t.Error("Wrong Title", items[0].Title)
+	}
+	if items[0].Description != "Some awesome description0" {
+		t.Error("Wrong Title", items[0].Description)
 	}
 }

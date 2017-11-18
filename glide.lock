@@ -1,5 +1,5 @@
-hash: ff2d998374d6031cba10406cf319fb9a2d61948775371303835e476c67fa14de
-updated: 2017-10-20T07:25:01.366592047+05:30
+hash: 0b6c4555a8a53aeb0b7e26d022aec6263f03e434583caa7f44794579f42baddf
+updated: 2017-12-03T16:35:19.177468744+05:30
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -7,31 +7,92 @@ imports:
   version: 109b4aa7555227378b198599f5ee8e2385e41f02
 - name: github.com/baijum/pgmigration
   version: b721838087c8558dd77144d60cab73fc5a6f3735
+- name: github.com/blevesearch/bleve
+  version: 6eea5b78da004393b1d06b8c88d1bed9ca0a94b2
+  subpackages:
+  - analysis
+  - analysis/analyzer/keyword
+  - analysis/analyzer/standard
+  - analysis/datetime/flexible
+  - analysis/datetime/optional
+  - analysis/lang/en
+  - analysis/token/lowercase
+  - analysis/token/porter
+  - analysis/token/stop
+  - analysis/tokenizer/single
+  - analysis/tokenizer/unicode
+  - document
+  - geo
+  - index
+  - index/store
+  - index/store/boltdb
+  - index/store/gtreap
+  - index/upsidedown
+  - mapping
+  - numeric
+  - registry
+  - search
+  - search/collector
+  - search/facet
+  - search/highlight
+  - search/highlight/format/html
+  - search/highlight/fragmenter/simple
+  - search/highlight/highlighter/html
+  - search/highlight/highlighter/simple
+  - search/query
+  - search/scorer
+  - search/searcher
+- name: github.com/blevesearch/go-porterstemmer
+  version: 23a2c8e5cf1f380f27722c6d2ae8896431dc7d0e
+  repo: https://github.com/blevesearch/go-porterstemmer
+- name: github.com/blevesearch/segment
+  version: db70c57796cc8c310613541dfade3dce627d09c7
+  repo: https://github.com/blevesearch/segment
+- name: github.com/boltdb/bolt
+  version: 144418e1475d8bf7abbdc48583500f1a20c62ea7
+  repo: https://github.com/boltdb/bolt
 - name: github.com/dgrijalva/jwt-go
   version: dbeaa9332f19a944acb5736b4456cfcc02140e29
 - name: github.com/elazarl/go-bindata-assetfs
-  version: 30f82fa23fd844bd5bb1e5f216db87fd77b5eb43
+  version: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
+- name: github.com/golang/protobuf
+  version: 655cdfa588ea190e901bc5590e65d5621688847c
+  repo: https://github.com/golang/protobuf
+  subpackages:
+  - proto
 - name: github.com/google/jsonapi
   version: 46d3ced0434461be12e555852e2f1a9ed382e139
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 24fca303ac6da784b9e8269f724ddeb0b2eea5e7
+  version: 7f08801859139f86dfafd1c296e2cba9a80d292e
 - name: github.com/jpillora/backoff
   version: 8eab2debe79d12b7bd3d10653910df25fa9552ba
 - name: github.com/kelseyhightower/envconfig
-  version: 462fda1f11d8cad3660e52737b8beefd27acfb3f
+  version: f611eb38b3875cc3bd991ca91c51d06446afa14c
 - name: github.com/lib/pq
-  version: 017e4c14d80628353eaee677a1aeffe47a10c0dc
+  version: 83612a56d3dd153a94a629cd64925371c9adad78
   subpackages:
   - oid
+- name: github.com/steveyen/gtreap
+  version: 0abe01ef9be25c4aedc174758ec2d917314d6d70
+  repo: https://github.com/steveyen/gtreap
 - name: github.com/thoas/stats
   version: 37829025d2242afb04d91572cb143e00019e2aac
 - name: github.com/urfave/negroni
-  version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
+  version: 5dbbc83f748fc3ad38585842b0aedab546d0ea1e
 - name: golang.org/x/crypto
-  version: ed5229da99e3a6df35c756cd64b6982d19505d86
+  version: 81e90905daefcd6fd217b62423c0908922eadb30
   subpackages:
   - pbkdf2
   - scrypt
+- name: golang.org/x/net
+  version: e45385e9b226f570b1f086bf287b25d3d4117776
+  repo: https://go.googlesource.com/net
+  subpackages:
+  - context
+- name: golang.org/x/sys
+  version: 478fcf54317e52ab69f40bb4c7a1520288d7f7ea
+  subpackages:
+  - unix
 testImports: []
