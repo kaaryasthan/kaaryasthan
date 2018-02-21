@@ -43,7 +43,7 @@ func TestMilestoneShow(t *testing.T) {
 		t.Error("Wrong Description", mil2.Description)
 	}
 
-	if mil2.Items != nil {
-		t.Error("Wrong Items", mil2.Items)
+	if mil2.OpenItems != nil {
+		t.Error("Wrong OpenItems", mil2.OpenItems)
 	}
 }

@@ -89,11 +89,13 @@ func (bi *BleveIndex) waitForNotification(l *pq.Listener) {
 			if err != nil {
 				continue
 			}
-			if err := bi.db.QueryRow("SELECT num, title, description FROM items WHERE id = $1",
-				id).Scan(&d.Num, &d.Title, &d.Description); err != nil {
+			var l pq.StringArray
+			if err := bi.db.QueryRow("SELECT num, title, description, labels FROM items WHERE id = $1",
+				id).Scan(&d.Num, &d.Title, &d.Description, &l); err != nil {
 				log.Println("Error running query:", err)
 				continue
 			}
+			d.Labels = []string(l)
 			if err := bi.Idx.Index(strconv.Itoa(d.Num), &d); err != nil {
 				log.Println("Error indexing:", err)
 			}

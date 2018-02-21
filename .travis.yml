@@ -1,9 +1,12 @@
 sudo: required
 language: go
+
 go:
 - 1.8
+
 services:
 - docker
+
 before_install:
 - sudo rm -f /usr/local/bin/docker-compose
 - curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname
@@ -18,6 +21,14 @@ before_install:
 - ls /home/travis/gopath/bin
 - curl https://glide.sh/get | sh
 - "/usr/local/bin/docker-compose up -d"
+- curl -o- -L https://yarnpkg.com/install.sh | bash
+- export PATH="$HOME/.yarn/bin:$PATH"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
 install:
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
   && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
@@ -25,8 +36,9 @@ install:
 - node --version
 - npm --version
 - npm install -g @angular/cli
+
 script:
-- cd web && npm install && cd ..
+- cd web && yarn install && cd ..
 - "$HOME/gopath/bin/go-bindata-assetfs -pkg db -o db/bindata.go -nocompress db/migrations/"
 - cd web && ng build -prod && cd ..
 - cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
@@ -48,8 +60,10 @@ script:
 branches:
   except:
   - /^exp-.*$/
+
 after_success:
 - curl -s https://gist.githubusercontent.com/baijum/37354d9de3b3dd38533f5d74b709086a/raw/merge.sh | bash
+
 env:
   global:
     secure: ysVjpK1xCibPJhXKgp3SAJEY/5V1PWPRiaLx9new88/RFQSNKX1Lp0Xs5YPUmxM+HuTdpTiFUSGzVIi7/lOvKfZIJbyQWQzbXTkBfy5JP6Q0YMeDulb5lahMPGAzeXWCE5p2Mqv9Z3zt+62V+cbkBuPQ9/E3LaJG+hVS42rno+KSpMN8NUiZ2ln0d8D6eDL9np0BLfocUyrYtrc9yeqiQRDF3LGHQqOSxcUru8PcWgSREH7BEkFneHfXtxWxomfJCmrbln6EFbspzyONYwETAO8BezT+VjvtPRmwEFgxflvX2OguffjvyfHxk7KxmMwl7Mzu3xuerojTp6VbJSL8XnTRu5x+LWPpH2pnw6Xqw/636mdeEv3ZSArmRPGftsfOjVFqkM7nddnYJ9mBp/y4SoMamz+soO7v1ykW6SfFUu0aJjOtTZ26xFJ2z8QRTEtiL1UAuk6OnId72UQJoabWHf5RWLkWtsF+s7zCMOjN/PD+qQ/nMaJQsuyxydXZZd0/A8SrIk3YnscGkKx6I8/H26i4fm2TTvaF9ws0Ff4dbHDaQwQaX33Vqr0W+sV7cQO8wNqgq09WWIMxJZPGky+lmX6zx48a1bcr6ZUfkr6lju/VaFF7MDYgD+TkFxKnfGg770TmK5g0m35czQtUx5wMrF+qHYZPlSwdQwwgI5R9gKc=

@@ -160,5 +160,5 @@ func TestIntegration(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("bbbbbbbbbbbbbbbbbbbbbbbbbb", searchResults)
+	fmt.Println("Search results:\n", searchResults)
 }

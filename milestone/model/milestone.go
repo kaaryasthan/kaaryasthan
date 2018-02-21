@@ -19,7 +19,7 @@ type Milestone struct {
 	Name        string `jsonapi:"attr,name"`
 	Description string `jsonapi:"attr,description"`
 	ProjectID   int    `jsonapi:"attr,project_id"`
-	Items       pq.Int64Array
+	OpenItems   pq.Int64Array
 }
 
 // Datastore implements the Repository interface

@@ -55,6 +55,10 @@ func (ds *Datastore) List(queryText string, offset, limit int) ([]Item, error) {
 			return nil, err
 		}
 		itm := Item{ID: id, Title: res.Fields["title"].(string), Description: res.Fields["description"].(string)}
+		i := res.Fields["label"]
+		for _, j := range i.([]interface{}) {
+			itm.Labels = append(itm.Labels, j.(string))
+		}
 		items = append(items, itm)
 	}
 	return items, nil

@@ -192,8 +192,10 @@ CREATE TABLE "milestones" (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT DEFAULT '' NOT NULL,
-  items BIGINT[],
+  open_items BIGINT[],
+  closed_items BIGINT[],
   project_id BIGINT REFERENCES projects(id) NOT NULL,
+  open_state BOOLEAN DEFAULT true NOT NULL, -- false is closed
   created_by UUID REFERENCES users(id) NOT NULL,
   updated_by UUID REFERENCES users(id),
   deleted_by UUID REFERENCES users(id),

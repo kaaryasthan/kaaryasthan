@@ -1,5 +1,5 @@
 hash: 0b6c4555a8a53aeb0b7e26d022aec6263f03e434583caa7f44794579f42baddf
-updated: 2017-12-03T16:35:19.177468744+05:30
+updated: 2018-02-21T10:34:51.901441887+05:30
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -65,7 +65,7 @@ imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 7f08801859139f86dfafd1c296e2cba9a80d292e
+  version: 53c1911da2b537f792e7cafcb446b05ffe33b996
 - name: github.com/jpillora/backoff
   version: 8eab2debe79d12b7bd3d10653910df25fa9552ba
 - name: github.com/kelseyhightower/envconfig
