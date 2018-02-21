@@ -39,7 +39,7 @@ install:
 
 script:
 - cd web && yarn install && cd ..
-- "$HOME/gopath/bin/go-bindata-assetfs -pkg db -o db/bindata.go -nocompress db/migrations/"
+- "$HOME/gopath/bin/go-bindata -pkg db -o db/bindata.go -nocompress db/migrations/"
 - cd web && ng build -prod && cd ..
 - cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
 - glide install
