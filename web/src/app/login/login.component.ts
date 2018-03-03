@@ -1,7 +1,8 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { Login } from '../login';
-import { LoginService } from '../login.service';
+import { AuthService } from '../auth.service';
 
 class LoginCredentials {
     username = '';
@@ -9,7 +10,6 @@ class LoginCredentials {
 }
 
 @Component({
-    selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
 })
@@ -17,7 +17,10 @@ export class LoginComponent implements OnInit {
 
     cred = new LoginCredentials()
 
-    constructor(public loginService: LoginService) { }
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        public authService: AuthService) { }
 
     ngOnInit() {
     }
@@ -31,7 +34,12 @@ export class LoginComponent implements OnInit {
     }
 
     newLogin() {
-        console.log(this.cred)
-        this.loginService.loginUser(this.cred).subscribe();
+        console.log(this.cred);
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        this.authService.login(this.cred)
+            .subscribe(token => {
+                localStorage.setItem('currentUser', token);
+                this.router.navigate(['/']);
+            });
     }
 }
