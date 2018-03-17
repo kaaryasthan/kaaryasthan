@@ -165,9 +165,9 @@ around could be using a reverse proxy.
 
 ---
 
-> [muthukadan.net](http://muthukadan.net) &nbsp;&middot;&nbsp;
-> GitHub [@baijum](https://github.com/baijum) &nbsp;&middot;&nbsp;
-> Twitter [@nogenerics](https://twitter.com/nogenerics)
+> [kaaryasthan.org](https://kaaryasthan.org) &nbsp;&middot;&nbsp;
+> GitHub [@kaaryasthan](https://github.com/kaaryasthan) &nbsp;&middot;&nbsp;
+> Twitter [@kaaryasthan](https://twitter.com/kaaryasthan)
 
 [my pet project]: https://team-coder.com/pet-project
 [Node]: https://nodejs.org/en
