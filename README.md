@@ -4,10 +4,6 @@
 [![Build Status](https://travis-ci.org/kaaryasthan/kaaryasthan.svg?branch=master)](https://travis-ci.org/kaaryasthan/kaaryasthan)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-**Disclaimer:** This is [my pet project] for learning web application
-development using Go & Angular.  See the [FAQ](#why-this-project) for
-more details.
-
 Kaaryasthan helps you to manage private projects.  You can add tasks &
 issues called items to your project.  An item will have title,
 description, discussions, creator, assignees and labels.  Multiple
@@ -109,30 +105,21 @@ To run the front-end development server (from the `./web` directory):
     License along with this program.  If not, see
     <http://www.gnu.org/licenses/>.
 
+## Author
+
+Baiju Muthukadan - <https://twitter.com/nogenerics>
+
 ## FAQ
 
 ### Why this project?
 
-This is [my pet project] for learning web application development
-using Go & Angular.  Here I am trying to explore various ideas about
-web application development.  I started this [project in 2014] with
-another name.  Few things I am learning through this project:
-
-- Designing RESTful APIs
-- Database design
-- Front-end development
-- Web application security
-- Load testing
-
-As part of my professional work, I can work on some of these things.
-But this side project gives me more freedom and flexibility.
+I started this as a [pet project] for learning web application development
+using Go & Angular.  In fact, I had started this [project in 2014] with
+another name.
 
 ### Are you seeking external contributions?
 
-As of now, I am not really looking for any external contributions.  I
-am not really sure how much time I can spend on pull request reviews.
-Though if you have any feedback, I would be happy to listen.  You can
-send your feedback to: baiju.m.mail AT gmail.com
+Yes! You are welcome to contribute :-)
 
 ### Why did you choose AGPLv3+ as the license?
 
@@ -171,7 +158,7 @@ around could be using a reverse proxy.
 > [Mailing List](https://groups.google.com/forum/#!forum/kaaryasthan) &nbsp;&middot;&nbsp;
 > Twitter [@kaaryasthan](https://twitter.com/kaaryasthan)
 
-[my pet project]: https://team-coder.com/pet-project
+[pet project]: https://team-coder.com/pet-project
 [Node]: https://nodejs.org/en
 [Angular]: https://angular.io
 [Go]: https://golang.org
