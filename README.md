@@ -166,7 +166,9 @@ around could be using a reverse proxy.
 ---
 
 > [kaaryasthan.org](https://kaaryasthan.org) &nbsp;&middot;&nbsp;
-> GitHub [@kaaryasthan](https://github.com/kaaryasthan) &nbsp;&middot;&nbsp;
+> Demo [demo.kaaryasthan.org](https://demo.kaaryasthan.org) &nbsp;&middot;&nbsp;
+> IRC [#kaaryasthan@freenode](https://riot.im/app/#/room/#freenode_#kaaryasthan:matrix.org) &nbsp;&middot;&nbsp;
+> [Mailing List](https://groups.google.com/forum/#!forum/kaaryasthan) &nbsp;&middot;&nbsp;
 > Twitter [@kaaryasthan](https://twitter.com/kaaryasthan)
 
 [my pet project]: https://team-coder.com/pet-project
