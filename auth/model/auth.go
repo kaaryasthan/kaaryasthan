@@ -5,14 +5,16 @@ import "database/sql"
 // Repository helps to manage login
 type Repository interface {
 	Login(obj *Login) error
+	VerifyEmail(obj *Login) error
 }
 
 // Login represents a logged in user session
 type Login struct {
-	ID       string `jsonapi:"primary,logins"`
-	Username string `jsonapi:"attr,username"`
-	Password string `jsonapi:"attr,password,omitempty"`
-	Token    string `jsonapi:"attr,token,omitempty"`
+	ID                    string `jsonapi:"primary,logins"`
+	Username              string `jsonapi:"attr,username"`
+	Password              string `jsonapi:"attr,password,omitempty"`
+	Token                 string `jsonapi:"attr,token,omitempty"`
+	EmailVerificationCode string `jsonapi:"attr,email_verification_code,omitempty"`
 }
 
 // Datastore implements the Repository interface

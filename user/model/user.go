@@ -19,15 +19,16 @@ type Repository interface {
 
 // User represents a user
 type User struct {
-	ID            string `jsonapi:"primary,users"`
-	Username      string `jsonapi:"attr,username"`
-	Name          string `jsonapi:"attr,name"`
-	Email         string `jsonapi:"attr,email"`
-	Role          string `jsonapi:"attr,role"`
-	Active        bool   `jsonapi:"attr,active"`
-	EmailVerified bool   `jsonapi:"attr,email_verified"`
-	Password      string `jsonapi:"attr,password,omitempty"`
-	PersonalNote  string `jsonapi:"attr,personal_note,omitempty"`
+	ID                    string `jsonapi:"primary,users"`
+	Username              string `jsonapi:"attr,username"`
+	Name                  string `jsonapi:"attr,name"`
+	Email                 string `jsonapi:"attr,email"`
+	Role                  string `jsonapi:"attr,role"`
+	Active                bool   `jsonapi:"attr,active"`
+	EmailVerified         bool   `jsonapi:"attr,email_verified"`
+	EmailVerificationCode string `jsonapi:"attr,email_verification_code,omitempty"`
+	Password              string `jsonapi:"attr,password,omitempty"`
+	PersonalNote          string `jsonapi:"attr,personal_note,omitempty"`
 }
 
 // Datastore implements the Repository interface
@@ -49,12 +50,12 @@ func (ds *Datastore) Create(usr *User) error {
 	}
 	err = ds.db.QueryRow(`INSERT INTO "users"
 		(username, name, email, password, salt)
-		VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+		VALUES ($1, $2, $3, $4, $5) RETURNING id, email_verification_code`,
 		usr.Username,
 		usr.Name,
 		usr.Email,
 		password,
-		salt).Scan(&usr.ID)
+		salt).Scan(&usr.ID, &usr.EmailVerificationCode)
 	return err
 }
 

@@ -1,22 +1,23 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
-import { Login } from '../login';
 import { AuthService } from '../auth.service';
 
-class LoginCredentials {
+class Register {
     username = '';
     password = '';
-    key = '';
+    fullname = '';
+    email = '';
 }
 
 @Component({
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css']
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 
-    cred = new LoginCredentials();
+    cred = new Register();
 
     constructor(
         private route: ActivatedRoute,
@@ -34,10 +35,18 @@ export class LoginComponent implements OnInit {
         this.cred.password = value
     }
 
-    newLogin() {
+    updateFullname(value: string) {
+        this.cred.fullname = value
+    }
+
+    updateEmail(value: string) {
+        this.cred.email = value
+    }
+
+    newRegister() {
         console.log(this.cred);
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        this.authService.login(this.cred)
+        this.authService.register(this.cred)
             .subscribe(token => {
                 localStorage.setItem('currentUser', token);
                 this.router.navigate(['/']);

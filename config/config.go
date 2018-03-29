@@ -19,6 +19,10 @@ type Configuration struct {
 	TokenSecretKey   string `default:"secret" split_words:"true"`
 	DeveloperMode    bool   `default:"false" split_words:"true"`
 	BleveIndexPath   string `split_words:"true"`
+	SendinblueKey    string `default:"secret" split_words:"true"`
+	BaseURL          string `envconfig:"BASE_URL"`
+	EmailSender      string `default:"noreply@example.org" split_words:"true"`
+	EmailReplyTo     string `default:"noreply@example.org" split_words:"true"`
 }
 
 // PostgresConfig provides PostgreSQL connection string

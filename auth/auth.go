@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/auth/model"
 	"github.com/kaaryasthan/kaaryasthan/config"
+	correspondence "github.com/kaaryasthan/kaaryasthan/correspondence/model"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
@@ -27,16 +28,18 @@ var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 type Controller struct {
 	ds  auth.Repository
 	uds user.Repository
+	cds correspondence.Repository
 }
 
 // NewController constructs a controller
-func NewController(userRepo user.Repository, repo auth.Repository) *Controller {
-	return &Controller{ds: repo, uds: userRepo}
+func NewController(userRepo user.Repository, repo auth.Repository, correspondenceRepo correspondence.Repository) *Controller {
+	return &Controller{ds: repo, uds: userRepo, cds: correspondenceRepo}
 }
 
 // Register handlers
 func Register(urt *mux.Router, db *sql.DB) {
-	c := NewController(user.NewDatastore(db), auth.NewDatastore(db))
+	c := NewController(user.NewDatastore(db), auth.NewDatastore(db), correspondence.NewDatastore(db))
 	urt.HandleFunc("/api/v1/register", c.RegisterHandler).Methods("POST")
 	urt.HandleFunc("/api/v1/login", c.LoginHandler).Methods("POST")
+	urt.HandleFunc("/api/v1/emailverification", c.EmailVerificationHandler).Methods("POST")
 }
