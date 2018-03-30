@@ -14,6 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthService } from './auth.service';
 import { EmailComponent } from './email/email.component';
 import { RegisterComponent } from './register/register.component';
+import { ProjectCreateComponent } from './project-create/project-create.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { RegisterComponent } from './register/register.component';
         LoginComponent,
         HomeComponent,
         EmailComponent,
-        RegisterComponent
+        RegisterComponent,
+        ProjectCreateComponent
     ],
     imports: [
         BrowserModule,
