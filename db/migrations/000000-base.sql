@@ -86,6 +86,8 @@ CREATE TABLE "users" (
   salt BYTEA NOT NULL,
   email_verified BOOLEAN DEFAULT false NOT NULL,
   email_verification_code TEXT DEFAULT uuid_generate_v4() NOT NULL,
+  reset_password_code TEXT DEFAULT uuid_generate_v4() NOT NULL,
+  reset_password_init_at TIMESTAMP WITH TIME ZONE,
   active BOOLEAN DEFAULT false NOT NULL,
   tsv TSVECTOR,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -97,6 +99,7 @@ CREATE UNIQUE INDEX idx_unq_users_id ON users (id); -- TODO: is this required?
 CREATE UNIQUE INDEX idx_unq_users_username ON users (username);
 CREATE UNIQUE INDEX idx_unq_users_email ON users (email) WHERE deleted_at IS NULL;
 CREATE UNIQUE INDEX idx_unq_users_email_verification_code ON users (email_verification_code);
+CREATE UNIQUE INDEX idx_unq_users_reset_password_code ON users (reset_password_code);
 CREATE UNIQUE INDEX idx_unq_users_salt ON users (salt);
 
 CREATE TRIGGER trgr_update_users_updated_at_column BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
