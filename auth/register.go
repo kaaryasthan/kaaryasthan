@@ -32,7 +32,7 @@ func (c *Controller) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	replyTo := config.Config.EmailReplyTo
 	htmlContentFormat := `Hi,<br/><br/> Thank you for registering at Kaaryasthan! <br/><br/> To confirm your email address, please click this link:<br/> %s <br/><br/>Thanks,<br/> Kaaryasthan Team `
 	randomkey := usr.EmailVerificationCode
-	htmlContent := fmt.Sprintf(htmlContentFormat, config.Config.BaseURL+"/email?key="+randomkey)
+	htmlContent := fmt.Sprintf(htmlContentFormat, config.Config.BaseURL+"/#/email?key="+randomkey)
 	email := &correspondence.Email{
 		ToName:      toName,
 		ToEmail:     toEmail,
