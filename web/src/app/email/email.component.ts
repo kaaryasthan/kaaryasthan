@@ -35,11 +35,11 @@ export class EmailComponent implements OnInit {
 
 
     updateUsername(value: string) {
-        this.cred.username = value
+        this.cred.username = value;
     }
 
     updatePassword(value: string) {
-        this.cred.password = value
+        this.cred.password = value;
     }
 
     newLogin() {

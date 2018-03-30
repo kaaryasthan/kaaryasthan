@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
 
 @Component({
-    selector: 'app',
+    selector: 'app', // tslint:disable-line
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })

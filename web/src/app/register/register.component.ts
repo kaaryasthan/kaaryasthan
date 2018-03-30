@@ -28,19 +28,19 @@ export class RegisterComponent implements OnInit {
     }
 
     updateUsername(value: string) {
-        this.cred.username = value
+        this.cred.username = value;
     }
 
     updatePassword(value: string) {
-        this.cred.password = value
+        this.cred.password = value;
     }
 
     updateFullname(value: string) {
-        this.cred.fullname = value
+        this.cred.fullname = value;
     }
 
     updateEmail(value: string) {
-        this.cred.email = value
+        this.cred.email = value;
     }
 
     newRegister() {

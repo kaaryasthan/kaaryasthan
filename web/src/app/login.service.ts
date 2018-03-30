@@ -23,13 +23,13 @@ export class LoginService {
     loginUser(loginCredentials: Login): Observable<Login> {
         const entity = {
             data: {
-                type: "logins",
+                type: 'logins',
                 attributes: {
                     username: loginCredentials.username,
                     password: loginCredentials.password,
                 },
             }
-        }
+        };
         return this.http.post<Login>(this.loginUrl, entity, httpOptions);
     }
 

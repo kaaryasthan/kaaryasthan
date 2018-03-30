@@ -9,20 +9,18 @@ import 'rxjs/add/operator/map';
 import { Login } from './login';
 import { Register } from './register';
 
-export const TOKEN_NAME: string = 'jwt_token';
+export const TOKEN_NAME = 'jwt_token';
 const httpOptions = {
     headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'my-auth-token'
+        'Content-Type': 'application/vnd.api+json',
     })
 };
 
 @Injectable()
 export class AuthService {
-    private loginUrl: string = 'api/v1/login';
-    private emailUrl: string = 'api/v1/emailverification';
-    private registerUrl: string = 'api/v1/register';
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private loginUrl = 'api/v1/login';
+    private emailUrl = 'api/v1/emailverification';
+    private registerUrl = 'api/v1/register';
     private token: string;
 
     constructor(private http: HttpClient) { }
@@ -38,7 +36,7 @@ export class AuthService {
     getTokenExpirationDate(token: string): Date {
         const decoded = jwt_decode(token);
 
-        if (decoded.exp === undefined) return null;
+        if (decoded.exp === undefined) { return null; }
 
         const date = new Date(0);
         date.setUTCSeconds(decoded.exp);
@@ -46,24 +44,24 @@ export class AuthService {
     }
 
     isTokenExpired(token?: string): boolean {
-        if (!token) token = this.getToken();
-        if (!token) return true;
+        if (!token) { token = this.getToken(); }
+        if (!token) { return true; }
 
         const date = this.getTokenExpirationDate(token);
-        if (date === undefined) return false;
+        if (date === undefined) { return false; }
         return !(date.valueOf() > new Date().valueOf());
     }
 
     login(user: Login): Observable<string> {
         const entity = {
             data: {
-                type: "logins",
+                type: 'logins',
                 attributes: {
                     username: user.username,
                     password: user.password,
                 },
             }
-        }
+        };
         return this.http
             .post(this.loginUrl, entity, httpOptions)
             .map(data => data['data'].attributes.token);
@@ -72,14 +70,14 @@ export class AuthService {
     verifyemail(user: Login): Observable<string> {
         const entity = {
             data: {
-                type: "logins",
+                type: 'logins',
                 attributes: {
                     username: user.username,
                     password: user.password,
                     email_verification_code: user.key,
                 },
             }
-        }
+        };
         return this.http
             .post(this.emailUrl, entity, httpOptions)
             .map(data => data['data'].attributes.token);
@@ -88,7 +86,7 @@ export class AuthService {
     register(user: Register): Observable<string> {
         const entity = {
             data: {
-                type: "logins",
+                type: 'logins',
                 attributes: {
                     username: user.username,
                     password: user.password,
@@ -96,7 +94,7 @@ export class AuthService {
                     email: user.email,
                 },
             }
-        }
+        };
         return this.http
             .post(this.registerUrl, entity, httpOptions)
             .map(data => data['data'].attributes.token);
