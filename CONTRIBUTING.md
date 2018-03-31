@@ -11,5 +11,5 @@ email, or any other method with the owners of this repository before making a ch
 Please note we have a [code of conduct](https://github.com/kaaryasthan/code-of-conduct),
 please follow it in all your interactions with the project.
 
-This project requires all contributors to [sign contributor license agreement](https://github.com/kaaryasthan/contributor-license-agreement).
-
+This project requires all contributors to [sign contributor license agreement](https://github.com/kaaryasthan/contributor-license-agreement)(CLA).
+You can sign the CLA from here: https://cla-assistant.io/kaaryasthan/contributor-license-agreement
