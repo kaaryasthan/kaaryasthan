@@ -5,6 +5,12 @@
 **Working on your first Pull Request?** You can learn how from this *free* series
 [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) 
 
+You can look at the issues [with help wanted label](https://github.com/kaaryasthan/kaaryasthan/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+for items that you can work on.
+
+If you need help, please feel free to
+[reach out in chat!](https://riot.im/app/#/room/#freenode_#kaaryasthan:matrix.org)
+
 When contributing to this repository, please first discuss the change you wish to make via issue,
 email, or any other method with the owners of this repository before making a change. 
 
