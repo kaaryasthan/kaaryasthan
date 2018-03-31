@@ -84,14 +84,14 @@ To run the back-end development server (from the top-level directory):
     fresh
 
 The back-end will listen on [8080] port.  Whenever there is a change
-in any Go source files, the server will be automatically restarted.
+in Go source files, the server will be automatically restarted.
 
 To run the front-end development server (from the `./web` directory):
 
     npm start
 
 The web user interface will be available on [4200] port.  You can use
-Firefox or Chrome to open it.  Any change is source file will refresh
+Firefox or Chrome to open it.  Any change in source files will refresh
 the user interface automatically.  There is a webhook which does this
 magic.
 
