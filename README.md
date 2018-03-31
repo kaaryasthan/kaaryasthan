@@ -83,9 +83,17 @@ To run the back-end development server (from the top-level directory):
 
     fresh
 
+The back-end will listen on [8080] port.  Whenever there is a change
+in any Go source files, the server will be automatically restarted.
+
 To run the front-end development server (from the `./web` directory):
 
-    ng serve
+    npm start
+
+The web user interface will be available on [4200] port.  You can use
+Firefox or Chrome to open it.  Any change is source file will refresh
+the user interface automatically.  There is a webhook which does this
+magic.
 
 ## License
 
@@ -116,10 +124,12 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
 | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-(Place holder for Contributor list)
-
 This project follows the [all-contributors][all-contributors] specification.
 Contributions of any kind are welcome!
+
+If you are looking forward to contribute to this project, please take
+a look at the [CONTRIBUTING.md] and [wiki page about contributing] for
+more deatils.
 
 ## FAQ
 
@@ -189,3 +199,5 @@ request for the same :-)
 [wiki page about contributing]: https://github.com/kaaryasthan/kaaryasthan/wiki/Contributing
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
+[8080]: http://localhost:8080
+[4200]: http://localhost:4200
