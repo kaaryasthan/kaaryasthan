@@ -91,7 +91,7 @@ To run the front-end development server (from the `./web` directory):
 ## License
 
     Kaaryasthan - Task Management for Small Teams
-    Copyright (C) 2017 Baiju Muthukadan
+    Copyright (C) 2017 The Kaaryasthan Authors
 
     This program is free software: you can redistribute it and/or
     modify it under the terms of the GNU Affero General Public License
@@ -107,24 +107,17 @@ To run the front-end development server (from the `./web` directory):
     License along with this program.  If not, see
     <http://www.gnu.org/licenses/>.
 
-## Author
-
-Baiju Muthukadan - <https://twitter.com/nogenerics>
-
 ## Contributors
+
+Thanks goes to these wonderful people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/121129?v=4" width="100px;"/><br /><sub><b>Baiju Muthukadan</b></sub>](http://muthukadan.net)<br />[📖](https://github.com/baijum/kaaryasthan/commits?author=baijum "Documentation") |
 | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-Thanks goes to these wonderful people ([emoji key][emojis]):
 
 (Place holder for Contributor list)
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
 Contributions of any kind are welcome!
