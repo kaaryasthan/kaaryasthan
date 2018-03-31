@@ -7,14 +7,14 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md)
 
 Kaaryasthan helps you to manage private projects.  You can add tasks &
-issues called items to your project.  An item will have title,
-description, discussions, creator, assignees and labels.  Multiple
-milestones can be created with due date and priority-ordered items.
+issues (items) in to your project.  An item has title, description,
+discussions, creator, assignees, and labels.  Project milestones can
+be created with due date and items with priority order.
 
 This repository contains the source code of Kaaryasthan.  It has
-source code for both front-end and back-end.  The front-end of
-Kaaryasthan is written in [Angular], back-end in [Go], and
-[PostgreSQL] is used as the persistent data store.
+source code for both user interface and server.  The user interface of
+Kaaryasthan is written in [Angular], server in [Go], and [PostgreSQL]
+is used for the database.
 
 > Kaaryasthan (കാര്യസ്ഥൻ) is a [Malayalam] word with meaning "manager".
 
