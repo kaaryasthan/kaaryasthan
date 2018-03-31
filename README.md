@@ -1,4 +1,5 @@
 # Kaaryasthan - Task Management for Small Teams
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kaaryasthan/kaaryasthan)](https://goreportcard.com/report/github.com/kaaryasthan/kaaryasthan)
 [![Build Status](https://travis-ci.org/kaaryasthan/kaaryasthan.svg?branch=master)](https://travis-ci.org/kaaryasthan/kaaryasthan)
@@ -110,6 +111,24 @@ To run the front-end development server (from the `./web` directory):
 
 Baiju Muthukadan - <https://twitter.com/nogenerics>
 
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars3.githubusercontent.com/u/121129?v=4" width="100px;"/><br /><sub><b>Baiju Muthukadan</b></sub>](http://muthukadan.net)<br />[📖](https://github.com/baijum/kaaryasthan/commits?author=baijum "Documentation") |
+| :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+Thanks goes to these wonderful people ([emoji key][emojis]):
+
+(Place holder for Contributor list)
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors][all-contributors] specification.
+Contributions of any kind are welcome!
+
 ## FAQ
 
 ### Why this project?
@@ -176,3 +195,5 @@ request for the same :-)
 [GNU website]: https://www.gnu.org/licenses/why-affero-gpl.en.html
 [CONTRIBUTING.md]: https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md
 [wiki page about contributing]: https://github.com/kaaryasthan/kaaryasthan/wiki/Contributing
+[emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
+[all-contributors]: https://github.com/kentcdodds/all-contributors

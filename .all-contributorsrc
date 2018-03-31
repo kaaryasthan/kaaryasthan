@@ -1,0 +1,22 @@
+{
+  "projectName": "kaaryasthan",
+  "projectOwner": "baijum",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "baijum",
+      "name": "Baiju Muthukadan",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/121129?v=4",
+      "profile": "http://muthukadan.net",
+      "contributions": [
+        "doc"
+      ]
+    }
+  ]
+}
