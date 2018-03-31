@@ -12,6 +12,8 @@ import { routing } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
 
 import { AuthService } from './auth.service';
+import { ProjectService } from './project.service';
+
 import { EmailComponent } from './email/email.component';
 import { RegisterComponent } from './register/register.component';
 import { ProjectCreateComponent } from './project-create/project-create.component';
@@ -34,7 +36,8 @@ import { ProjectCreateComponent } from './project-create/project-create.componen
     providers: [
         LoginService,
         AuthGuard,
-        AuthService
+        AuthService,
+        ProjectService
     ],
     bootstrap: [AppComponent]
 })

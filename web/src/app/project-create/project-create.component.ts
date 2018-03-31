@@ -1,4 +1,12 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+
+import { ProjectService } from '../project.service';
+
+class Project {
+    name = '';
+    description = '';
+}
 
 @Component({
     selector: 'app-project-create',
@@ -7,26 +15,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProjectCreateComponent implements OnInit {
 
-    constructor() { }
+    data = new Project();
+
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        public projectService: ProjectService) { }
 
     ngOnInit() {
     }
 
     updateName(value: string) {
-        //this.cred.email = value;
+        this.data.name = value;
     }
 
     updateDescription(value: string) {
-        //this.cred.email = value;
+        this.data.description = value;
     }
 
     newProject() {
-        //     console.log(this.cred);
-        //     // store user details and jwt token in local storage to keep user logged in between page refreshes
-        //     this.authService.register(this.cred)
-        //         .subscribe(token => {
-        //             localStorage.setItem('currentUser', token);
-        //             this.router.navigate(['/']);
-        //         });
+        console.log(this.data);
+        this.projectService.create(this.data)
+            .subscribe(token => {
+                this.router.navigate(['/']);
+            });
     }
 }
