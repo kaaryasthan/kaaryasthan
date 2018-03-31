@@ -20,15 +20,14 @@ Kaaryasthan is written in [Angular], back-end in [Go], and
 
 ## Key Features
 
-- All URLs will require require authentication except login &
-  registration.  (Note: This makes it unsuitable for open source
-  projects with public issues.  Only private projects can be hosted
-  using Kaaryasthan)
-- Threaded discussions.  Discussions can be added under items.
-  Comments can be added under each discussion.
+- All URLs requires authentication except login & registration.
+  (Note: This makes it unsuitable for open source projects with public
+  issues.  Only private projects can be hosted using Kaaryasthan)
+- Threaded discussion. Multiple discussions can be added under an
+  item.  And comments can be added under each discussion.
 - Easy deployment.  Entire application including front-end is
-  available as a single binary. You also need to install PostgreSQL
-  and NGINX.
+  available as a single binary.  You also need to install PostgreSQL
+  and NGINX unless you are using hosted PostgreSQL service.
 
 ## Development
 
@@ -123,6 +122,9 @@ another name.
 
 Yes! You are welcome to contribute :-)
 
+Please take a look at the [CONTRIBUTING.md] and
+[wiki page about contributing] for more deatils.
+
 ### Why did you choose AGPLv3+ as the license?
 
 I believe that's the best license for a web application.  From the
@@ -140,17 +142,18 @@ I think that may not be possible.  Because all URLs will require
 authentication except login & registration.  Since open source
 projects requires public trackers, this won't be a desirable solution.
 Kaaryasthan is designed exclusively for private projects.  And I am
-not planning to change it. These are few reasons for not supporting:
+not planning to change it. These are few reasons for not supporting
+open source projects:
 
-1. There are many good trackers available for open source projects
-2. Kaaryasthan is not exclusively designed for software projects
-3. Don't want to make the system complex to handle Slashdot effects
-4. No plan for search engine optimization (SEO) for Google, Bing etc.
-5. Reducing scope will make the system simple
+1. There are many good trackers available for open source projects.
+2. Kaaryasthan is not exclusively designed for software projects.
+3. Don't want to make the system complex to handle Slashdot effects.
+4. No plan for search engine optimization (SEO for Google, Bing etc.).
+5. Reduce the scope to keep the software as simple as possible.
 
 The architecture doesn't support Kaaryasthan being used as a public
-tracker.  Despite this limitation, if you really want to use, a work
-around could be using a reverse proxy.
+tracker. I explained this much in-order to not receive any feature
+request for the same :-)
 
 ---
 
@@ -171,3 +174,5 @@ around could be using a reverse proxy.
 [Kaaryasthan]: https://github.com/kaaryasthan/kaaryasthan
 [project in 2014]: https://github.com/baijum/pitracker
 [GNU website]: https://www.gnu.org/licenses/why-affero-gpl.en.html
+[CONTRIBUTING.md]: https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md
+[wiki page about contributing]: https://github.com/kaaryasthan/kaaryasthan/wiki/Contributing
