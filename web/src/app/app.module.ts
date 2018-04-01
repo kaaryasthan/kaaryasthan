@@ -17,6 +17,10 @@ import { ProjectService } from './project.service';
 import { EmailComponent } from './email/email.component';
 import { RegisterComponent } from './register/register.component';
 import { ProjectCreateComponent } from './project-create/project-create.component';
+import { ItemCreateComponent } from './item-create/item-create.component';
+import { ItemListComponent } from './item-list/item-list.component';
+import { ItemShowComponent } from './item-show/item-show.component';
+import { ItemEditComponent } from './item-edit/item-edit.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +29,11 @@ import { ProjectCreateComponent } from './project-create/project-create.componen
         HomeComponent,
         EmailComponent,
         RegisterComponent,
-        ProjectCreateComponent
+        ProjectCreateComponent,
+        ItemCreateComponent,
+        ItemListComponent,
+        ItemShowComponent,
+        ItemEditComponent
     ],
     imports: [
         BrowserModule,
