@@ -32,6 +32,7 @@ func (c *Controller) ListHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Couldn't find projects: ", http.StatusInternalServerError)
 		return
 	}
+
 	if err := jsonapi.MarshalPayload(w, objs); err != nil {
 		log.Println("Couldn't unmarshal: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

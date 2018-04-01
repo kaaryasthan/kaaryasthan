@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 
 import { AuthService } from './auth.service';
 import { ProjectService } from './project.service';
+import { ItemService } from './item.service';
 
 import { EmailComponent } from './email/email.component';
 import { RegisterComponent } from './register/register.component';
@@ -45,7 +46,8 @@ import { ItemEditComponent } from './item-edit/item-edit.component';
         LoginService,
         AuthGuard,
         AuthService,
-        ProjectService
+        ProjectService,
+        ItemService
     ],
     bootstrap: [AppComponent]
 })

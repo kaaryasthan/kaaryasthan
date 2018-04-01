@@ -2,11 +2,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 import { ProjectService } from '../project.service';
+import { ProjectModel } from '../project.service';
 
-class Project {
-    name = '';
-    description = '';
-}
+// class Project {
+//     name = '';
+//     description = '';
+// }
 
 @Component({
     selector: 'app-project-create',
@@ -15,7 +16,7 @@ class Project {
 })
 export class ProjectCreateComponent implements OnInit {
 
-    data = new Project();
+    data = new ProjectModel();
 
     constructor(
         private route: ActivatedRoute,
