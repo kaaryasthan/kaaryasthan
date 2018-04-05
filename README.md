@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/kaaryasthan/kaaryasthan.svg?branch=master)](https://travis-ci.org/kaaryasthan/kaaryasthan)
 [![Open Source Helpers](https://www.codetriage.com/kaaryasthan/kaaryasthan/badges/users.svg)](https://www.codetriage.com/kaaryasthan/kaaryasthan)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Kaaryasthan helps you to manage private projects.  You can add tasks &
 issues (items) in to your project.  An item has title, description,
