@@ -38,6 +38,19 @@ func Router(DB *sql.DB, bi *search.BleveIndex) (n *negroni.Negroni, art *mux.Rou
 		}
 	})
 
+	urt.HandleFunc("/favicon.png", func(w http.ResponseWriter, r *http.Request) {
+		f := "route/static/favicon.png"
+		c, err := Asset(f)
+		if err != nil {
+			log.Println("Cannot find:", f)
+			return
+		}
+		if _, err := w.Write(c); err != nil {
+			log.Println("Couldn't write to response:", err)
+		}
+
+	})
+
 	user.Register(art, DB)
 	auth.Register(urt, DB)
 	project.Register(art, DB)

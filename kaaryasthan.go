@@ -24,6 +24,7 @@ import (
 )
 
 //go:generate go-bindata -pkg db -o db/bindata.go -nocompress db/migrations/
+//go:generate go-bindata -pkg route -o route/bindata.go -nocompress route/static
 
 var migrate = flag.Bool("migrate", false, "perform db migrations")
 var createuser = flag.String("createuser", "", `create an active user
