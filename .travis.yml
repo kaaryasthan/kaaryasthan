@@ -38,10 +38,11 @@ install:
 - npm install -g @angular/cli
 
 script:
-- cd web && yarn install && cd ..
+- cd $TRAVIS_BUILD_DIR/web && yarn install && cd ..
 - "$HOME/gopath/bin/go-bindata -pkg db -o db/bindata.go -nocompress db/migrations/"
-- cd web && ng build -prod && cd ..
-- cd web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
+- cd $TRAVIS_BUILD_DIR/web && ng build -prod && cd ..
+- cd $TRAVIS_BUILD_DIR/web && $HOME/gopath/bin/go-bindata-assetfs -pkg web dist/... && cd ..
+- cd $TRAVIS_BUILD_DIR
 - glide install
 - go build
 - "./kaaryasthan -migrate"
