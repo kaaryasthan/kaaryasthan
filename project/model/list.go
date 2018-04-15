@@ -6,7 +6,7 @@ import (
 )
 
 // List projects
-func (ds *Datastore) List(all bool) ([]Project, error) {
+func (ds *Datastore) List(all bool) ([]*Project, error) {
 	var err error
 	var rows *sql.Rows
 	if all {
@@ -25,14 +25,14 @@ func (ds *Datastore) List(all bool) ([]Project, error) {
 		}
 	}()
 
-	var objs []Project
+	var objs []*Project
 	for rows.Next() {
 		prj := Project{}
 		err = rows.Scan(&prj.ID, &prj.Name, &prj.Description, &prj.ItemTemplate, &prj.Archived)
 		if err != nil {
 			return nil, err
 		}
-		objs = append(objs, prj)
+		objs = append(objs, &prj)
 	}
 	err = rows.Err()
 	if err != nil {

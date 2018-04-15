@@ -12,7 +12,7 @@ type Repository interface {
 	Create(usr *user.User, prj *Project) error
 	Valid(prj *Project) error
 	Show(prj *Project) error
-	List(all bool) ([]Project, error)
+	List(all bool) ([]*Project, error)
 }
 
 // Project represents a project

@@ -56,8 +56,12 @@ func (ds *projectDS) Show(prj *project.Project) error {
 	return nil
 }
 
-func (ds *projectDS) List(all bool) ([]project.Project, error) {
-	return nil, nil
+func (ds *projectDS) List(all bool) ([]*project.Project, error) {
+	pl := []*project.Project{
+		{ID: 1, Name: "somename1", Description: "Some description 1"},
+		{ID: 2, Name: "somename2", Description: "Some description 2"},
+	}
+	return pl, nil
 }
 
 func TestProjectCreateHandler(t *testing.T) {

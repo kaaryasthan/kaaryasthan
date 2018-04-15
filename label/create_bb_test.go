@@ -57,7 +57,7 @@ func (ds *projectDS) Show(prj *project.Project) error {
 	return nil
 }
 
-func (ds *projectDS) List(all bool) ([]project.Project, error) {
+func (ds *projectDS) List(all bool) ([]*project.Project, error) {
 	return nil, nil
 }
 

@@ -25,7 +25,7 @@ func (c *Controller) ListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var objs []project.Project
+	var objs []*project.Project
 	var err error
 	if objs, err = c.ds.List(false); err != nil {
 		log.Println("Couldn't find projects: ", err)
