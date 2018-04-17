@@ -1,6 +1,7 @@
 package item
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/kaaryasthan/kaaryasthan/project/model"
@@ -30,7 +31,7 @@ func TestDiscussionCreate(t *testing.T) {
 	}
 
 	itmDS := NewDatastore(DB, bi)
-	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
+	itm := &Item{Title: "sometitle", Description: "Some description", ProjectID: strconv.Itoa(prj.ID)}
 	if err := itmDS.Create(usr, itm); err != nil {
 		t.Fatal(err)
 	}

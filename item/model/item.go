@@ -24,7 +24,7 @@ type Item struct {
 	Title            string  `jsonapi:"attr,title"`
 	Description      string  `jsonapi:"attr,description"`
 	Number           int     `jsonapi:"attr,num"`
-	ProjectID        int     `jsonapi:"attr,project_id"`
+	ProjectID        string  `jsonapi:"attr,project_id"`
 	OpenState        bool    `jsonapi:"attr,open_state"`
 	LockConversation bool    `jsonapi:"attr,lock_conversation"`
 	CreatedBy        string  `jsonapi:"attr,created_by"`

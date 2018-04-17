@@ -35,8 +35,8 @@ func TestItemList(t *testing.T) {
 	itmDS := NewDatastore(DB, bi)
 
 	for i := 0; i < 3; i++ {
-		itm := &Item{Title: "found sometitle" + strconv.Itoa(i), Description: "Some awesome description" + strconv.Itoa(i), ProjectID: prj.ID,
-			Labels: []string{"a", "c"}}
+		itm := &Item{Title: "found sometitle" + strconv.Itoa(i), Description: "Some awesome description" + strconv.Itoa(i),
+			ProjectID: strconv.Itoa(prj.ID), Labels: []string{"a", "c"}}
 		err := itmDS.Create(usr, itm)
 		if err != nil {
 			t.Fatal(err)
@@ -49,7 +49,8 @@ func TestItemList(t *testing.T) {
 		}
 	}
 
-	itm := &Item{Title: "found baiju sometitle", Description: "Some awesome description", ProjectID: prj.ID, Labels: []string{"a/c -_d", "b"}}
+	itm := &Item{Title: "found baiju sometitle", Description: "Some awesome description",
+		ProjectID: strconv.Itoa(prj.ID), Labels: []string{"a/c -_d", "b"}}
 	err := itmDS.Create(usr, itm)
 	if err != nil {
 		t.Fatal(err)

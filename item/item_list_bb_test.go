@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/google/jsonapi"
@@ -87,7 +88,7 @@ func TestItemListHandler(t *testing.T) {
 	}
 
 	itmDS := item.NewDatastore(DB, bi)
-	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
+	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: strconv.Itoa(prj.ID)}
 	err := itmDS.Create(usr, itm)
 	if err != nil {
 		t.Fatal(err)

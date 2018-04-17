@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/blevesearch/bleve"
@@ -93,7 +94,7 @@ func TestIntegration(t *testing.T) {
 	}
 
 	itmDS := item.NewDatastore(DB, bi)
-	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: prj.ID}
+	itm := &item.Item{Title: "sometitle", Description: "Some description", ProjectID: strconv.Itoa(prj.ID)}
 	if err := itmDS.Create(usr, itm); err != nil {
 		t.Fatal(err)
 	}

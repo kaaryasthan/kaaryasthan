@@ -90,7 +90,7 @@ func TestItemCreateHandler(t *testing.T) {
 			"attributes": {
 				"title": "Some Title",
 				"description": "Some description",
-				"project_id": 1
+				"project_id": "1"
 			}
 		}
 	}`)
