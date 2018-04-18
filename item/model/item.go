@@ -15,7 +15,7 @@ type Repository interface {
 	Create(usr *user.User, itm *Item) error
 	Valid(itm *Item) error
 	Show(itm *Item) error
-	List(query string, offset, limit int) ([]Item, error)
+	List(query string, offset, limit int) ([]*Item, error)
 }
 
 // Item represents an item
@@ -23,7 +23,7 @@ type Item struct {
 	ID               int     `jsonapi:"primary,items"`
 	Title            string  `jsonapi:"attr,title"`
 	Description      string  `jsonapi:"attr,description"`
-	Number           int     `jsonapi:"attr,num"`
+	Number           string  `jsonapi:"attr,num"`
 	ProjectID        string  `jsonapi:"attr,project_id"`
 	OpenState        bool    `jsonapi:"attr,open_state"`
 	LockConversation bool    `jsonapi:"attr,lock_conversation"`

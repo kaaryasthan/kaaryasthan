@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/blevesearch/bleve"
 	"github.com/google/jsonapi"
 	"github.com/kaaryasthan/kaaryasthan/auth/model"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
@@ -101,7 +100,7 @@ func TestIntegration(t *testing.T) {
 	if itm.ID <= 0 {
 		t.Fatalf("Data not inserted. ID: %#v", itm.ID)
 	}
-	if itm.Number != 1 {
+	if itm.Number != "1" {
 		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 
@@ -153,13 +152,17 @@ func TestIntegration(t *testing.T) {
 		t.Errorf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
 	}
 
-	// search for some text
-	query := bleve.NewMatchQuery("sometitle")
-	search := bleve.NewSearchRequest(query)
-	searchResults, err := bi.Idx.Search(search)
+	req2, _ := http.NewRequest("GET", ts.URL+"/api/v1/items?Query=sometitle", nil)
+	req2.Header.Set("Authorization", "Bearer "+tkn)
+	client2 := http.Client{}
+	resp2, err := client2.Do(req2)
 	if err != nil {
-		fmt.Println(err)
+		t.Fatal(err)
+	}
+	defer resp2.Body.Close()
+
+	if _, err := jsonapi.UnmarshalManyPayload(resp2.Body, reflect.TypeOf(new(item.Item))); err != nil {
+		t.Fatal("Unable to unmarshal body:", err)
 		return
 	}
-	fmt.Println("Search results:\n", searchResults)
 }

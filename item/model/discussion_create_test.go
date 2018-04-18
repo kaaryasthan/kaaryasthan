@@ -38,7 +38,7 @@ func TestDiscussionCreate(t *testing.T) {
 	if itm.ID <= 0 {
 		t.Fatalf("Data not inserted. ID: %#v", itm.ID)
 	}
-	if itm.Number != 1 {
+	if itm.Number != "1" {
 		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 

@@ -37,7 +37,7 @@ func (c *ItemController) ShowItemHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	itm := &item.Item{Number: number}
+	itm := &item.Item{Number: num}
 	if err := c.ds.Show(itm); err != nil {
 		log.Println("Couldn't find item: ", number, err)
 		http.Error(w, "Couldn't find item: "+string(number), http.StatusInternalServerError)

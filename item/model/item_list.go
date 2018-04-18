@@ -7,7 +7,7 @@ import (
 )
 
 // List searches for items which maches text in items+discussions+comments
-func (ds *Datastore) List(queryText string, offset, limit int) ([]Item, error) {
+func (ds *Datastore) List(queryText string, offset, limit int) ([]*Item, error) {
 	matchQuery := bleve.NewQueryStringQuery(queryText)
 	searchRequest := bleve.NewSearchRequest(matchQuery)
 	bleve.NewConjunctionQuery(matchQuery)
@@ -48,18 +48,20 @@ func (ds *Datastore) List(queryText string, offset, limit int) ([]Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	var items []Item
+	var items []*Item
 	for _, res := range searchResults.Hits {
 		id, err := strconv.Atoi(res.ID)
 		if err != nil {
 			return nil, err
 		}
-		itm := Item{ID: id, Title: res.Fields["title"].(string), Description: res.Fields["description"].(string)}
-		i := res.Fields["label"]
-		for _, j := range i.([]interface{}) {
-			itm.Labels = append(itm.Labels, j.(string))
+		itm := Item{ID: id, Number: "1", ProjectID: "1", Title: res.Fields["title"].(string), Description: res.Fields["description"].(string)}
+		i, ok := res.Fields["label"]
+		if ok {
+			for _, j := range i.([]interface{}) {
+				itm.Labels = append(itm.Labels, j.(string))
+			}
 		}
-		items = append(items, itm)
+		items = append(items, &itm)
 	}
 	return items, nil
 }

@@ -58,7 +58,7 @@ func (ds *itemDS) Create(usr *user.User, itm *item.Item) error {
 	return nil
 }
 
-func (ds *itemDS) List(query string, offset, limit int) ([]item.Item, error) {
+func (ds *itemDS) List(query string, offset, limit int) ([]*item.Item, error) {
 	return nil, nil
 }
 

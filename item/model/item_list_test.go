@@ -1,7 +1,6 @@
 package item
 
 import (
-	"fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -44,7 +43,7 @@ func TestItemList(t *testing.T) {
 		if itm.ID <= 0 {
 			t.Fatalf("Data not inserted. ID: %#v", itm.ID)
 		}
-		if itm.Number != i+1 {
+		if itm.Number != strconv.Itoa(i+1) {
 			t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 		}
 	}
@@ -58,21 +57,16 @@ func TestItemList(t *testing.T) {
 
 	time.Sleep(time.Second) // FIXME: Any other approach possible?
 	items, err := itmDS.List(`label:"a/c -_d"`, 0, 20)
-	for _, i := range items {
-		fmt.Println(i)
-	}
 	if err != nil {
 		t.Error("Retrieving items failed.")
 	}
-	/*
-		if items[0].ID != 1 {
-			t.Error("Wrong ID", items[0].ID)
-		}
-		if items[0].Title != "found sometitle0" {
-			t.Error("Wrong Title", items[0].Title)
-		}
-		if items[0].Description != "Some awesome description0" {
-			t.Error("Wrong Title", items[0].Description)
-		}
-	*/
+	if items[0].ID != 4 {
+		t.Error("Wrong ID", items[0].ID)
+	}
+	if items[0].Title != "found baiju sometitle" {
+		t.Error("Wrong Title", items[0].Title)
+	}
+	if items[0].Description != "Some awesome description" {
+		t.Error("Wrong Title", items[0].Description)
+	}
 }

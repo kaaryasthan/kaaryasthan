@@ -1,3 +1,13 @@
-<p>
-  item-list works!
-</p>
+<div class="container">
+  <h1>Item Search</h1>
+  <form>
+
+    <div class="form-group">
+      <label for="title">Search text</label>
+      <input type="text" class="form-control" id="search" required #search  (blur)="updateSearch(search.value)" (keyup.enter)="updateSearch(search.value)">
+    </div>
+
+    <button type="button" class="btn btn-success" (click)="newSearch()">Search</button>
+
+  </form>
+</div>

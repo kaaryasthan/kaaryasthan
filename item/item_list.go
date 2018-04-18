@@ -32,7 +32,7 @@ func (c *ItemController) ListItemHandler(w http.ResponseWriter, r *http.Request)
 		query = queries[0]
 	}
 
-	var objs []item.Item
+	var objs []*item.Item
 	var err error
 	// FIXME: offset & limit hard-coded
 	if objs, err = c.ds.List(query, 0, 20); err != nil {
