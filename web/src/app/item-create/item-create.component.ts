@@ -7,6 +7,7 @@ import { ProjectModel } from '../project.service';
 import { ProjectService } from '../project.service';
 
 class Item {
+    id = 0;
     project_id = 0;
     title = '';
     description = '';

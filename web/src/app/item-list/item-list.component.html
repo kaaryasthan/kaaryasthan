@@ -9,5 +9,9 @@
 
     <button type="button" class="btn btn-success" (click)="newSearch()">Search</button>
 
+    <li *ngFor="let item of items">
+      {{ item.title }} - {{ item.description }}
+    </li>
+
   </form>
 </div>
