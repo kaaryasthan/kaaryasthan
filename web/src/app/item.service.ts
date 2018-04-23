@@ -8,6 +8,7 @@ import { Item } from './item';
 
 export class ItemModel {
     id = 0;
+    num = "";
     title = "";
     description = "";
     project_id = 0;
@@ -63,6 +64,7 @@ export class ItemService {
                     var o = data['data'][i];
                     var itm = new ItemModel();
                     itm.id = o.id;
+                    itm.num = o.attributes.num;
                     itm.title = o.attributes.title;
                     itm.description = o.attributes.description;
                     itm.project_id = o.attributes.project_id;

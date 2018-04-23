@@ -54,7 +54,7 @@ func (ds *Datastore) List(queryText string, offset, limit int) ([]*Item, error) 
 		if err != nil {
 			return nil, err
 		}
-		itm := Item{ID: id, Number: "1", ProjectID: "1", Title: res.Fields["title"].(string), Description: res.Fields["description"].(string)}
+		itm := Item{ID: id, Number: strconv.Itoa(int(res.Fields["num"].(float64))), ProjectID: "1", Title: res.Fields["title"].(string), Description: res.Fields["description"].(string)}
 		i, ok := res.Fields["label"]
 		if ok {
 			for _, j := range i.([]interface{}) {

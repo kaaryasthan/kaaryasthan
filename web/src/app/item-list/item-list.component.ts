@@ -43,9 +43,5 @@ export class ItemListComponent implements OnInit {
     newSearch() {
         console.log("new query", this.newQuery);
         this.router.navigate(["/items"], { queryParams: { q: this.newQuery } });
-        // this.itemService.search(this.newQuery)
-        //     .subscribe(token => {
-        //         this.router.navigate(["/items"], { queryParams: { q: this.newQuery } });
-        //     });
     }
 }

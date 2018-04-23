@@ -10,7 +10,7 @@
     <button type="button" class="btn btn-success" (click)="newSearch()">Search</button>
 
     <li *ngFor="let item of items">
-      {{ item.title }} - {{ item.description }}
+      <a href="/#/items/{{ item.num }}">{{ item.title }}</a> - {{ item.description }}
     </li>
 
   </form>
