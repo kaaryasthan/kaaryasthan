@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 import { ProjectCreateComponent } from './project-create/project-create.component';
 import { ItemCreateComponent } from './item-create/item-create.component';
 import { ItemListComponent } from './item-list/item-list.component';
+import { ItemShowComponent } from './item-show/item-show.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -18,6 +19,7 @@ const routes: Routes = [
     { path: 'projects/new', component: ProjectCreateComponent, canActivate: [AuthGuard] },
     { path: 'items/new', component: ItemCreateComponent, canActivate: [AuthGuard] },
     { path: 'items', component: ItemListComponent, canActivate: [AuthGuard] },
+    { path: 'items/:num', component: ItemShowComponent, canActivate: [AuthGuard] },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

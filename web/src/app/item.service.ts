@@ -75,4 +75,26 @@ export class ItemService {
 
     }
 
+    getItem(num: string): Observable<Item> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Bearer ' + localStorage.getItem('currentUser'),
+            })
+        };
+
+        console.log('Bearer ' + localStorage.getItem('currentUser'));
+        return this.http
+            .get(this.itmUrl + "/" + +num, httpOptions)
+            .map(data => {
+                let itm: Item = new ItemModel();
+                let o = data['data'];
+                itm.id = 1;
+                itm.num = o.attributes.num;
+                itm.title = o.attributes.title;
+                itm.description = o.attributes.description;
+                itm.project_id = o.attributes.project_id;
+                return itm;
+            })
+    }
 }

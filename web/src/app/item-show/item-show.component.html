@@ -1,3 +1,8 @@
-<p>
-  item-show works!
-</p>
+<div *ngIf="item$ | async as item">
+  
+<h2>{{ item.title }}</h2>
+
+<br>
+
+{{ item.description }}
+</div>
