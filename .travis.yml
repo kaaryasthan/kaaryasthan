@@ -32,10 +32,10 @@ cache:
 install:
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
   && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
-  install 6.11.2
+  install 8.11.1
 - node --version
 - npm --version
-- npm install -g @angular/cli
+- npm install -g @angular/cli@1.7.4
 
 script:
 - cd $TRAVIS_BUILD_DIR/web && yarn install && cd ..
