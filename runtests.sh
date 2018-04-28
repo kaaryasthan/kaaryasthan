@@ -3,7 +3,7 @@ set -e
 golint db/db.go
 golint web/web.go
 golint route/route.go
-gometalinter $(glide nv)  --disable-all --enable=errcheck --enable=ineffassign \
+gometalinter --deadline=2m $(glide nv)  --disable-all --enable=errcheck --enable=ineffassign \
 	--enable=gofmt --enable=vet --enable=deadcode --enable=varcheck \
 	--enable=structcheck --enable=maligned --enable=unconvert --enable=unused \
 	--enable=goconst --enable=gas --enable=unparam --enable=staticcheck \
