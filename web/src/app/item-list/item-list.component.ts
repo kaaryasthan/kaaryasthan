@@ -26,6 +26,8 @@ export class ItemListComponent implements OnInit {
         this.route.queryParams.subscribe(params => {
             if ("q" in params) {
                 this.query = params["q"];
+            } else {
+                this.query = "state:open";
             }
             console.log("query: ", this.query);
             this.itemService.search(this.query)
