@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 
 bindata_assetfs.go
+package-lock.json
