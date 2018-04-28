@@ -43,7 +43,7 @@ type Item struct {
 	Updated           *time.Time `json:"updated"`
 	Assignees         []string   `json:"assignee"`
 	Subscribers       []string   `json:"subscriber"`
-	OpenState         bool       `json:"state"`
+	State             string     `json:"state"`
 	Mentions          []string   `json:"mention"`
 	DiscussionAuthors []string   `json:"discussion_author"`
 	DiscussionEditors []string   `json:"discussion_editor"`
@@ -62,12 +62,19 @@ func (i *Item) Type() string {
 
 // GenerateFromDatabase creates full-text search index
 func (bi *BleveIndex) GenerateFromDatabase() error {
-	rows, err := bi.db.Query("SELECT num, title, description FROM items")
+	rows, err := bi.db.Query("SELECT num, title, description, labels, open_state FROM items")
 	for rows.Next() {
+		var l pq.StringArray
+		var state bool
 		d := Item{}
-		err = rows.Scan(&d.Num, &d.Title, &d.Description)
+		err = rows.Scan(&d.Num, &d.Title, &d.Description, &l, &state)
 		if err != nil {
 			return err
+		}
+		d.Labels = []string(l)
+		d.State = "closed"
+		if state {
+			d.State = "open"
 		}
 		if err = bi.Idx.Index(strconv.Itoa(d.Num), d); err != nil {
 			log.Println("Error indexing:", err)
@@ -90,12 +97,17 @@ func (bi *BleveIndex) waitForNotification(l *pq.Listener) {
 				continue
 			}
 			var l pq.StringArray
-			if err := bi.db.QueryRow("SELECT num, title, description, labels FROM items WHERE id = $1",
-				id).Scan(&d.Num, &d.Title, &d.Description, &l); err != nil {
+			var state bool
+			if err := bi.db.QueryRow("SELECT num, title, description, labels, open_state FROM items WHERE id = $1",
+				id).Scan(&d.Num, &d.Title, &d.Description, &l, &state); err != nil {
 				log.Println("Error running query:", err)
 				continue
 			}
 			d.Labels = []string(l)
+			d.State = "closed"
+			if state {
+				d.State = "open"
+			}
 			if err := bi.Idx.Index(strconv.Itoa(d.Num), &d); err != nil {
 				log.Println("Error indexing:", err)
 			}
@@ -144,6 +156,10 @@ func NewBleveIndex(db *sql.DB, conf config.Configuration) *BleveIndex {
 		authorFieldMapping := bleve.NewTextFieldMapping()
 		authorFieldMapping.Analyzer = keyword
 		docMapping.AddFieldMappingsAt("author", authorFieldMapping)
+
+		stateFieldMapping := bleve.NewTextFieldMapping()
+		stateFieldMapping.Analyzer = keyword
+		docMapping.AddFieldMappingsAt("state", stateFieldMapping)
 
 		editorFieldMapping := bleve.NewTextFieldMapping()
 		editorFieldMapping.Analyzer = keyword
