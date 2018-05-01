@@ -1,8 +1,18 @@
-<div *ngIf="item$ | async as item">
+<div class="container">
+
+  <div *ngIf="item$ | async as item">
   
-<h2>{{ item.title }}</h2>
+    <h2>{{ item.title }}</h2>
 
-<br>
+    <br>
 
-{{ item.description }}
+    {{ item.description }}
+
+
+  <app-discussion-list>  </app-discussion-list>
+
+  <app-discussion-create [item_id]="+item.num">  </app-discussion-create>
+
+  </div>
+  
 </div>
