@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
+	"github.com/pkg/errors"
 )
 
 // ShowItemHandler shows item
@@ -22,7 +23,7 @@ func (c *ItemController) ShowItemHandler(w http.ResponseWriter, r *http.Request)
 
 	usr := &user.User{ID: userID}
 	if err := c.uds.Valid(usr); err != nil {
-		log.Println("Couldn't validate user: "+usr.ID, err)
+		log.Printf("Couldn't validate user: %s \n%+v\n", usr.ID, err)
 		http.Error(w, "Couldn't validate user: "+usr.ID, http.StatusUnauthorized)
 		return
 	}
@@ -32,14 +33,14 @@ func (c *ItemController) ShowItemHandler(w http.ResponseWriter, r *http.Request)
 
 	number, err := strconv.Atoi(num)
 	if err != nil {
-		log.Println("Invalid number: "+num, err)
+		log.Printf("Invalid number: %s \n%+v\n", num, errors.WithStack(err))
 		http.Error(w, "Invalid number: "+num, http.StatusUnauthorized)
 		return
 	}
 
 	itm := &item.Item{Number: num}
 	if err := c.ds.Show(itm); err != nil {
-		log.Println("Couldn't find item: ", number, err)
+		log.Printf("Couldn't find item: %d \n%+v\n", number, err)
 		http.Error(w, "Couldn't find item: "+string(number), http.StatusInternalServerError)
 		return
 	}

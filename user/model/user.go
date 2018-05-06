@@ -3,10 +3,10 @@ package user
 import (
 	"crypto/rand"
 	"database/sql"
-	"errors"
 	"io"
 	"log"
 
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/scrypt"
 )
 
@@ -66,10 +66,10 @@ func (ds *Datastore) Valid(usr *User) error {
 		WHERE id=$1 AND active=true AND email_verified=true AND deleted_at IS NULL`,
 		usr.ID).Scan(&count)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "validate user: "+usr.ID)
 	}
 	if count == 0 {
-		return errors.New("Invalid user")
+		return errors.New("Invalid user: " + usr.ID)
 	}
 	return nil
 }

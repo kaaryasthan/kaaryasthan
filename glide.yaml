@@ -22,3 +22,5 @@ import:
   version: 83612a56d3dd153a94a629cd64925371c9adad78
   subpackages:
   - oid
+- package: github.com/pkg/errors
+  version: ^0.8.0

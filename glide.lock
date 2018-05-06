@@ -1,5 +1,5 @@
-hash: 0b6c4555a8a53aeb0b7e26d022aec6263f03e434583caa7f44794579f42baddf
-updated: 2018-02-21T10:34:51.901441887+05:30
+hash: 7baea8c4ae2ddea11b44802443ba350b274c1cc205ef41d0f50d60f7966a5f57
+updated: 2018-05-05T15:24:32.071294574+05:30
 imports:
 - name: github.com/auth0/go-jwt-middleware
   version: 5493cabe49f7bfa6e2ec444a09d334d90cd4e2bd
@@ -52,7 +52,7 @@ imports:
   version: 144418e1475d8bf7abbdc48583500f1a20c62ea7
   repo: https://github.com/boltdb/bolt
 - name: github.com/dgrijalva/jwt-go
-  version: dbeaa9332f19a944acb5736b4456cfcc02140e29
+  version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
 - name: github.com/elazarl/go-bindata-assetfs
   version: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
 - name: github.com/golang/protobuf
@@ -74,6 +74,8 @@ imports:
   version: 83612a56d3dd153a94a629cd64925371c9adad78
   subpackages:
   - oid
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/steveyen/gtreap
   version: 0abe01ef9be25c4aedc174758ec2d917314d6d70
   repo: https://github.com/steveyen/gtreap

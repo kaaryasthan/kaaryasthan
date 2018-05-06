@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/baijum/logger"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
 	"github.com/gorilla/mux"
@@ -26,9 +25,7 @@ func (c *Controller) ShowUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	usr := &user.User{ID: userID}
 	if err := c.ds.Valid(usr); err != nil {
-		if logger.Level <= logger.DEBUG {
-			log.Println("Couldn't validate user: "+usr.ID, err)
-		}
+		log.Println("Couldn't validate user: "+usr.ID, err)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -38,16 +35,12 @@ func (c *Controller) ShowUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	usr = &user.User{Username: username}
 	if err := c.ds.Show(usr); err != nil {
-		if logger.Level <= logger.DEBUG {
-			log.Println("Couldn't find user: "+username, err)
-		}
+		log.Println("Couldn't find user: "+username, err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	if err := jsonapi.MarshalPayload(w, usr); err != nil {
-		if logger.Level <= logger.DEBUG {
-			log.Println("Couldn't unmarshal: ", err)
-		}
+		log.Println("Couldn't unmarshal: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

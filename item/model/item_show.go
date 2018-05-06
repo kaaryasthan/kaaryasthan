@@ -1,5 +1,7 @@
 package item
 
+import "github.com/pkg/errors"
+
 // Show an item
 func (ds *Datastore) Show(itm *Item) error {
 	err := ds.db.QueryRow(`SELECT id, title, description, open_state,
@@ -10,5 +12,5 @@ func (ds *Datastore) Show(itm *Item) error {
 		&itm.OpenState, &itm.ProjectID, &itm.LockConversation, &itm.CreatedBy,
 		&itm.UpdatedBy, &itm.Assignees, &itm.Subscribers, &itm.Labels,
 		&itm.CreatedAt, &itm.UpdatedAt)
-	return err
+	return errors.Wrap(err, "select item with number: "+itm.Number)
 }

@@ -32,5 +32,7 @@ func Register(art *mux.Router, db *sql.DB, bi *search.BleveIndex) {
 	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}", ic.ShowItemHandler).Methods("GET")
 	art.HandleFunc("/api/v1/items", ic.ListItemHandler).Methods("GET")
 	art.HandleFunc("/api/v1/discussions", dc.CreateDiscussionHandler).Methods("POST")
-	art.HandleFunc("/api/v1/comments", cc.CreateCommentHandler).Methods("POST")
+	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}/relationships/discussions", dc.CreateDiscussionHandler).Methods("POST")
+	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}/discussions", dc.ListDiscussionHandler).Methods("GET")
+	art.HandleFunc("/api/v1/discussions/{id}/relationships/comments", cc.CreateCommentHandler).Methods("POST")
 }

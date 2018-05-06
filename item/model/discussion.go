@@ -11,6 +11,7 @@ import (
 type DiscussionRepository interface {
 	Create(usr *user.User, disc *Discussion) error
 	Valid(itm *Discussion) error
+	List(itm int) ([]*Discussion, error)
 }
 
 // Discussion represents a discussion

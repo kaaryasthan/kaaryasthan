@@ -15,7 +15,7 @@ type CommentRepository interface {
 type Comment struct {
 	ID           string `jsonapi:"primary,comments"`
 	Body         string `jsonapi:"attr,body"`
-	DiscussionID string `jsonapi:"attr,discussion_id"`
+	DiscussionID string
 }
 
 // CommentDatastore implements the Repository interface

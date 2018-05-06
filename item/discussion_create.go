@@ -3,9 +3,11 @@ package controller
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
+	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
@@ -30,13 +32,24 @@ func (c *DiscussionController) CreateDiscussionHandler(w http.ResponseWriter, r 
 		return
 	}
 
-	itm := &item.Item{ID: disc.ItemID}
+	vars := mux.Vars(r)
+	num := vars["number"]
+
+	number, err := strconv.Atoi(num)
+	if err != nil {
+		log.Println("Invalid number: "+num, err)
+		http.Error(w, "Invalid number: "+num, http.StatusUnauthorized)
+		return
+	}
+
+	itm := &item.Item{ID: number}
 	if err := c.ids.Valid(itm); err != nil {
 		log.Println("Couldn't validate item: ", err)
 		return
 	}
 
-	err := c.ds.Create(usr, disc)
+	disc.ItemID = number
+	err = c.ds.Create(usr, disc)
 	if err != nil {
 		log.Println("Unable to save data: ", err)
 		return

@@ -3,8 +3,11 @@ package item
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
+	"github.com/google/jsonapi"
+	"github.com/kaaryasthan/kaaryasthan/config"
 	"github.com/kaaryasthan/kaaryasthan/search"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/lib/pq"
@@ -34,6 +37,19 @@ type Item struct {
 	Labels           pq.StringArray
 	CreatedAt        time.Time
 	UpdatedAt        *time.Time
+	Discussions      []*Discussion `jsonapi:"relation,discussions"`
+}
+
+// JSONAPIRelationshipLinks invoked for each relationship defined
+// on the Item struct when marshaled
+func (itm Item) JSONAPIRelationshipLinks(relation string) *jsonapi.Links {
+	if relation == "discussions" {
+		return &jsonapi.Links{
+			"self":    fmt.Sprintf(config.Config.BaseURL+"/api/v1/items/%s/relationships/discussions", itm.Number),
+			"related": fmt.Sprintf(config.Config.BaseURL+"/api/v1/items/%s/discussions", itm.Number),
+		}
+	}
+	return nil
 }
 
 // Datastore implements the Repository interface

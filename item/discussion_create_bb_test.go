@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	authctrl "github.com/kaaryasthan/kaaryasthan/auth"
 	"github.com/kaaryasthan/kaaryasthan/item"
-	"github.com/kaaryasthan/kaaryasthan/item/model"
+	item "github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/test"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 	"github.com/urfave/negroni"
@@ -28,13 +28,17 @@ func (ds *discussionDS) Valid(itm *item.Discussion) error {
 	return nil
 }
 
+func (ds *discussionDS) List(itmID int) ([]*item.Discussion, error) {
+	return nil, nil
+}
+
 func TestDiscussionCreateHandler(t *testing.T) {
 	t.Parallel()
 
 	n := negroni.New()
 	r := mux.NewRouter()
 	c := controller.NewDiscussionController(&userDS{}, &itemDS{}, &discussionDS{})
-	r.Handle("/api/v1/discussions", negroni.New(
+	r.Handle("/api/v1/items/{number:[1-9]\\d*}/relationships/discussions", negroni.New(
 		negroni.HandlerFunc(authctrl.JwtMiddleware.HandlerWithNext),
 		negroni.Wrap(http.HandlerFunc(c.CreateDiscussionHandler)),
 	)).Methods("POST")
@@ -44,13 +48,12 @@ func TestDiscussionCreateHandler(t *testing.T) {
 		"data": {
 			"type": "discussions",
 			"attributes": {
-				"body": "Some body",
-				"item_id": 1
+				"body": "Some body"
 			}
 		}
 	}`)
 
-	req, _ := http.NewRequest("POST", "/api/v1/discussions", bytes.NewReader(d))
+	req, _ := http.NewRequest("POST", "/api/v1/items/1/relationships/discussions", bytes.NewReader(d))
 	req.Header.Set("Authorization", test.NewBearerToken())
 	tr := httptest.NewRecorder()
 	n.ServeHTTP(tr, req)
@@ -59,6 +62,7 @@ func TestDiscussionCreateHandler(t *testing.T) {
 	if err := jsonapi.UnmarshalPayload(bytes.NewReader(d), reqPayload); err != nil {
 		t.Fatal("Unable to unmarshal input:", err)
 	}
+	reqPayload.ItemID = 1
 
 	respPayload := new(item.Discussion)
 	if err := jsonapi.UnmarshalPayload(tr.Body, respPayload); err != nil {

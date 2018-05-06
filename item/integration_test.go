@@ -4,7 +4,6 @@ package controller_test
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -113,22 +112,21 @@ func TestIntegration(t *testing.T) {
 		t.Fatalf("Data not inserted. ID: %#v", disc.ID)
 	}
 
-	n := []byte(fmt.Sprintf(`{
+	n := []byte(`{
 			"data": {
-				"type": "comments",
+				"type": "discussions",
 				"attributes": {
-					"body": "Some Body",
-					"discussion_id": "%s"
+					"body": "Some Body"
 				}
 			}
-		}`, disc.ID))
+		}`)
 
-	reqPayload := new(item.Comment)
+	reqPayload := new(item.Discussion)
 	if err := jsonapi.UnmarshalPayload(bytes.NewReader(n), reqPayload); err != nil {
 		t.Fatal("Unable to unmarshal input:", err)
 	}
 
-	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/comments", bytes.NewReader(n))
+	req, _ := http.NewRequest("POST", ts.URL+"/api/v1/items/1/relationships/discussions", bytes.NewReader(n))
 	req.Header.Set("Authorization", "Bearer "+tkn)
 	client := http.Client{}
 	resp, err := client.Do(req)
@@ -137,16 +135,17 @@ func TestIntegration(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	respPayload := new(item.Comment)
+	respPayload := new(item.Discussion)
 	if err := jsonapi.UnmarshalPayload(resp.Body, respPayload); err != nil {
 		t.Fatal("Unable to unmarshal body:", err)
 		return
 	}
+	reqPayload.ItemID = 1
 
 	reqPayload.ID = respPayload.ID
 
 	if reqPayload.ID == "" {
-		t.Error("Comment ID is empty")
+		t.Error("Discussion ID is empty")
 	}
 	if !reflect.DeepEqual(reqPayload, respPayload) {
 		t.Errorf("Data not matching. \nOriginal: %#v\nNew Data: %#v", reqPayload, respPayload)
@@ -161,7 +160,8 @@ func TestIntegration(t *testing.T) {
 	}
 	defer resp2.Body.Close()
 
-	if _, err := jsonapi.UnmarshalManyPayload(resp2.Body, reflect.TypeOf(new(item.Item))); err != nil {
+	buf := test.BufLog(t, resp2.Body, "Item:")
+	if _, err := jsonapi.UnmarshalManyPayload(buf, reflect.TypeOf(new(item.Item))); err != nil {
 		t.Fatal("Unable to unmarshal body:", err)
 		return
 	}

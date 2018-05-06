@@ -36,7 +36,10 @@ func TestItemShowHandler(t *testing.T) {
 	}
 
 	respPayload := new(item.Item)
-	if err := jsonapi.UnmarshalPayload(tr.Body, respPayload); err != nil {
+
+	buf := test.BufLog(t, tr.Body, "Item:")
+
+	if err := jsonapi.UnmarshalPayload(buf, respPayload); err != nil {
 		t.Error("Unable to unmarshal body:", err)
 		return
 	}
