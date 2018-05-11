@@ -29,30 +29,25 @@ type BleveIndex struct {
 
 // Item to index
 type Item struct {
-	Num               int        `json:"num"`
-	Title             string     `json:"title"`
-	Description       string     `json:"description"`
-	Discussions       []string   `json:"discussion"`
-	Comments          []string   `json:"comment"`
-	Project           string     `json:"project"`
-	Labels            []string   `json:"label"`
-	Milestones        []string   `json:"milestone"`
-	Author            string     `json:"author"`
-	Editor            string     `json:"editor"`
-	Created           time.Time  `json:"created"`
-	Updated           *time.Time `json:"updated"`
-	Assignees         []string   `json:"assignee"`
-	Subscribers       []string   `json:"subscriber"`
-	State             string     `json:"state"`
-	Mentions          []string   `json:"mention"`
-	DiscussionAuthors []string   `json:"discussion_author"`
-	DiscussionEditors []string   `json:"discussion_editor"`
-	DiscussionCreated time.Time  `json:"discussion_created"`
-	DiscussionUpdated *time.Time `json:"discussion_updated"`
-	CommentAuthors    []string   `json:"comment_author"`
-	CommentEditors    string     `json:"comment_editor"`
-	CommentCreated    time.Time  `json:"comment_created"`
-	CommentUpdated    *time.Time `json:"comment_updated"`
+	Num            int        `json:"num"`
+	Title          string     `json:"title"`
+	Description    string     `json:"description"`
+	Comments       []string   `json:"comment"`
+	Project        string     `json:"project"`
+	Labels         []string   `json:"label"`
+	Milestones     []string   `json:"milestone"`
+	Author         string     `json:"author"`
+	Editor         string     `json:"editor"`
+	Created        time.Time  `json:"created"`
+	Updated        *time.Time `json:"updated"`
+	Assignees      []string   `json:"assignee"`
+	Subscribers    []string   `json:"subscriber"`
+	State          string     `json:"state"`
+	Mentions       []string   `json:"mention"`
+	CommentAuthors []string   `json:"comment_author"`
+	CommentEditors string     `json:"comment_editor"`
+	CommentCreated time.Time  `json:"comment_created"`
+	CommentUpdated *time.Time `json:"comment_updated"`
 }
 
 // Type of the document for custom mapping
@@ -176,14 +171,6 @@ func NewBleveIndex(db *sql.DB, conf config.Configuration) *BleveIndex {
 		mentionFieldMapping := bleve.NewTextFieldMapping()
 		mentionFieldMapping.Analyzer = keyword
 		docMapping.AddFieldMappingsAt("mention", mentionFieldMapping)
-
-		discAuthorFieldMapping := bleve.NewTextFieldMapping()
-		discAuthorFieldMapping.Analyzer = keyword
-		docMapping.AddFieldMappingsAt("discAuthor", discAuthorFieldMapping)
-
-		discEditorFieldMapping := bleve.NewTextFieldMapping()
-		discEditorFieldMapping.Analyzer = keyword
-		docMapping.AddFieldMappingsAt("discEditor", discEditorFieldMapping)
 
 		comAuthorFieldMapping := bleve.NewTextFieldMapping()
 		comAuthorFieldMapping.Analyzer = keyword

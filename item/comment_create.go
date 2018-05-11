@@ -3,9 +3,11 @@ package controller
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/jsonapi"
+	"github.com/gorilla/mux"
 	"github.com/kaaryasthan/kaaryasthan/item/model"
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
@@ -30,13 +32,24 @@ func (c *CommentController) CreateCommentHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	disc := &item.Discussion{ID: cmt.DiscussionID}
-	if err := c.dds.Valid(disc); err != nil {
-		log.Println("Couldn't validate discussion: ", err)
+	vars := mux.Vars(r)
+	num := vars["number"]
+
+	number, err := strconv.Atoi(num)
+	if err != nil {
+		log.Println("Invalid number: "+num, err)
+		http.Error(w, "Invalid number: "+num, http.StatusUnauthorized)
 		return
 	}
 
-	err := c.ds.Create(usr, cmt)
+	itm := &item.Item{ID: number}
+	if err := c.ids.Valid(itm); err != nil {
+		log.Println("Couldn't validate item: ", err)
+		return
+	}
+
+	cmt.ItemID = number
+	err = c.ds.Create(usr, cmt)
 	if err != nil {
 		log.Println("Unable to save data: ", err)
 		return

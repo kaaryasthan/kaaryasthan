@@ -1,3 +1,16 @@
-<p>
-  comment-create works!
-</p>
+<div class="container">
+
+  <form>
+
+    <div class="form-group">
+      <label for="body">Comment</label>
+
+      <textarea class="form-control" name="body" id="body" rows="3" [ngModel]="body" (ngModelChange)="updateCommentBody($event)"> </textarea>
+
+    </div>
+
+    <button type="button" class="btn btn-success" (click)="newComment()">Comment</button>
+
+  </form>
+
+</div>

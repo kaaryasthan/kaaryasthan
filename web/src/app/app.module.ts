@@ -14,7 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthService } from './auth.service';
 import { ProjectService } from './project.service';
 import { ItemService } from './item.service';
-import { DiscussionService } from './discussion.service';
+import { CommentService } from './comment.service';
 
 import { EmailComponent } from './email/email.component';
 import { RegisterComponent } from './register/register.component';
@@ -23,9 +23,6 @@ import { ItemCreateComponent } from './item-create/item-create.component';
 import { ItemListComponent } from './item-list/item-list.component';
 import { ItemShowComponent } from './item-show/item-show.component';
 import { ItemEditComponent } from './item-edit/item-edit.component';
-import { DiscussionCreateComponent } from './discussion-create/discussion-create.component';
-import { DiscussionListComponent } from './discussion-list/discussion-list.component';
-import { DiscussionEditComponent } from './discussion-edit/discussion-edit.component';
 import { CommentCreateComponent } from './comment-create/comment-create.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentEditComponent } from './comment-edit/comment-edit.component';
@@ -42,9 +39,6 @@ import { CommentEditComponent } from './comment-edit/comment-edit.component';
         ItemListComponent,
         ItemShowComponent,
         ItemEditComponent,
-        DiscussionCreateComponent,
-        DiscussionListComponent,
-        DiscussionEditComponent,
         CommentCreateComponent,
         CommentListComponent,
         CommentEditComponent
@@ -61,7 +55,7 @@ import { CommentEditComponent } from './comment-edit/comment-edit.component';
         AuthService,
         ProjectService,
         ItemService,
-        DiscussionService
+        CommentService
     ],
     bootstrap: [AppComponent]
 })

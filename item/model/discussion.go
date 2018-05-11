@@ -7,54 +7,54 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
-// DiscussionRepository to manage items
-type DiscussionRepository interface {
-	Create(usr *user.User, disc *Discussion) error
-	Valid(itm *Discussion) error
-	List(itm int) ([]*Discussion, error)
+// CommentRepository to manage items
+type CommentRepository interface {
+	Create(usr *user.User, cmt *Comment) error
+	Valid(itm *Comment) error
+	List(itm int) ([]*Comment, error)
 }
 
-// Discussion represents a discussion
-type Discussion struct {
-	ID     string `jsonapi:"primary,discussions"`
+// Comment represents a comment
+type Comment struct {
+	ID     string `jsonapi:"primary,comments"`
 	Body   string `jsonapi:"attr,body"`
 	ItemID int    `jsonapi:"attr,item_id"`
 }
 
-// DiscussionDatastore implements the Repository interface
-type DiscussionDatastore struct {
+// CommentDatastore implements the Repository interface
+type CommentDatastore struct {
 	db *sql.DB
 }
 
-// NewDiscussionDatastore constructs a new Repository
-func NewDiscussionDatastore(db *sql.DB) *DiscussionDatastore {
-	return &DiscussionDatastore{db}
+// NewCommentDatastore constructs a new Repository
+func NewCommentDatastore(db *sql.DB) *CommentDatastore {
+	return &CommentDatastore{db}
 }
 
-// Valid checks the validity of the discussion
-func (ds *DiscussionDatastore) Valid(disc *Discussion) error {
+// Valid checks the validity of the comment
+func (ds *CommentDatastore) Valid(cmt *Comment) error {
 	var count int
-	err := ds.db.QueryRow(`SELECT count(1) FROM "discussions"
+	err := ds.db.QueryRow(`SELECT count(1) FROM "comments"
 		WHERE id=$1 AND deleted_at IS NULL`,
-		disc.ID).Scan(&count)
+		cmt.ID).Scan(&count)
 	if err != nil {
 		return err
 	}
 	if count == 0 {
 		return errors.New("Invalid item")
 	}
-	err = ds.db.QueryRow(`SELECT count(1) FROM "discussions"
-		INNER JOIN items ON discussions.item_id = items.id
+	err = ds.db.QueryRow(`SELECT count(1) FROM "comments"
+		INNER JOIN items ON comments.item_id = items.id
 		INNER JOIN projects ON items.project_id = projects.id
-		WHERE discussions.id=$1 AND items.lock_conversation=false
+		WHERE comments.id=$1 AND items.lock_conversation=false
 		AND items.deleted_at IS NULL AND projects.archived=false
 		AND projects.deleted_at IS NULL`,
-		disc.ID).Scan(&count)
+		cmt.ID).Scan(&count)
 	if err != nil {
 		return err
 	}
 	if count == 0 {
-		return errors.New("Invalid discussion")
+		return errors.New("Invalid comment")
 	}
 	return nil
 }

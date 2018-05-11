@@ -37,16 +37,16 @@ type Item struct {
 	Labels           pq.StringArray
 	CreatedAt        time.Time
 	UpdatedAt        *time.Time
-	Discussions      []*Discussion `jsonapi:"relation,discussions"`
+	Comments         []*Comment `jsonapi:"relation,comments"`
 }
 
 // JSONAPIRelationshipLinks invoked for each relationship defined
 // on the Item struct when marshaled
 func (itm Item) JSONAPIRelationshipLinks(relation string) *jsonapi.Links {
-	if relation == "discussions" {
+	if relation == "comments" {
 		return &jsonapi.Links{
-			"self":    fmt.Sprintf(config.Config.BaseURL+"/api/v1/items/%s/relationships/discussions", itm.Number),
-			"related": fmt.Sprintf(config.Config.BaseURL+"/api/v1/items/%s/discussions", itm.Number),
+			"self":    fmt.Sprintf(config.Config.BaseURL+"/api/v1/items/%s/relationships/comments", itm.Number),
+			"related": fmt.Sprintf(config.Config.BaseURL+"/api/v1/items/%s/comments", itm.Number),
 		}
 	}
 	return nil

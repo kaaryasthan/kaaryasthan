@@ -25,14 +25,12 @@ func NewItemController(userRepo user.Repository, prjRepo project.Repository, rep
 // Register handlers
 func Register(art *mux.Router, db *sql.DB, bi *search.BleveIndex) {
 	ic := NewItemController(user.NewDatastore(db), project.NewDatastore(db), item.NewDatastore(db, bi))
-	dc := NewDiscussionController(user.NewDatastore(db), item.NewDatastore(db, bi), item.NewDiscussionDatastore(db))
-	cc := NewCommentController(user.NewDatastore(db), item.NewDiscussionDatastore(db), item.NewCommentDatastore(db))
+	dc := NewCommentController(user.NewDatastore(db), item.NewDatastore(db, bi), item.NewCommentDatastore(db))
 
 	art.HandleFunc("/api/v1/items", ic.CreateItemHandler).Methods("POST")
 	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}", ic.ShowItemHandler).Methods("GET")
 	art.HandleFunc("/api/v1/items", ic.ListItemHandler).Methods("GET")
-	art.HandleFunc("/api/v1/discussions", dc.CreateDiscussionHandler).Methods("POST")
-	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}/relationships/discussions", dc.CreateDiscussionHandler).Methods("POST")
-	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}/discussions", dc.ListDiscussionHandler).Methods("GET")
-	art.HandleFunc("/api/v1/discussions/{id}/relationships/comments", cc.CreateCommentHandler).Methods("POST")
+	art.HandleFunc("/api/v1/comments", dc.CreateCommentHandler).Methods("POST")
+	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}/relationships/comments", dc.CreateCommentHandler).Methods("POST")
+	art.HandleFunc("/api/v1/items/{number:[1-9]\\d*}/comments", dc.ListCommentHandler).Methods("GET")
 }

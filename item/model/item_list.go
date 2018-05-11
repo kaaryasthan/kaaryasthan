@@ -6,7 +6,7 @@ import (
 	"github.com/blevesearch/bleve"
 )
 
-// List searches for items which maches text in items+discussions+comments
+// List searches for items which maches text in items and comments
 func (ds *Datastore) List(queryText string, offset, limit int) ([]*Item, error) {
 	matchQuery := bleve.NewQueryStringQuery(queryText)
 	searchRequest := bleve.NewSearchRequest(matchQuery)

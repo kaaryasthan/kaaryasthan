@@ -7,9 +7,9 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Kaaryasthan helps you to manage private projects.  You can add tasks &
-issues (items) in to your project.  An item has title, description,
-discussions, creator, assignees, and labels.  Project milestones can
-be created with due date and items with priority order.
+issues (items) to your project.  An item has title, description,
+comments, creator, assignees, and labels.  Project milestones can
+be created with due date and items with the priority order.
 
 This repository contains the source code of Kaaryasthan.  It has
 source code for both user interface and server.  The user interface of
@@ -23,8 +23,6 @@ is used for the database.
 - All URLs requires authentication except login & registration.
   (Note: This makes it unsuitable for open source projects with public
   issues.  Only private projects can be hosted using Kaaryasthan)
-- Threaded discussion. Multiple discussions can be added under an
-  item.  And comments can be added under each discussion.
 - Easy deployment.  Entire application including front-end is
   available as a single binary.  You also need to install PostgreSQL
   and NGINX unless you are using hosted PostgreSQL service.

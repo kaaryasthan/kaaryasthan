@@ -10,7 +10,7 @@ import (
 	"github.com/kaaryasthan/kaaryasthan/user/model"
 )
 
-func TestDiscussionCreate(t *testing.T) {
+func TestCommentCreate(t *testing.T) {
 	t.Parallel()
 	DB, conf := test.NewTestDB()
 	defer test.ResetDB(DB, conf)
@@ -42,12 +42,12 @@ func TestDiscussionCreate(t *testing.T) {
 		t.Fatalf("Data not inserted. Num: %#v", itm.Number)
 	}
 
-	discDS := NewDiscussionDatastore(DB)
-	disc := &Discussion{Body: "some discussion", ItemID: itm.ID}
-	if err := discDS.Create(usr, disc); err != nil {
+	cmtDS := NewCommentDatastore(DB)
+	cmt := &Comment{Body: "some comment", ItemID: itm.ID}
+	if err := cmtDS.Create(usr, cmt); err != nil {
 		t.Error(err)
 	}
-	if disc.ID == "" {
-		t.Errorf("Data not inserted. ID: %#v", disc.ID)
+	if cmt.ID == "" {
+		t.Errorf("Data not inserted. ID: %#v", cmt.ID)
 	}
 }

@@ -3,6 +3,8 @@ package project
 import (
 	"database/sql"
 	"log"
+
+	"github.com/pkg/errors"
 )
 
 // List projects
@@ -21,7 +23,7 @@ func (ds *Datastore) List(all bool) ([]*Project, error) {
 	}
 	defer func() {
 		if err = rows.Close(); err != nil {
-			log.Println("Error closing the database rows:", err)
+			log.Println(errors.Wrap(err, "failed to close database rows"))
 		}
 	}()
 
