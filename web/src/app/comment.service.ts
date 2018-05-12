@@ -11,13 +11,12 @@ import { Comment } from './comment';
 
 export class CommentModel {
     id = 0;
-    body = "";
+    body = '';
     item_id = 0;
 }
 
 @Injectable()
 export class CommentService {
-    private commentUrl = 'api/v1/comments';
 
     constructor(private http: HttpClient) { }
 
@@ -55,8 +54,10 @@ export class CommentService {
             })
         };
 
+        let url = 'api/v1/items/' + cmt.item_id.toString() + '/relationships/comments';
+
         return this.http
-            .post<Comment>(this.commentUrl, entity, httpOptions)
+            .post<Comment>(url, entity, httpOptions)
             .pipe(catchError(this.handleError))
             .map(data => {
                 return data['data'].attributes;
