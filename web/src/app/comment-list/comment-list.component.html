@@ -1,3 +1,10 @@
-<p>
-  comment-list works!
-</p>
+
+<div *ngIf="comments$ | async as comments">
+
+  <p *ngFor="let comment of comments">
+
+    {{ comment.body }}
+
+  </p>
+
+</div>

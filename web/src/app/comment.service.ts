@@ -67,4 +67,29 @@ export class CommentService {
             });
     }
 
+    list(item_id: number): Observable<Comment[]> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Bearer ' + localStorage.getItem('currentUser'),
+            })
+        };
+
+        let url = 'api/v1/items/' + item_id.toString() + '/comments';
+
+        return this.http
+            .get(url, httpOptions)
+            .map(data => {
+                var cmtList: CommentModel[] = [];
+                for (let i = 0; i < data['data'].length; i++) {
+                    var o = data['data'][i];
+                    var cmt = new CommentModel();
+                    cmt.id = o.id;
+                    cmt.body = o.attributes.body;
+                    cmtList.push(cmt);
+                }
+                return cmtList;
+            });
+
+    }
 }

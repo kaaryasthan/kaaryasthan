@@ -9,7 +9,7 @@
     {{ item.description }}
 
 
-  <app-comment-list>  </app-comment-list>
+  <app-comment-list [item_id]="+item.num">  </app-comment-list>
 
   <app-comment-create [item_id]="+item.num">  </app-comment-create>
 
