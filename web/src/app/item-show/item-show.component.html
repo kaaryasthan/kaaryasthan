@@ -11,7 +11,7 @@
 
   <app-comment-list [item_id]="+item.num">  </app-comment-list>
 
-  <app-comment-create [item_id]="+item.num">  </app-comment-create>
+  <app-comment-create [item_id]="+item.num"  (onCommentAdded)="onCommentAdded($event)">  </app-comment-create>
 
   </div>
   

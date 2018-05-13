@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
 import { CommentService } from '../comment.service';
 import { CommentModel } from '../comment.service';
 
@@ -11,11 +12,13 @@ export class CommentCreateComponent implements OnInit {
 
     @Input() item_id: number;
 
+    @Output()
+    public onCommentAdded = new EventEmitter<string>();
+
     body: string;
     data = new CommentModel();
 
-    constructor(
-        public commentService: CommentService) { }
+    constructor(public commentService: CommentService) { }
 
     ngOnInit() {
     }
@@ -29,6 +32,7 @@ export class CommentCreateComponent implements OnInit {
         this.data.item_id = this.item_id;
         console.log(this.data);
         this.commentService.create(this.data).subscribe();
+        this.onCommentAdded.emit(this.item_id.toString());
+        this.body = '';
     }
-
 }
