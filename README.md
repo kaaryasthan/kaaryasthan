@@ -2,9 +2,9 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kaaryasthan/kaaryasthan)](https://goreportcard.com/report/github.com/kaaryasthan/kaaryasthan)
 [![Build Status](https://travis-ci.org/kaaryasthan/kaaryasthan.svg?branch=master)](https://travis-ci.org/kaaryasthan/kaaryasthan)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Open Source Helpers](https://www.codetriage.com/kaaryasthan/kaaryasthan/badges/users.svg)](https://www.codetriage.com/kaaryasthan/kaaryasthan)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Kaaryasthan helps you to manage private projects.  You can add tasks &
 issues (items) to your project.  An item has title, description,
@@ -93,6 +93,25 @@ Firefox or Chrome to open it.  Any change in source files will refresh
 the user interface automatically.  There is a webhook which does this
 magic.
 
+## License
+
+    Kaaryasthan - Task Management for Small Teams
+    Copyright (C) 2017 The Kaaryasthan Authors
+
+    This program is free software: you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public
+    License along with this program.  If not, see
+    <http://www.gnu.org/licenses/>.
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key][emojis]):
@@ -124,6 +143,17 @@ Yes! You are welcome to contribute :-)
 
 Please take a look at the [CONTRIBUTING.md] and
 [wiki page about contributing] for more deatils.
+
+### Why did you choose AGPLv3+ as the license?
+
+I believe that's the best license for a web application.  From the
+[GNU website]:
+
+> The GNU Affero General Public License is a modified version of the
+> ordinary GNU GPL version 3.  It has one added requirement: if you
+> run a modified program on a server and let other users communicate
+> with it there, your server must also allow them to download the
+> source code corresponding to the modified version running there.
 
 ### Can I use Kaaryasthan to manage open source project tasks & issues?
 
@@ -162,6 +192,7 @@ request for the same :-)
 [Docker Compose]: https://docs.docker.com/compose
 [Kaaryasthan]: https://github.com/kaaryasthan/kaaryasthan
 [project in 2014]: https://github.com/baijum/pitracker
+[GNU website]: https://www.gnu.org/licenses/why-affero-gpl.en.html
 [CONTRIBUTING.md]: https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md
 [wiki page about contributing]: https://github.com/kaaryasthan/kaaryasthan/wiki/Contributing
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key

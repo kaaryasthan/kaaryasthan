@@ -1,6 +1,7 @@
 package test
 
 import (
+	"log"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -14,6 +15,10 @@ func NewBearerToken() string {
 		"exp": time.Now().Add(time.Minute).Unix(),
 	})
 
-	tkn, _ := token.SignedString([]byte(config.Config.TokenSecretKey))
+	tkn, err := token.SignedString([]byte(config.Config.TokenSecretKey))
+	if err != nil {
+		log.Println("Error sigining", err)
+		return ""
+	}
 	return "Bearer " + tkn
 }

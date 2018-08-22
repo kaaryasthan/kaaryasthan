@@ -181,7 +181,10 @@ func NewBleveIndex(db *sql.DB, conf config.Configuration) *BleveIndex {
 		docMapping.AddFieldMappingsAt("comEditor", comEditorFieldMapping)
 
 		idxMapping.AddDocumentMapping("item", docMapping)
-		idx, _ = bleve.New(conf.BleveIndexPath, idxMapping)
+		idx, err = bleve.New(conf.BleveIndexPath, idxMapping)
+		if err != nil {
+			log.Println("Error creating index", err)
+		}
 	}
 	return &BleveIndex{db, conf, idx}
 }

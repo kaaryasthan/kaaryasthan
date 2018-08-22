@@ -170,7 +170,11 @@ func generateTokens(DB *sql.DB) {
 			"exp": time.Now().Add(time.Hour * 24 * 7).Unix(),
 		})
 
-		tokenString, _ := token.SignedString(secretKey)
+		tokenString, err := token.SignedString(secretKey)
+		if err != nil {
+			log.Println("Error signing", err)
+			panic(Exit{1})
+		}
 		fmt.Println(fmt.Sprintf("Token for the user 'developer%s':\n", username))
 		fmt.Println(tokenString)
 		fmt.Println("")

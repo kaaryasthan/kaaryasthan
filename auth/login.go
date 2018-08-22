@@ -28,7 +28,11 @@ func (c *Controller) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	secretKey := []byte(config.Config.TokenSecretKey)
-	tokenString, _ := token.SignedString(secretKey)
+	tokenString, err := token.SignedString(secretKey)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	obj.Token = tokenString
 	obj.Password = ""
 	if err := jsonapi.MarshalPayload(w, obj); err != nil {

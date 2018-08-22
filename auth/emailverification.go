@@ -31,12 +31,17 @@ func (c *Controller) EmailVerificationHandler(w http.ResponseWriter, r *http.Req
 	})
 
 	secretKey := []byte(config.Config.TokenSecretKey)
-	tokenString, _ := token.SignedString(secretKey)
+	tokenString, err := token.SignedString(secretKey)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	obj.Token = tokenString
 	obj.Password = ""
 	obj.EmailVerificationCode = ""
 	if err := jsonapi.MarshalPayload(w, obj); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 }
