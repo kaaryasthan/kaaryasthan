@@ -6,7 +6,7 @@ cd ${WD}
 glide install
 
 cd ${WD}/web
-yarn install
+npm install
 go generate
 
 cd ${WD}
