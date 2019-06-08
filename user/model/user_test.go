@@ -23,7 +23,9 @@ func TestUserShow(t *testing.T) {
 		t.Error("email is not yet verified")
 	}
 
-	DB.Exec("UPDATE users SET email_verified=true WHERE id=$1", usr.ID)
+	if _, err := DB.Exec("UPDATE users SET email_verified=true WHERE id=$1", usr.ID); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
 
 	usr3 := &User{Username: "jack"}
 	if err := usrDS.Show(usr3); err != nil {
@@ -48,7 +50,9 @@ func TestUserShow(t *testing.T) {
 		t.Error("Wrong EmailVerified:", usr3.EmailVerified)
 	}
 
-	DB.Exec("UPDATE users SET active=true WHERE id=$1", usr.ID)
+	if _, err := DB.Exec("UPDATE users SET active=true WHERE id=$1", usr.ID); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
 
 	usr4 := &User{Username: "jack"}
 	if err := usrDS.Show(usr4); err != nil {

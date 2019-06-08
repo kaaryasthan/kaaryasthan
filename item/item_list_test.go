@@ -36,7 +36,9 @@ func TestItemListHandler(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		DB.Exec("UPDATE users SET active=true, email_verified=true WHERE id=$1", usr.ID)
+		if _, err := DB.Exec("UPDATE users SET active=true, email_verified=true WHERE id=$1", usr.ID); err != nil {
+			t.Fatal("Unable to updates users:", err)
+		}
 		n := []byte(`{
 			"data": {
 				"type": "logins",

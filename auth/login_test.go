@@ -27,7 +27,10 @@ func TestUserLoginHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	DB.Exec("UPDATE users SET active=true, email_verified=true")
+	if _, err := DB.Exec("UPDATE users SET active=true, email_verified=true"); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
+
 	_, _, urt := route.Router(DB, bi)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()

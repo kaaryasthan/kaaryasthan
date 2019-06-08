@@ -27,7 +27,9 @@ func TestEmailVerificationHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	DB.Exec("UPDATE users SET email_verification_code='4208f094-b50d-4296-bdcc-166c76672c95'")
+	if _, err := DB.Exec("UPDATE users SET email_verification_code='4208f094-b50d-4296-bdcc-166c76672c95'"); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
 	_, _, urt := route.Router(DB, bi)
 	ts := httptest.NewServer(urt)
 	defer ts.Close()

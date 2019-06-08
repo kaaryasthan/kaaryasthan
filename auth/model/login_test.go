@@ -29,17 +29,23 @@ func TestUserLogin(t *testing.T) {
 		t.Error("Login succeeded")
 	}
 
-	DB.Exec("UPDATE users SET active=true")
+	if _, err := DB.Exec("UPDATE users SET active=true"); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
 	if err := loginDS.Login(login); err == nil {
 		t.Error("Login succeeded")
 	}
 
-	DB.Exec("UPDATE users SET active=false, email_verified=true")
+	if _, err := DB.Exec("UPDATE users SET active=false, email_verified=true"); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
 	if err := loginDS.Login(login); err == nil {
 		t.Error("Login succeeded")
 	}
 
-	DB.Exec("UPDATE users SET active=true, email_verified=true")
+	if _, err := DB.Exec("UPDATE users SET active=true, email_verified=true"); err != nil {
+		t.Fatal("Unable to updates users:", err)
+	}
 	if err := loginDS.Login(login); err != nil {
 		t.Error("Login failed", err)
 	}
