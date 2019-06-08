@@ -2,14 +2,14 @@ sudo: required
 language: go
 
 go:
-- 1.8.x
+- 1.12.x
 
 services:
 - docker
 
 before_install:
 - sudo rm -f /usr/local/bin/docker-compose
-- curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname
+- curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname
   -s`-`uname -m` > docker-compose
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
@@ -28,10 +28,10 @@ cache:
 install:
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
   && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
-  install 8.11.1
+  install 10.16.0
 - node --version
 - npm --version
-- npm install -g @angular/cli@6.0.1
+- npm install -g @angular/cli@8.0.2
 
 script:
 - cd $TRAVIS_BUILD_DIR
