@@ -56,7 +56,7 @@ func routeStaticFaviconPng() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "route/static/favicon.png", size: 25203, mode: os.FileMode(436), modTime: time.Unix(1523190763, 0)}
+	info := bindataFileInfo{name: "route/static/favicon.png", size: 25203, mode: os.FileMode(436), modTime: time.Unix(1559987480, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

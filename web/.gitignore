@@ -41,5 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-bindata_assetfs.go
+bindata.go
 package-lock.json
