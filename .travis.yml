@@ -15,6 +15,7 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 - go get github.com/jteeuwen/go-bindata/...
 - go get github.com/elazarl/go-bindata-assetfs/...
+- go get golang.org/x/lint/golint
 - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b . v1.16.0
 - ls /home/travis/gopath/bin
 - curl https://glide.sh/get | sh
