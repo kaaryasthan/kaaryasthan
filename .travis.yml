@@ -1,12 +1,9 @@
 sudo: required
 language: go
-
 go:
 - 1.12.x
-
 services:
 - docker
-
 before_install:
 - sudo rm -f /usr/local/bin/docker-compose
 - curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname
@@ -16,15 +13,14 @@ before_install:
 - go get github.com/jteeuwen/go-bindata/...
 - go get github.com/elazarl/go-bindata-assetfs/...
 - go get golang.org/x/lint/golint
-- curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b . v1.16.0
+- curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh
+  | sh -s -- -b . v1.16.0
 - ls /home/travis/gopath/bin
 - curl https://glide.sh/get | sh
 - "/usr/local/bin/docker-compose up -d"
-
 cache:
   directories:
-    - node_modules
-
+  - node_modules
 install:
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
   && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
@@ -32,30 +28,17 @@ install:
 - node --version
 - npm --version
 - npm install -g @angular/cli@8.0.2
-
 script:
 - cd $TRAVIS_BUILD_DIR
 - "./build.sh"
 - "./kaaryasthan -migrate"
 - "./runtests.sh"
-
-  #deploy:
-  #  provider: releases
-  #  api_key:
-  #    secure: cuts1a5X5OQdTYwZKk/6nvGyA17EVs1jllG30ZjcZyG5/McR86pN3D14QRKCXBsph3c9PFxCo28qxXjpIA6/oO2Y8Ox2dNWIe2h3RiZdeuFAYYciMeuldqAby51/wwi8992TGgqNL8rFDCLzgoq7gyDwmbCRRHRKOsscFsfPZJHO0PbD+JLytfhLsskj/8abgGBOZPCY17DbCvdunHVHJLz2vgUgcGocj6wCU/0XCooBzXk64F5uXIX6ihtECwJ7pUnm3z3thKLPxJTNlyfq1Yd8fHt5hPBtkBqEV5cQmy8s2MNjrhBt0fBm1sExyYbN7b4b7Hxyxd8W1LEqiBKizhKI/CykuoKSrjS8PFNvGWf334AihkE8e6Quq/Lj0PXIffQGnoA0tdLF1irnKzYgavdWffq2eBYK9tILxsReYD9nyHBThARyVg4NO3OmU4u7+/i+l/JMJhRK12jog0kPsFw1xgtePAARvyVMO6XWqN5Nhj1bsGm3cJOLMAavK1GV0EZOxSh1flUSez2xgOHReZf/+VNE063EBeXtW2B5fVgxV6Pboac+lfprppJlBPaT4HS86FomW2OSUhNoRok3jtaV7/rdg+11viAGEgVm4XxYWXqSKdEKgalkvsQww1wUURkP2zhp7S2w+ldtq/vwYgw2EmpNtOpsvBVDKdtZPSw=
-  #  file: kaaryasthan
-  #  overwrite: true
-  #  skip_cleanup: true
-  #  on:
-  #    repo: kaaryasthan/kaaryasthan
-
 branches:
   except:
-  - /^exp-.*$/
-
+  - "/^exp-.*$/"
 after_success:
-- curl -s https://gist.githubusercontent.com/baijum/37354d9de3b3dd38533f5d74b709086a/raw/merge.sh | bash
-
+- curl -s https://gist.githubusercontent.com/baijum/37354d9de3b3dd38533f5d74b709086a/raw/merge.sh
+  | bash
 env:
   global:
-    secure: ysVjpK1xCibPJhXKgp3SAJEY/5V1PWPRiaLx9new88/RFQSNKX1Lp0Xs5YPUmxM+HuTdpTiFUSGzVIi7/lOvKfZIJbyQWQzbXTkBfy5JP6Q0YMeDulb5lahMPGAzeXWCE5p2Mqv9Z3zt+62V+cbkBuPQ9/E3LaJG+hVS42rno+KSpMN8NUiZ2ln0d8D6eDL9np0BLfocUyrYtrc9yeqiQRDF3LGHQqOSxcUru8PcWgSREH7BEkFneHfXtxWxomfJCmrbln6EFbspzyONYwETAO8BezT+VjvtPRmwEFgxflvX2OguffjvyfHxk7KxmMwl7Mzu3xuerojTp6VbJSL8XnTRu5x+LWPpH2pnw6Xqw/636mdeEv3ZSArmRPGftsfOjVFqkM7nddnYJ9mBp/y4SoMamz+soO7v1ykW6SfFUu0aJjOtTZ26xFJ2z8QRTEtiL1UAuk6OnId72UQJoabWHf5RWLkWtsF+s7zCMOjN/PD+qQ/nMaJQsuyxydXZZd0/A8SrIk3YnscGkKx6I8/H26i4fm2TTvaF9ws0Ff4dbHDaQwQaX33Vqr0W+sV7cQO8wNqgq09WWIMxJZPGky+lmX6zx48a1bcr6ZUfkr6lju/VaFF7MDYgD+TkFxKnfGg770TmK5g0m35czQtUx5wMrF+qHYZPlSwdQwwgI5R9gKc=
+  - secure: gPBpvisrHtuzC4N6FdcfIid04iXaL92t5rikaA6IgfEMsIfRhzyTdskbpvCZN+ocRHZwBIVsCEuQEEk/ZRK0jBuoUbre0cIVZ5gh8c5AgkDi7d6RIj+iGFOOPc+HCm9XBvnwcd0YKUwqAPPuXfAW2feYsV7S3vB//hveEnDa9FmSvbKmTwefYPghNpxz5uOGraHqWAiVghRHVPhmjF1ox6Tg3LKhKBNvGRsEZoj3mPnzi7ACO/jLSsOUCMl4k2+RAXfeVrCl9tEqMRG0+FrAZGhvvIk4Qu22KViJcHzFpx0zNx0A3FJpH8WMSYd6Zj7TEFj3rq1cl/pTrIKMgmPdlfwgKShEQsAGhbkXfVxzVFSeqI6jbxk7eTIjig3u+v9tSLK4OdPGjhE5kU14o36Wtg5LENgk6g7+ru8FGBKL936LvIpmx3Qu50AWgXIeHmyO2WrrT8YlmaBH9VLk/ZfLSx28oN9JGGMH2FDbk2UKAIoEcDo0Bh3fou+V6hnjDaiMUVGPE1HY5s4SnVLwLuQ2KsQXe1E3bvSk4d4IS8dICBm8cFglPWCgloRse2htqaTQhE2/o2KZsLQG/XSyeD39Ds9BGlmqGb2+RZ811wgokjdh2dy3EeP3Ty2p52a337eGR0CW91szkgnNLWYZ6BKEFPIY34EoUS2Y0ng/V1sIylY=
