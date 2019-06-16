@@ -44,7 +44,7 @@ Once Go and Node is installed, you can install these utilities:
 - <https://github.com/pilu/fresh>
 - <https://github.com/go-bindata/go-bindata>
 - <https://github.com/elazarl/go-bindata-assetfs>
-- <https://github.com/alecthomas/gometalinter>
+- <https://github.com/golangci/golangci-lint>
 - <https://cli.angular.io>
 
 To install the above packages:
