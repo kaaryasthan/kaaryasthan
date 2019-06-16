@@ -30,6 +30,4 @@ https://cla-assistant.io/kaaryasthan/contributor-license-agreement
 
 The
 [project README.md in GitHub](https://github.com/kaaryasthan/kaaryasthan/blob/master/README.md)
-has the basic instructions to setup the development environment.  For
-more details about contribution, please go though the
-[wiki page about contributing](https://github.com/kaaryasthan/kaaryasthan/wiki/Contributing).
+has the basic instructions to setup the development environment.

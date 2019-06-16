@@ -122,8 +122,7 @@ This project follows the [all-contributors][all-contributors] specification.
 Contributions of any kind are welcome!
 
 If you are looking forward to contribute to this project, please take
-a look at the [CONTRIBUTING.md] and [wiki page about contributing] for
-more deatils.
+a look at the [CONTRIBUTING.md].
 
 ## FAQ
 
@@ -137,8 +136,7 @@ another name.
 
 Yes! You are welcome to contribute :-)
 
-Please take a look at the [CONTRIBUTING.md] and
-[wiki page about contributing] for more deatils.
+Please take a look at the [CONTRIBUTING.md] for more deatils.
 
 ### Why did you choose AGPLv3+ as the license?
 
@@ -187,7 +185,6 @@ request for the same :-)
 [project in 2014]: https://github.com/baijum/pitracker
 [GNU website]: https://www.gnu.org/licenses/why-affero-gpl.en.html
 [CONTRIBUTING.md]: https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md
-[wiki page about contributing]: https://github.com/kaaryasthan/kaaryasthan/wiki/Contributing
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [8080]: http://localhost:8080
