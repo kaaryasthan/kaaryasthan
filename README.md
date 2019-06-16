@@ -29,6 +29,13 @@ is used for the database.
 
 ## Development
 
+You can clone [Kaaryasthan] repository inside `$GOPATH` using these
+commands (Note: `$GOPATH` should be pointing to a single directory):
+
+    mkdir -p $(go env GOPATH)/src/github.com/kaaryasthan
+    cd $(go env GOPATH)/src/github.com/kaaryasthan
+    git clone https://github.com/kaaryasthan/kaaryasthan.git
+
 This project requires [Go] version 1.12 or above.  This project also
 requires [Node] version 10.16 or above, preferably an LTS release.
 
@@ -40,21 +47,9 @@ Once Go and Node is installed, you can install these utilities:
 - <https://github.com/alecthomas/gometalinter>
 - <https://cli.angular.io>
 
-To install the above utilities:
+To install the above packages:
 
-    go get github.com/pilu/fresh
-    go get github.com/jteeuwen/go-bindata/...
-    go get github.com/elazarl/go-bindata-assetfs/...
-    go get github.com/alecthomas/gometalinter
-    curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.16.0
-    npm install -g @angular/cli
-
-You can clone [Kaaryasthan] repository inside `$GOPATH` using these
-commands (Note: `$GOPATH` should be pointing to a single directory):
-
-    mkdir -p $GOPATH/src/github.com/kaaryasthan
-    cd $GOPATH/src/github.com/kaaryasthan
-    git clone https://github.com/kaaryasthan/kaaryasthan.git
+    ./hack/install-deps.sh
 
 Now you can run `./build.sh` command.
 
