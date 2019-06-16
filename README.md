@@ -6,43 +6,43 @@
 [![Open Source Helpers](https://www.codetriage.com/kaaryasthan/kaaryasthan/badges/users.svg)](https://www.codetriage.com/kaaryasthan/kaaryasthan)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/kaaryasthan/kaaryasthan/blob/master/CONTRIBUTING.md)
 
-Kaaryasthan helps you to manage private projects.  You can add tasks &
-issues (items) to your project.  An item has title, description,
-comments, creator, assignees, and labels.  Project milestones can
-be created with due date and items with the priority order.
+Kaaryasthan helps you to manage private projects.  You can add tasks & issues
+(items) to your project.  An item has title, description, comments, creator,
+assignees, and labels.  Project milestones can be created with due date and
+items with the priority order.
 
-This repository contains the source code of Kaaryasthan.  It has
-source code for both user interface and server.  The user interface of
-Kaaryasthan is written in [Angular], server in [Go], and [PostgreSQL]
-is used for the database.
+This repository contains the source code of Kaaryasthan.  It has source code for
+both user interface and server.  The user interface of Kaaryasthan is written in
+[Angular], server in [Go], and [PostgreSQL] is used for the database.
 
 > Kaaryasthan (കാര്യസ്ഥൻ) is a [Malayalam] word with meaning "manager".
 
 ## Key Features
 
-- All URLs requires authentication except login & registration.
-  (Note: This makes it unsuitable for open source projects with public
-  issues.  Only private projects can be hosted using Kaaryasthan)
-- Easy deployment.  Entire application including front-end is
-  available as a single binary.  You also need to install PostgreSQL
-  and NGINX unless you are using hosted PostgreSQL service.
+- All URLs requires authentication except login & registration.  (Note: This
+  makes it unsuitable for open source projects with public issues.  Only private
+  projects can be hosted using Kaaryasthan)
+
+- Easy deployment.  Entire application including front-end is available as a
+  single binary.  You also need to install PostgreSQL and NGINX unless you are
+  using hosted PostgreSQL service.
 
 ## Development
 
-You can clone [Kaaryasthan] repository inside `$GOPATH` using these
-commands (Note: `$GOPATH` should be pointing to a single directory):
+You can clone [Kaaryasthan] repository inside `$GOPATH` using these commands
+(Note: `$GOPATH` should be pointing to a single directory):
 
     mkdir -p $(go env GOPATH)/src/github.com/kaaryasthan
     cd $(go env GOPATH)/src/github.com/kaaryasthan
     git clone https://github.com/kaaryasthan/kaaryasthan.git
 
-This project requires [Go] version 1.12 or above.  This project also
-requires [Node] version 10.16 or above, preferably an LTS release.
+This project requires [Go] version 1.12 or above.  This project also requires
+[Node] version 10.16 or above, preferably an LTS release.
 
 Once Go and Node is installed, you can install these utilities:
 
 - <https://github.com/pilu/fresh>
-- <https://github.com/jteeuwen/go-bindata>
+- <https://github.com/go-bindata/go-bindata>
 - <https://github.com/elazarl/go-bindata-assetfs>
 - <https://github.com/alecthomas/gometalinter>
 - <https://cli.angular.io>
@@ -74,17 +74,20 @@ To run the back-end development server (from the top-level directory):
 
     fresh
 
-The back-end will listen on [8080] port.  Whenever there is a change
-in Go source files, the server will be automatically restarted.
+The back-end will listen on [8080] port.  Whenever there is a change in Go
+source files, the server will be automatically restarted.
 
 To run the front-end development server (from the `./web` directory):
 
     npm start
 
-The web user interface will be available on [4200] port.  You can use
-Firefox or Chrome to open it.  Any change in source files will refresh
-the user interface automatically.  There is a webhook which does this
-magic.
+The web user interface will be available on [4200] port.  You can use Firefox or
+Chrome to open it.  Any change in source files will refresh the user interface
+automatically.  There is a webhook which does this magic.
+
+Note: Frontend development is inactive now.  I am looking for contributors.  If
+you are interested and know Angular and TypeScript, you are welcome to
+contribute.
 
 ## License
 
@@ -169,11 +172,8 @@ request for the same :-)
 
 ---
 
-> [kaaryasthan.org](https://kaaryasthan.org) &nbsp;&middot;&nbsp;
-> Demo [demo.kaaryasthan.org](https://demo.kaaryasthan.org) &nbsp;&middot;&nbsp;
 > IRC [#kaaryasthan@freenode](https://riot.im/app/#/room/#freenode_#kaaryasthan:matrix.org) &nbsp;&middot;&nbsp;
 > [Mailing List](https://groups.google.com/forum/#!forum/kaaryasthan) &nbsp;&middot;&nbsp;
-> Twitter [@kaaryasthan](https://twitter.com/kaaryasthan)
 
 [pet project]: https://team-coder.com/pet-project
 [Node]: https://nodejs.org/en
