@@ -2,9 +2,6 @@
 
 WD=`pwd`
 
-cd ${WD}
-glide install
-
 cd ${WD}/web
 npm install
 go generate

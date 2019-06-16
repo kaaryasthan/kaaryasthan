@@ -10,13 +10,13 @@ before_install:
   -s`-`uname -m` > docker-compose
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
-- go get github.com/jteeuwen/go-bindata/...
+- go get -u github.com/go-bindata/go-bindata/...
 - go get github.com/elazarl/go-bindata-assetfs/...
 - go get golang.org/x/lint/golint
 - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh
   | sh -s -- -b . v1.16.0
+- sudo mv golangci-lint /usr/local/bin
 - ls /home/travis/gopath/bin
-- curl https://glide.sh/get | sh
 - "/usr/local/bin/docker-compose up -d"
 cache:
   directories:
@@ -28,6 +28,7 @@ install:
 - node --version
 - npm --version
 - npm install -g @angular/cli@8.0.2
+- go mod vendor
 script:
 - cd $TRAVIS_BUILD_DIR
 - "./build.sh"
@@ -42,3 +43,4 @@ after_success:
 env:
   global:
   - secure: gPBpvisrHtuzC4N6FdcfIid04iXaL92t5rikaA6IgfEMsIfRhzyTdskbpvCZN+ocRHZwBIVsCEuQEEk/ZRK0jBuoUbre0cIVZ5gh8c5AgkDi7d6RIj+iGFOOPc+HCm9XBvnwcd0YKUwqAPPuXfAW2feYsV7S3vB//hveEnDa9FmSvbKmTwefYPghNpxz5uOGraHqWAiVghRHVPhmjF1ox6Tg3LKhKBNvGRsEZoj3mPnzi7ACO/jLSsOUCMl4k2+RAXfeVrCl9tEqMRG0+FrAZGhvvIk4Qu22KViJcHzFpx0zNx0A3FJpH8WMSYd6Zj7TEFj3rq1cl/pTrIKMgmPdlfwgKShEQsAGhbkXfVxzVFSeqI6jbxk7eTIjig3u+v9tSLK4OdPGjhE5kU14o36Wtg5LENgk6g7+ru8FGBKL936LvIpmx3Qu50AWgXIeHmyO2WrrT8YlmaBH9VLk/ZfLSx28oN9JGGMH2FDbk2UKAIoEcDo0Bh3fou+V6hnjDaiMUVGPE1HY5s4SnVLwLuQ2KsQXe1E3bvSk4d4IS8dICBm8cFglPWCgloRse2htqaTQhE2/o2KZsLQG/XSyeD39Ds9BGlmqGb2+RZ811wgokjdh2dy3EeP3Ty2p52a337eGR0CW91szkgnNLWYZ6BKEFPIY34EoUS2Y0ng/V1sIylY=
+  - GO111MODULE=on
