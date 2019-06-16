@@ -64,9 +64,9 @@ Migrate database schema by running:
 
     ./kaaryasthan -migrate
 
-To run test cases:
+To run tests:
 
-    ./runtests.sh
+    make test
 
 ### Running development servers
 

@@ -33,7 +33,7 @@ script:
 - cd $TRAVIS_BUILD_DIR
 - "make build"
 - "./kaaryasthan -migrate"
-- "./runtests.sh"
+- "make test"
 branches:
   except:
   - "/^exp-.*$/"
