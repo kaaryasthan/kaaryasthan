@@ -29,8 +29,8 @@ is used for the database.
 
 ## Development
 
-This project requires [Go] version 1.8 or above.  This project also
-requires [Node] version 6.11 or above, preferably an LTS release.
+This project requires [Go] version 1.12 or above.  This project also
+requires [Node] version 10.16 or above, preferably an LTS release.
 
 Once Go and Node is installed, you can install these utilities:
 
@@ -38,17 +38,15 @@ Once Go and Node is installed, you can install these utilities:
 - <https://github.com/jteeuwen/go-bindata>
 - <https://github.com/elazarl/go-bindata-assetfs>
 - <https://github.com/alecthomas/gometalinter>
-- <https://glide.sh>
 - <https://cli.angular.io>
 
 To install the above utilities:
 
-    curl https://glide.sh/get | sh
     go get github.com/pilu/fresh
     go get github.com/jteeuwen/go-bindata/...
     go get github.com/elazarl/go-bindata-assetfs/...
     go get github.com/alecthomas/gometalinter
-    gometalinter --install
+    curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.16.0
     npm install -g @angular/cli
 
 You can clone [Kaaryasthan] repository inside `$GOPATH` using these
