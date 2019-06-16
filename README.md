@@ -49,12 +49,12 @@ Once Go and Node is installed, you can install these utilities:
 
 To install the above packages:
 
+    cd $GOPATH/src/github.com/kaaryasthan/kaaryasthan
     ./hack/install-deps.sh
 
-Now you can run `./build.sh` command.
+Now you can run `make build` command.
 
-    cd $GOPATH/src/github.com/kaaryasthan/kaaryasthan
-    ./build.sh
+    make build
 
 Install [Docker] and [Docker Compose] and then run:
 
